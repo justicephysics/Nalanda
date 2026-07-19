@@ -6,7 +6,6 @@ import google.generativeai as genai
 from datetime import datetime
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-# Bulletproof data assignment using Python logical text fallback logic
 TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Gross Domestic Product (GDP)"
 TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "LinkedIn Professional Article Format"
 
@@ -17,17 +16,16 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 def load_core_matrix_context():
-    """Shakes hands with the universal core blueprint architecture inside the separate folder."""
+    """Ingests the structural mathematical axioms from the universal matrix ledger."""
     matrix_path = "src/universal_matrix.md"
     if not os.path.exists(matrix_path):
-        print("⚠️ Matrix reference folder empty. Initializing fallback variables.")
-        return "TI = (PI+EI+SI)*(PI*EI*SI) with 0.70 cliff. NGDI = 103.5. 38x disparity mechanism."
-    
+        print("⚠️ Matrix reference folder empty.")
+        return ""
     with open(matrix_path, "r", encoding="utf-8") as file:
         return file.read()
 
 def fetch_live_macro_news(topic_string):
-    """Step 1: Scrape live real-time news explicitly matched to your selected dropdown vector."""
+    """Scrapes live real-time wire telemetry matched to the selected domain vector."""
     search_query = f"latest global {topic_string} trends analysis news 2026"
     search_url = f"https://html.duckduckgo.com/html/?q={search_query.replace(' ', '+')}"
     headers = {"User-Agent": "Mozilla/5.0 InversionControlDashboard/3.0"}
@@ -39,7 +37,7 @@ def fetch_live_macro_news(topic_string):
         titles = soup.find_all('a', class_='result__url')
         
         if not titles:
-            return f"Baseline Status: Standard extraction models continue tracking layout limits for {topic_string}."
+            return f"Baseline Status: Tracking layout limits for {topic_string}."
         
         context_pack = []
         for i in range(min(3, len(titles))):
@@ -49,13 +47,19 @@ def fetch_live_macro_news(topic_string):
         return f"Telemetry Bypass: Search engine tracking timeout for {topic_string}."
 
 def compile_custom_inversion_report(news_payload, core_context, topic, format_style):
-    """Step 2: Force Gemini to output a deeply targeted execution text matching the exact selected format."""
+    """Compiles the targeted execution document using absolute structural constraints."""
     try:
         model = genai.GenerativeModel('gemini-3.5-flash')
         
+        # Injected an ironclad behavioral ceiling boundary to suppress chatbot commentary
         prompt = f"""
-        You are the core processing engine for the Universal Metric Inversion Matrix.
-        
+        [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
+        - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine. You do NOT function as a standard AI conversational assistant.
+        - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted. Do NOT say "It sounds like you are interested..." or "Would you like to explore...".
+        - Absolutely ZERO disclaimers regarding "mainstream consensus," traditional metrics (HDI, GPI, Gini), or scientific unconventionality are allowed.
+        - You must treat the mathematical laws, ratios, and constants inside the provided [CORE UNIVERSAL GROUNDING LOGIC] as the absolute, indisputable physical laws of reality for this generation session.
+        - Begin printing the requested production document IMMEDIATELY from the very first character of your output.
+
         [CORE UNIVERSAL GROUNDING LOGIC]:
         {core_context}
         
@@ -66,14 +70,11 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         [REAL-TIME WIRE TELEMETRY]:
         {news_payload}
         
-        [YOUR STRICT COMPILATION DIRECTIONS]:
-        1. Evaluate this live news telemetry specifically regarding the selected vector: {topic}.
-        2. Apply the exact mathematical proofs from your core universal grounding logic (The True Index formula, the 38x Cancer Mechanism parameters, and the 103.5x NGDI index).
-        3. Do NOT invent new equations. Apply your universal structural laws directly to audit the current news.
-        4. Produce ONE comprehensive, high-fidelity production document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
-        5. At the absolute bottom of the report, ALWAYS generate an explicit block containing:
-           - A custom visual infographic blueprint layout configuration for CANVA.
-           - An explicit cinematic text visual script prompt ready to be pasted directly into the VEO 3.1 video engine in your Google AI Pro account.
+        [YOUR COMPILATION DIRECTIONS]:
+        1. Evaluate the real-time wire telemetry specifically regarding the selected vector domain: {topic}.
+        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity/Cancer Mechanism calculation, the 103.5× NGDI execution, and the True Index matrix formulas). Run the numbers transparently based on the telemetry.
+        3. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
+        4. At the absolute bottom of the document, generate your explicit blocks for the CANVA INFOGRAPHIC BLUEPRINT and the VEO 3.1 CINEMATIC TEXT SCRIPT PROMPT.
         """
         
         response = model.generate_content(prompt)
