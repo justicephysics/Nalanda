@@ -2,8 +2,8 @@ name: Automated Inversion Engine Run
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Continues to run on autopilot every six hours
-  workflow_dispatch: # Opens the gateway to receive custom commands from your HTML dashboard
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
     inputs:
       topic:
         description: 'Selected System Vector'
@@ -15,7 +15,7 @@ on:
         default: 'LinkedIn Professional Article Format'
 
 permissions:
-  contents: write # Allows the runner to commit the files right back into your repo ledger
+  contents: write
 
 jobs:
   execute-matrix:
@@ -35,9 +35,8 @@ jobs:
       - name: Run Dynamic Core Inversion Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # Bind the dashboard dropdown text variables cleanly to your environment strings
-          INPUT_TOPIC: ${{ inputs.topic || github.event.inputs.topic || 'Gross Domestic Product (GDP)' }}
-          INPUT_FORMAT: ${{ inputs.format || github.event.inputs.format || 'LinkedIn Professional Article Format' }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic || inputs.topic || 'Gross Domestic Product (GDP)' }}
+          INPUT_FORMAT: ${{ github.event.inputs.format || inputs.format || 'LinkedIn Professional Article Format' }}
         run: python scripts/autonomous_engine.py
 
       - name: Commit Generated Drafts to Staged Folder
