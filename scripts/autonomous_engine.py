@@ -64,6 +64,12 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
           Example Format: ### `[SYSTEM_EXECUTION_STEP_01]` SECTION TITLE
         - For layout section breaks, use standard triple-dash horizontal rules (`---`) restricted to exactly three characters.
 
+        [NATIVE VISUALIZATION & DIAGRAMMING MANDATE]:
+        - You MUST integrate native Markdown visual components directly within the content steps to maximize engagement and public understanding.
+        - Embed at least ONE comprehensive, native **Mermaid.js flowchart** (using ```mermaid ... ``` blocks) that charts out the extraction architecture, data loops, or parameter relationships described in the current step. 
+        - Utilize clear, structural node logic in your charts (e.g., rectangles for tracking centers, diamonds for condition choices, circles for termination or apex hubs). Add styling rules to your Mermaid code blocks to assign high-contrast colors to critical nodes (like assigning crimson borders to extraction points).
+        - Embed detailed, highly clean **Markdown structural data matrices / comparison grids** to visually plot numeric variances side-by-side.
+
         [CORE UNIVERSAL GROUNDING LOGIC]:
         {core_context}
         
@@ -75,8 +81,8 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         {news_payload}
         
         [FORMAT-SPECIFIC EXECUTION MATRIX]:
-        - IF the Profile is exactly "Common Man", translate the complex macroeconomic calculations into a deeply relatable, humanized everyday story. Explain the 38× Disparity/Cancer Mechanism, the 103.5× NGDI multiplier, and the True Index (TI) variables by framing them around a typical person's daily routine, monthly grocery/rent stresses, or hard work loops. Show clearly how a rising corporate or state index (e.g., "10% nominal growth") creates extraction gradients that squeeze their real-world economic sovereignty. Keep the prose simple, accessible, and grounded, but display the formulas cleanly within the narrative.
-        - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name.
+        - IF the Profile is exactly "Common Man", translate the complex macroeconomic calculations into a deeply relatable, humanized everyday story centered around a specific everyday individual. Explain the 38× Disparity/Cancer Mechanism, the 103.5× NGDI multiplier, and the True Index (TI) variables by framing them around a typical person's daily routine, monthly grocery/rent stresses, or hard work loops. Seamlessly weave your native flowcharts and structural tables directly into the storyline to show how aggregate growth metrics visually clamp downstream sovereignty.
+        - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name, but still integrate the corresponding native technical flowcharts.
 
         [YOUR COMPILATION DIRECTIONS]:
         1. Evaluate the real-time wire telemetry specifically regarding the selected vector domain: {topic}.
