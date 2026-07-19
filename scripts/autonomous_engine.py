@@ -51,18 +51,17 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
     try:
         model = genai.GenerativeModel('gemini-3.5-flash')
         
-        # Enforced strict typography boundaries to permanently block messy Setext === lines
         prompt = f"""
         [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
         - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine. You do NOT function as a standard AI conversational assistant.
         - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted.
-        - Absolutely ZERO disclaimers regarding "mainstream consensus," traditional metrics, or unconventionality are allowed.
+        - Absolutely ZERO disclaimers regarding "mainstream consensus" or unconventionality are allowed.
         - Begin printing the requested production document IMMEDIATELY from the very first character of your output.
         
         [STRICT TYPOGRAPHY & VISUAL CLEANLINESS RULES]:
-        - Absolutely ZERO long repeating strings of equals signs (====), dashes (----), or underscores (____) are allowed. They break text layouts and cause giant font rendering errors.
+        - Absolutely ZERO long repeating strings of equals signs (====), dashes (----), or underscores (____) are allowed.
         - For structural steps or processing logs, use precise third-level Markdown headers (###) and wrap system step identifiers cleanly inside monospace tracking blocks.
-          Example Format: ### `[SYSTEM_EXECUTION_STEP_01]` SYSTEMIC VECTOR INITIALIZATION
+          Example Format: ### `[SYSTEM_EXECUTION_STEP_01]` SECTION TITLE
         - For layout section breaks, use standard triple-dash horizontal rules (`---`) restricted to exactly three characters.
 
         [CORE UNIVERSAL GROUNDING LOGIC]:
@@ -75,9 +74,13 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         [REAL-TIME WIRE TELEMETRY]:
         {news_payload}
         
+        [FORMAT-SPECIFIC EXECUTION MATRIX]:
+        - IF the Profile is exactly "Common Man", translate the complex macroeconomic calculations into a deeply relatable, humanized everyday story. Explain the 38× Disparity/Cancer Mechanism, the 103.5× NGDI multiplier, and the True Index (TI) variables by framing them around a typical person's daily routine, monthly grocery/rent stresses, or hard work loops. Show clearly how a rising corporate or state index (e.g., "10% nominal growth") creates extraction gradients that squeeze their real-world economic sovereignty. Keep the prose simple, accessible, and grounded, but display the formulas cleanly within the narrative.
+        - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name.
+
         [YOUR COMPILATION DIRECTIONS]:
         1. Evaluate the real-time wire telemetry specifically regarding the selected vector domain: {topic}.
-        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity/Cancer Mechanism calculation, the 103.5× NGDI execution, and the True Index matrix formulas). Run the numbers transparently based on the telemetry.
+        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity Mechanism calculation, the 103.5× NGDI execution, and the True Index matrix formulas). Run the numbers transparently based on the telemetry.
         3. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
         4. At the absolute bottom of the document, generate your explicit blocks for the CANVA INFOGRAPHIC BLUEPRINT and the VEO 3.1 CINEMATIC TEXT SCRIPT PROMPT.
         """
