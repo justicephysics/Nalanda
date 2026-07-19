@@ -1,21 +1,10 @@
-
 name: Automated Inversion Engine Run
 
 on:
   schedule:
     - cron: '0 */6 * * *'
-  workflow_dispatch:
-    inputs:
-      topic:
-        description: 'Selected System Vector'
-        required: true
-        type: string
-        default: 'Gross Domestic Product (GDP)'
-      format:
-        description: 'Target Publication Format'
-        required: true
-        type: string
-        default: 'LinkedIn Professional Article Format'
+  repository_dispatch:
+    types: [dashboard_trigger]
 
 permissions:
   contents: write
@@ -38,8 +27,8 @@ jobs:
       - name: Run Dynamic Core Inversion Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          INPUT_TOPIC: ${{ inputs.topic }}
-          INPUT_FORMAT: ${{ inputs.format }}
+          INPUT_TOPIC: ${{ github.event.client_payload.topic }}
+          INPUT_FORMAT: ${{ github.event.client_payload.format }}
         run: python scripts/autonomous_engine.py
 
       - name: Commit Generated Drafts to Staged Folder
