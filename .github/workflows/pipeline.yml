@@ -2,11 +2,20 @@ name: Automated Inversion Engine Run
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Auto-triggers every six hours completely free
-  workflow_dispatch: # Gives you a manual button in the GitHub UI to fire it instantly
+    - cron: '0 */6 * * *' # Still auto-runs on schedule as standard backup
+  workflow_dispatch: # Armed to receive custom parameters from your live web dashboard
+    inputs:
+      topic:
+        description: 'Selected System Vector'
+        required: true
+        default: 'Gross Domestic Product (GDP)'
+      format:
+        description: 'Target Publication Format'
+        required: true
+        default: 'LinkedIn Professional Article Format'
 
 permissions:
-  contents: write # Grants the runner permission to commit the drafted files back to your repo
+  contents: write
 
 jobs:
   execute-matrix:
@@ -23,9 +32,12 @@ jobs:
       - name: Install System Dependencies
         run: pip install requests beautifulsoup4 google-generativeai
 
-      - name: Run Core Inversion Pipeline Script
+      - name: Run Dynamic Core Inversion Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Pass the interactive dropdown choices straight to the environment variables
+          INPUT_TOPIC: ${{ github.event.inputs.topic || 'Gross Domestic Product (GDP)' }}
+          INPUT_FORMAT: ${{ github.event.inputs.format || 'LinkedIn Professional Article Format' }}
         run: python scripts/autonomous_engine.py
 
       - name: Commit Generated Drafts to Staged Folder
@@ -34,4 +46,4 @@ jobs:
           git config --global user.email "bot@humanos.network"
           mkdir -p staged_outputs
           git add staged_outputs/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "ledger: save autonomous real-time inversion drafts" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "ledger: save adaptive custom inversion report" && git push)
