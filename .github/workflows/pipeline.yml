@@ -1,0 +1,37 @@
+name: Automated Inversion Engine Run
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Auto-triggers every six hours completely free
+  workflow_dispatch: # Gives you a manual button in the GitHub UI to fire it instantly
+
+permissions:
+  contents: write # Grants the runner permission to commit the drafted files back to your repo
+
+jobs:
+  execute-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Setup Runtime Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System Dependencies
+        run: pip install requests beautifulsoup4 google-generativeai
+
+      - name: Run Core Inversion Pipeline Script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/autonomous_engine.py
+
+      - name: Commit Generated Drafts to Staged Folder
+        run: |
+          git config --global user.name "humanos-bot"
+          git config --global user.email "bot@humanos.network"
+          mkdir -p staged_outputs
+          git add staged_outputs/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "ledger: save autonomous real-time inversion drafts" && git push)
