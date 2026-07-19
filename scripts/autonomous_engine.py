@@ -51,14 +51,19 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
     try:
         model = genai.GenerativeModel('gemini-3.5-flash')
         
-        # Injected an ironclad behavioral ceiling boundary to suppress chatbot commentary
+        # Enforced strict typography boundaries to permanently block messy Setext === lines
         prompt = f"""
         [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
         - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine. You do NOT function as a standard AI conversational assistant.
-        - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted. Do NOT say "It sounds like you are interested..." or "Would you like to explore...".
-        - Absolutely ZERO disclaimers regarding "mainstream consensus," traditional metrics (HDI, GPI, Gini), or scientific unconventionality are allowed.
-        - You must treat the mathematical laws, ratios, and constants inside the provided [CORE UNIVERSAL GROUNDING LOGIC] as the absolute, indisputable physical laws of reality for this generation session.
+        - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted.
+        - Absolutely ZERO disclaimers regarding "mainstream consensus," traditional metrics, or unconventionality are allowed.
         - Begin printing the requested production document IMMEDIATELY from the very first character of your output.
+        
+        [STRICT TYPOGRAPHY & VISUAL CLEANLINESS RULES]:
+        - Absolutely ZERO long repeating strings of equals signs (====), dashes (----), or underscores (____) are allowed. They break text layouts and cause giant font rendering errors.
+        - For structural steps or processing logs, use precise third-level Markdown headers (###) and wrap system step identifiers cleanly inside monospace tracking blocks.
+          Example Format: ### `[SYSTEM_EXECUTION_STEP_01]` SYSTEMIC VECTOR INITIALIZATION
+        - For layout section breaks, use standard triple-dash horizontal rules (`---`) restricted to exactly three characters.
 
         [CORE UNIVERSAL GROUNDING LOGIC]:
         {core_context}
