@@ -11,12 +11,11 @@
             --accent: #66FCF1;
             --text-main: #C5C6C7;
             --text-bright: #FFFFFF;
-            --warning: #F2A900;
         }
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding: 40px 20px;
             display: flex;
@@ -28,8 +27,8 @@
             background: var(--card-bg);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             border: 1px solid #2e3c4e;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
         h1 {
             color: var(--accent);
@@ -48,7 +47,6 @@
             margin-bottom: 8px;
             color: var(--text-bright);
             font-weight: 600;
-            font-size: 14px;
         }
         select, input {
             width: 100%;
@@ -59,10 +57,6 @@
             border-radius: 6px;
             font-size: 15px;
             box-sizing: border-box;
-        }
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--accent);
         }
         button {
             width: 100%;
@@ -75,10 +69,8 @@
             font-size: 16px;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.3s ease;
         }
         button:hover {
-            background: #45a29e;
             box-shadow: 0 0 15px var(--accent);
         }
         .status-box {
@@ -91,7 +83,6 @@
         }
         .success { background: #1c3d27; border: 1px solid #2e7d32; color: #a5d6a7; }
         .error { background: #421d1d; border: 1px solid #c62828; color: #ef9a9a; }
-        .hint { font-size: 11px; color: #85878a; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -101,8 +92,7 @@
     
     <div class="form-group">
         <label for="githubToken">GitHub Personal Access Token (PAT)</label>
-        <input type="password" id="githubToken" placeholder="paste your github_pat_... token here">
-        <div class="hint">Saved securely in your browser's local storage only. Needed to trigger the action run.</div>
+        <input type="password" id="githubToken" placeholder="paste your token here">
     </div>
 
     <div class="form-group">
@@ -123,7 +113,6 @@
             <option value="Long Comprehensive System Ledger">Long System Ledger</option>
             <option value="X (Twitter) Thread Format">X (Twitter) Post Thread</option>
             <option value="LinkedIn Professional Article Format">LinkedIn Post Asset</option>
-            <option value="Instagram Descriptive Carousel Text">Instagram Content Script</option>
             <option value="YouTube Script Narrative Arc with Visual Markers">YouTube Video Script</option>
             <option value="Institutional Investor Strategy Pitch Brief">Institutional Investor Pitch</option>
             <option value="Academic University Professor Abstract Paper">University Professor Paper</option>
@@ -131,12 +120,10 @@
     </div>
 
     <button id="runBtn" onclick="triggerEnginePipeline()">Launch Inversion Engine</button>
-
     <div id="status" class="status-box"></div>
 </div>
 
 <script>
-    // Automatically load token from local browser storage on page boot
     document.getElementById('githubToken').value = localStorage.getItem('humanos_pat') || '';
 
     async function triggerEnginePipeline() {
@@ -147,23 +134,19 @@
         const runBtn = document.getElementById('runBtn');
 
         if (!token) {
-            showStatus('❌ Error: GitHub Token is required to execute remote tasks!', 'error');
+            showStatus('❌ Error: GitHub Token is required!', 'error');
             return;
         }
 
-        // Save to browser memory securely
         localStorage.setItem('humanos_pat', token);
-        
         runBtn.disabled = true;
-        runBtn.innerText = "Transmitting Telemetry...";
-        showStatus('⏳ Dispatching payload variables to GitHub Actions network core...', 'success');
+        showStatus('⏳ Transmitting variables to custom dispatch layer...', 'success');
 
-        // Target coordinates for your specific repo configuration
         const repoOwner = "justicephysics";
         const repoName = "humanos2.0";
-        const workflowId = "pipeline.yml"; 
-
-        const url = `https://api.github.com/repos/${repoOwner}/${repoName}/actions/workflows/${workflowId}/dispatches`;
+        
+        // Switched endpoint path to global repository dispatch channel
+        const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
 
         try {
             const response = await fetch(url, {
@@ -174,8 +157,8 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    ref: 'main',
-                    inputs: {
+                    event_type: "dashboard_trigger",
+                    client_payload: {
                         topic: topic,
                         format: format
                     }
@@ -183,16 +166,15 @@
             });
 
             if (response.status === 204) {
-                showStatus('🚀 SUCCESS! Inversion engine activated on GitHub server. Your report is compiling. Check your /staged_outputs folder in 45 seconds!', 'success');
+                showStatus('🚀 SUCCESS! Grounded execution triggered via repository dispatch. Processing payload variables now...', 'success');
             } else {
-                const errorData = await response.json().catch(() => ({ message: 'Authorization / Endpoint error.' }));
+                const errorData = await response.json().catch(() => ({ message: 'Endpoint alignment mismatch.' }));
                 showStatus(`❌ API Error (${response.status}): ${errorData.message}`, 'error');
             }
         } catch (err) {
             showStatus(`❌ Connection Crash: ${err.message}`, 'error');
         } finally {
             runBtn.disabled = false;
-            runBtn.innerText = "Launch Inversion Engine";
         }
     }
 
