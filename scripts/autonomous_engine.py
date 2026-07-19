@@ -6,9 +6,9 @@ import google.generativeai as genai
 from datetime import datetime
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-# Capture the dynamic dropdown variables forwarded from the website dashboard UI
-TARGET_TOPIC = os.getenv("INPUT_TOPIC", "Gross Domestic Product (GDP)")
-TARGET_FORMAT = os.getenv("INPUT_FORMAT", "LinkedIn Professional Article Format")
+# Bulletproof data assignment using Python logical text fallback logic
+TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Gross Domestic Product (GDP)"
+TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "LinkedIn Professional Article Format"
 
 if not GEMINI_API_KEY:
     print("❌ FATAL ERROR: GEMINI_API_KEY missing from system secret registers.")
@@ -28,7 +28,6 @@ def load_core_matrix_context():
 
 def fetch_live_macro_news(topic_string):
     """Step 1: Scrape live real-time news explicitly matched to your selected dropdown vector."""
-    # Build clean query URL string based directly on your choice
     search_query = f"latest global {topic_string} trends analysis news 2026"
     search_url = f"https://html.duckduckgo.com/html/?q={search_query.replace(' ', '+')}"
     headers = {"User-Agent": "Mozilla/5.0 InversionControlDashboard/3.0"}
@@ -71,7 +70,7 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         1. Evaluate this live news telemetry specifically regarding the selected vector: {topic}.
         2. Apply the exact mathematical proofs from your core universal grounding logic (The True Index formula, the 38x Cancer Mechanism parameters, and the 103.5x NGDI index).
         3. Do NOT invent new equations. Apply your universal structural laws directly to audit the current news.
-        4. Produce ONE comprehensive, high-fidelity production document formatted EXCIUSIVELY to fit the requested profile layout: {format_style}.
+        4. Produce ONE comprehensive, high-fidelity production document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
         5. At the absolute bottom of the report, ALWAYS generate an explicit block containing:
            - A custom visual infographic blueprint layout configuration for CANVA.
            - An explicit cinematic text visual script prompt ready to be pasted directly into the VEO 3.1 video engine in your Google AI Pro account.
@@ -84,7 +83,7 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         sys.exit(1)
 
 if __name__ == "__main__":
-    print(f"🚀 Dashboard Activation Request Captured.")
+    print(f"🚀 Dashboard Activation Request Captured via Repository Dispatch.")
     print(f"📡 Selected Systemic Vector: {TARGET_TOPIC}")
     print(f"📋 Selected Content Destination: {TARGET_FORMAT}")
     
@@ -94,7 +93,6 @@ if __name__ == "__main__":
     print("🧠 Ingesting payloads into dynamic Gemini template compiler...")
     final_report = compile_custom_inversion_report(live_telemetry, core_logic, TARGET_TOPIC, TARGET_FORMAT)
     
-    # Clean file saving sequence
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
     filename = f"staged_outputs/report_{clean_topic_name}_{timestamp}.md"
