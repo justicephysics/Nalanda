@@ -1,8 +1,6 @@
 name: Automated Inversion Engine Run
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       topic:
@@ -24,22 +22,22 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v4
 
-      - name: Setup Runtime Python Environment
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: pip install requests beautifulsoup4 google-generativeai
 
-      - name: Run Dynamic Core Inversion Script
+      - name: Run Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          INPUT_TOPIC: ${{ github.event.inputs.topic || inputs.topic || 'Gross Domestic Product (GDP)' }}
-          INPUT_FORMAT: ${{ github.event.inputs.format || inputs.format || 'LinkedIn Professional Article Format' }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic }}
+          INPUT_FORMAT: ${{ github.event.inputs.format }}
         run: python scripts/autonomous_engine.py
 
-      - name: Commit Generated Drafts to Staged Folder
+      - name: Save Output
         run: |
           git config --global user.name "humanos-bot"
           git config --global user.email "bot@humanos.network"
