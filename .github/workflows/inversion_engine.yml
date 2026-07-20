@@ -1,0 +1,40 @@
+name: Dynamic Inversion Engine Pipeline
+
+on:
+  repository_dispatch:
+    types: [dashboard_trigger]
+
+permissions:
+  contents: write
+
+jobs:
+  run-compiler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install System Dependencies
+        run: |
+          pip install google-generativeai requests beautifulsoup4
+
+      - name: Execute Dynamic Ledger Compiler Engine
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          INPUT_TOPIC: ${{ github.event.client_payload.topic }}
+          INPUT_FORMAT: ${{ github.event.client_payload.format }}
+        run: |
+          python scripts/autonomous_engine.py
+
+      - name: Commit and Publish Staged Ledger Reports Live
+        run: |
+          git config --global user.name "Nalanda Automation Engine"
+          git config --global user.email "engine@nalanda.internal"
+          git add staged_outputs/* registry.json
+          git commit -m "Systemic Ledger Update: Staged dynamically via Inversion Control Dashboard [skip ci]" || echo "No new variations found."
+          git push origin main
