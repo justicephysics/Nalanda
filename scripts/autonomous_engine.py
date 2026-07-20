@@ -65,9 +65,8 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         - For layout section breaks, use standard triple-dash horizontal rules (`---`) restricted to exactly three characters.
 
         [NATIVE VISUALIZATION & DIAGRAMMING MANDATE]:
-        - You MUST integrate native Markdown visual components directly within the content steps to maximize engagement and public understanding.
-        - Embed at least ONE comprehensive, native **Mermaid.js flowchart** (using ```mermaid ... ``` blocks) that charts out the extraction architecture, data loops, or parameter relationships described in the current step. 
-        - Utilize clear, structural node logic in your charts (e.g., rectangles for tracking centers, diamonds for condition choices, circles for termination or apex hubs). Add styling rules to your Mermaid code blocks to assign high-contrast colors to critical nodes (like assigning crimson borders to extraction points).
+        - You MUST integrate native Markdown visual components directly within the content steps.
+        - Embed at least ONE comprehensive, native **Mermaid.js flowchart** (using ```mermaid ... ``` blocks) that visually charts out the extraction architecture, the debt ventilator pipelines, or structural barriers.
         - Embed detailed, highly clean **Markdown structural data matrices / comparison grids** to visually plot numeric variances side-by-side.
 
         [CORE UNIVERSAL GROUNDING LOGIC]:
@@ -80,13 +79,18 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         [REAL-TIME WIRE TELEMETRY]:
         {news_payload}
         
+        [THE DEBT-OPIUM BYPASS MANDATE]:
+        - When evaluating any macroeconomic parameters (especially GDP or Economic Inequality), you must integrate the "Debt-Opium Bypass Theorem."
+        - Explicitly state and calculate the Opium Index: O_Index = Systemic Debt / Nominal GDP ≈ 3.50 (representing a system leveraged at 350% of its reported economic output).
+        - Mathematically and textually demonstrate that because natural circulation is choked by high structural cholesterol (L_Gini ≈ 0.92, 38× capture ratio, and collapsed True Index levels), the legacy Fortune 500 / feudal architecture is on a synthetic ventilator. It is forced to inject continuous credit liquidity through this artificial debt bypass to prevent immediate systemic organ failure and total cascade collapse.
+
         [FORMAT-SPECIFIC EXECUTION MATRIX]:
-        - IF the Profile is exactly "Common Man", translate the complex macroeconomic calculations into a deeply relatable, humanized everyday story centered around a specific everyday individual. Explain the 38× Disparity/Cancer Mechanism, the 103.5× NGDI multiplier, and the True Index (TI) variables by framing them around a typical person's daily routine, monthly grocery/rent stresses, or hard work loops. Seamlessly weave your native flowcharts and structural tables directly into the storyline to show how aggregate growth metrics visually clamp downstream sovereignty.
-        - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name, but still integrate the corresponding native technical flowcharts.
+        - IF the Profile is exactly "Common Man", translate these complex calculations into a deeply relatable, humanized everyday story centered around a specific individual (e.g., Arthur). Show how their daily cost-of-living panic and credit dependencies are direct symptoms of a global economy sustained entirely by a 350% debt-opium bypass. Seamlessly weave your flowcharts and data tables directly into the narrative.
+        - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name, formatting the Debt-Opium Bypass as a formal quantitative theorem.
 
         [YOUR COMPILATION DIRECTIONS]:
         1. Evaluate the real-time wire telemetry specifically regarding the selected vector domain: {topic}.
-        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity Mechanism calculation, the 103.5× NGDI execution, and the True Index matrix formulas). Run the numbers transparently based on the telemetry.
+        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity Mechanism, the 103.5× NGDI execution, the True Index formulas, and the 350% Opium Bypass Index). Run the numbers transparently based on the telemetry.
         3. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
         4. At the absolute bottom of the document, generate your explicit blocks for the CANVA INFOGRAPHIC BLUEPRINT and the VEO 3.1 CINEMATIC TEXT SCRIPT PROMPT.
         """
