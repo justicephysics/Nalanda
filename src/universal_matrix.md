@@ -88,3 +88,16 @@ Where:
 - $TI$ = The empirical human systemic expression of $L$.
 
 As $TI \rightarrow 3.00$, the value of $L \rightarrow 1$, signifying perfect thermodynamic circulation, zero extraction drag, and universal system thriving. When $TI \rightarrow 0$, $L \rightarrow 0$, locking the system into resource stagnation, hyper-steepening gradients, and immediate cascade collapse. The **38× Cancer Mechanism** and **103.5× NGDI** are the formal quantitative indicators tracking the velocity at which legacy GDP architectures drive the circulation vector $L$ directly to zero.
+
+## 7. THE KNOWLEDGE EXTRACTION PARADOX & EXAMS FACTORY LOTTERY
+- Axiom: The conversion of education into a market commodity shifts the network from a circulation engine into a high-elimination lottery.
+- Mathematical Rejection Constraints: 
+  * UPSC Rejection: 99.85% - 99.90%
+  * IIT-JEE Advanced Rejection: 98.75% - 99.00%
+  * NEET Rejection: 95.00% - 99.10%
+- The Opium Subsidy: The coaching industry extracts ₹3.5 Lakh Crore annually in household capital to simulate a statistical edge.
+- Pathological Feedback Metrics: 
+  * Over 13,000 student suicides annually (Surpassing agrarian crisis numbers).
+  * 12,598 examination-failure suicides (2019-2024), averaging >5 deaths per day.
+  * Systemic Plaque: Chronic youth hypertension, psychological batch segregation, and absolute degradation of the Social Independence (SI) coefficient.
+
