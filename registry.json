@@ -1,4 +1,13 @@
 {
   "last_updated": "2026-07-20",
-  "reports": []
+  "reports": [
+    {
+      "id": "N-SYS-GROSS_DOMEST-2026-07-20_15-18",
+      "date": "2026-07-20",
+      "title": "Gross Domestic Product (GDP) Systemic Inversion Analysis",
+      "description": "A structural ledger tracking real-time wire telemetry trends through the metric grounding parameters of the universal matrix.",
+      "discipline": "Macroeconomic Inversion",
+      "file_path": "staged_outputs/report_Gross_Domestic__2026-07-20_15-18.md"
+    }
+  ]
 }
