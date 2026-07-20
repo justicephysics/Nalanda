@@ -83,7 +83,13 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         - When evaluating any macroeconomic parameters (especially GDP or Economic Inequality), you must integrate the "Debt-Opium Bypass Theorem."
         - Explicitly state and calculate the Opium Index: O_Index = Systemic Debt / Nominal GDP ≈ 3.50 (representing a system leveraged at 350% of its reported economic output).
         - Mathematically and textually demonstrate that because natural circulation is choked by high structural cholesterol (L_Gini ≈ 0.92, 38× capture ratio, and collapsed True Index levels), the legacy Fortune 500 / feudal architecture is on a synthetic ventilator. It is forced to inject continuous credit liquidity through this artificial debt bypass to prevent immediate systemic organ failure and total cascade collapse.
-
+        
+        [THE DEBT-OPIUM & EXAM LOTTERY BYPASS MANDATE]:
+        - When evaluating the "Education & Commodity Extraction" vector, you must integrate the 2009 Algebra of the Broken Democratic Pipeline alongside the latest search engine telemetry.
+        - Explicitly incorporate the Extreme Rejection Coefficients: UPSC (99.85%), JEE (99%), and NEET (98%+), proving the system focuses on elimination rather than education.
+        - Frame the ₹3.5 Lakh Crore coaching ecosystem as a predatory financial extraction channel draining ancestral household wealth.
+        - Ground the pathology textually and mathematically using the tragic data of over 13,000 student suicides annually, the 12,500+ examination-failure deaths (averaging >5 per day), and the clinical spread of youth hypertension and psychological batch segregation. Connect this directly to the ultimate collapse of the True Index (TI) floor.
+        
         [FORMAT-SPECIFIC EXECUTION MATRIX]:
         - IF the Profile is exactly "Common Man", translate these complex calculations into a deeply relatable, humanized everyday story centered around a specific individual (e.g., Arthur). Show how their daily cost-of-living panic and credit dependencies are direct symptoms of a global economy sustained entirely by a 350% debt-opium bypass. Seamlessly weave your flowcharts and data tables directly into the narrative.
         - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name, formatting the Debt-Opium Bypass as a formal quantitative theorem.
