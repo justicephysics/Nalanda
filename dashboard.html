@@ -142,7 +142,7 @@
 
         localStorage.setItem('humanos_pat', token);
         runBtn.disabled = true;
-        showStatus('⏳ Transmitting variables to custom dispatch layer...', 'success');
+        showStatus('⏳ Transmitting selected variables to automation server layers...', 'success');
 
         const repoOwner = "justicephysics";
         const repoName = "Nalanda";
@@ -166,7 +166,7 @@
             });
 
             if (response.status === 204) {
-                showStatus('🚀 SUCCESS! Grounded execution triggered via repository dispatch. Processing payload variables now...', 'success');
+                showStatus('🚀 SUCCESS! Grounded execution triggered via repository dispatch. The machine is generating your document now. Check back in 60 seconds.', 'success');
             } else {
                 const errorData = await response.json().catch(() => ({ message: 'Endpoint alignment mismatch.' }));
                 showStatus(`❌ API Error (${response.status}): ${errorData.message}`, 'error');
