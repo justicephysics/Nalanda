@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justice Physics Nalanda // Systemic Inversion Ledger</title>
+    <style>
+        :root {
+            --bg-color: #0B0C10;
+            --card-bg: #1F2833;
+            --accent: #66FCF1;
+            --accent-dim: #45A29E;
+            --text-main: #C5C6C7;
+            --text-bright: #FFFFFF;
+            --warning: #FF3B30;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar layout for 8 Disciplines */
+        .sidebar {
+            width: 320px;
+            background: #11141a;
+            border-right: 1px solid #2e3c4e;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 {
+            color: var(--accent);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #2e3c4e;
+            padding-bottom: 10px;
+        }
+        .discipline-btn {
+            background: transparent;
+            border: 1px solid #2e3c4e;
+            color: var(--text-main);
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .discipline-btn:hover, .discipline-btn.active {
+            background: var(--card-bg);
+            border-color: var(--accent);
+            color: var(--text-bright);
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
+        }
+        /* Main Viewport Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 50px;
+            box-sizing: border-box;
+            max-width: 1000px;
+        }
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #2e3c4e;
+            padding-bottom: 20px;
+        }
+        header h1 {
+            color: var(--text-bright);
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #1c232d;
+            border: 1px solid var(--accent-dim);
+            color: var(--accent);
+            padding: 4px 10px;
+            font-family: monospace;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid #2e3c4e;
+            border-radius: 8px;
+            padding: 24px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .report-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-dim);
+        }
+        .report-meta {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--accent-dim);
+            margin-bottom: 8px;
+        }
+        .report-title {
+            color: var(--text-bright);
+            font-size: 20px;
+            margin: 0 0 12px 0;
+        }
+        .report-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .master-link {
+            display: inline-block;
+            color: #0b0c10;
+            background: var(--accent);
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        .master-link:hover {
+            box-shadow: 0 0 12px var(--accent);
+        }
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+            border: 1px dashed #2e3c4e;
+            border-radius: 8px;
+            color: var(--accent-dim);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar listing the 8 Disciplines -->
+    <div class="sidebar">
+        <h2>8 Frontiers Matrix</h2>
+        <button class="discipline-btn active" onclick="switchDiscipline('Macroeconomic Inversion', this)">1. Macroeconomic Inversion</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Commodity Extraction Dynamics', this)">2. Commodity Extraction Matrix</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Thermodynamic Field Dynamics', this)">3. Thermodynamic Field Dynamics</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Sovereign Debt Debasement', this)">4. Debt & Leverage Velocity</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Cognitive Network Exploitation', this)">5. Cognitive Domination Layers</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Resource Exhaustion Entropy', this)">6. Ecology & Resource Entropy</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Institutional Policy Analysis', this)">7. Institutional Structural Laws</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Civilizational Phase Transition', this)">8. Phase Transition Forecasting</button>
+    </div>
+
+    <!-- Main Content Area where Master Docs render links -->
+    <div class="main-content">
+        <header>
+            <h1 id="disciplineTitle">Macroeconomic Inversion</h1>
+            <div class="status-badge">SYSTEM TELESCOPE STATUS: ACTIVE // OPEN DIRECTORY</div>
+        </header>
+
+        <div id="reportsContainer" class="report-grid">
+            <!-- Dynamic Master Doc Link Cards will insert here via JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let currentDiscipline = "Macroeconomic Inversion";
+        let masterRegistry = [];
+
+        // Dynamic API script loader to fetch the latest published reports matrix
+        async function fetchRegistryData() {
+            try {
+                const response = await fetch('registry.json');
+                const data = await response.json();
+                masterRegistry = data.reports || [];
+                renderActiveReports();
+            } catch (err) {
+                console.error("Registry mapping timeout:", err);
+                document.getElementById('reportsContainer').innerHTML = '<div class="empty-state">Systemic register alignment pending initialization.</div>';
+            }
+        }
+
+        function switchDiscipline(disciplineName, element) {
+            currentDiscipline = disciplineName;
+            document.getElementById('disciplineTitle').innerText = disciplineName;
+            
+            // Toggle selection visual states
+            document.querySelectorAll('.discipline-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            
+            renderActiveReports();
+        }
+
+        function renderActiveReports() {
+            const container = document.getElementById('reportsContainer');
+            const filtered = masterRegistry.filter(r => r.discipline === currentDiscipline);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state">No real-time macro CT scans staged under this discipline vector yet. Launch your inversion engine dashboard to populate this vector.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(report => `
+                <div class="report-card">
+                    <div class="report-meta">ID: ${report.id} // RECORDED: ${report.date}</div>
+                    <h3 class="report-title">${report.title}</h3>
+                    <p class="report-desc">${report.description}</p>
+                    <a href="${report.file_path}" target="_blank" class="master-link">Open Master Document ──►</a>
+                </div>
+            `).join('');
+        }
+
+        // Run network registry lookups immediately on frame configuration load
+        window.onload = fetchRegistryData;
+    </script>
+</body>
+</html>
