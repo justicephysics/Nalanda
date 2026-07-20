@@ -36,5 +36,5 @@ jobs:
           git config --global user.name "Nalanda Automation Engine"
           git config --global user.email "engine@nalanda.internal"
           git add staged_outputs/* registry.json
-          git commit -m "Systemic Ledger Update: Staged dynamically via Inversion Control Dashboard [skip ci]" || echo "No new variations found."
+          git commit -m "Systemic Ledger Update: Staged dynamically via Inversion Control Dashboard [skip ci]" || echo "No variations detected."
           git push origin main
