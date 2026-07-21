@@ -72,6 +72,11 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     models_to_try = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash']
     
     prompt = f"""
+    [STRICT LATEX & GRAPHICS CONSTRAINTS]:
+    - In LaTeX equations ($...$ or $$...$$), NEVER use the ampersand symbol '&' inside \text{} blocks. Always spell out the word 'and' (e.g., use \text{Wealth and Power} instead of \text{Wealth & Power}).
+    - For inline math, use single dollar signs without spaces around the formula (e.g., $\eta_{\text{Edu}}$ or $S$).
+    - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
+    
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
     - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted.
