@@ -16,9 +16,9 @@ Where:
 *   $$GDP_{\text{Nominal}}$$ = Total nominal global economic output.
 
 ### Real-Time Parameter Telemetry:
-*   **Global Nominal GDP ($GDP_{\text{Nominal}}$):** ~$$105.0 \times 10^{12}$$ USD
-*   **Total Systemic Debt ($D_{\text{Systemic}}$):** ~$$367.5 \times 10^{12}$$ USD
-*   **Calculated Opium Index ($O_{\text{Index}}$):**
+*   **Global Nominal GDP ($$GDP_{\text{Nominal}}$$):** ~$$105.0 \times 10^{12}$$ USD
+*   **Total Systemic Debt ($$D_{\text{Systemic}}$$):** ~$$367.5 \times 10^{12}$$ USD
+*   **Calculated Opium Index ($$O_{\text{Index}}$$):**
 
 $$O_{\text{Index}} = \frac{367.5 \times 10^{12}}{105.0 \times 10^{12}} = 3.50 \ \ (350\%)$$
 
