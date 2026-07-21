@@ -8,17 +8,23 @@ import google.generativeai as genai
 from datetime import datetime
 import re
 
-def sanitize_latex_ampersands(markdown_text):
+def sanitize_latex_in_markdown(markdown_text):
     """
-    Finds every \text{...} block in LaTeX equations and replaces 
-    unescaped or backslash-escaped '&' symbols with the word 'and'.
+    1. Sanitizes \text{... & ...} ampersands to avoid KaTeX crashes.
+    2. Wraps orphan \text{...} in prose with math delimiters $...$.
     """
     def fix_text_block(match):
         inner_content = match.group(1)
         cleaned_content = inner_content.replace("\\&", "and").replace("&", "and")
         return f"\\text{{{cleaned_content}}}"
 
-    return re.sub(r'\\text\{([^}]*)\}', fix_text_block, markdown_text)
+    # Replace ampersands inside \text{}
+    text = re.sub(r'\\text\{([^}]*)\}', fix_text_block, markdown_text)
+    
+    # Wrap orphan \text{...} appearing in prose without $ delimiters
+    text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
+    
+    return text
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commodity Extraction"
@@ -84,11 +90,11 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     models_to_try = ['gemini-3.5-flash', 'gemini-3.0-flash', 'gemini-2.5-flash']
     
     prompt = f"""
-    [STRICT LATEX & BOUNDARY CONSTRAINTS]:
+    [STRICT LATEX & LIST CONSTRAINTS]:
     - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\&') inside \\text{{}} blocks. Always spell out the word 'and'.
-    - NEVER put long multi-word quotes or full slogans inside a single LaTeX display block ($$...$$), as they breach container boundaries.
-    - Format all quotes and slogans as clean Markdown Blockquotes (e.g. > "Education is Not a Commodity") or as bullet points.
-    - For inline math, use single dollar signs without spaces around the formula (e.g. $\\eta_{{\\text{{Edu}}}}$ or $S$).
+    - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $ ... $ math delimiters.
+    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items, as it distorts list formatting.
+    - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
@@ -189,8 +195,8 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # Programmatically sanitize LaTeX ampersands
-    final_report = sanitize_latex_ampersands(final_report)
+    # Sanitize LaTeX ampersands and orphan \text{} blocks
+    final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
