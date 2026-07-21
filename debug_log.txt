@@ -2,7 +2,7 @@ STEP 01 | ✅ [PASS] | Python Modules Import
 Details: google-generativeai, requests, bs4 ready.
 ------------------------------------------------------------
 STEP 02 | ✅ [PASS] | GEMINI_API_KEY Secrets Check
-Details: Key present: AQ.A...Cisg | Topic: 'Gross Domestic Product (GDP)'
+Details: Key present: AQ.A...Cisg | Topic: 'Systemic Ruin of Education and Commodity Extraction'
 ------------------------------------------------------------
 STEP 03 | ✅ [PASS] | Directory Structure Verification
 Details: All paths verified: ['src/verticals/local', 'src/verticals/universal', 'staged_outputs']
