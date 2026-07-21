@@ -80,9 +80,12 @@
             display: none;
             font-family: monospace;
             font-size: 13px;
+            line-height: 1.6;
         }
+        .info { background: #1c2b3d; border: 1px solid #2e5c8a; color: #a5c9f3; }
         .success { background: #1c3d27; border: 1px solid #2e7d32; color: #a5d6a7; }
         .error { background: #421d1d; border: 1px solid #c62828; color: #ef9a9a; }
+        .log-link { color: #66FCF1; font-weight: bold; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -132,7 +135,6 @@
         const token = document.getElementById('githubToken').value;
         const topic = document.getElementById('topicSelect').value;
         const format = document.getElementById('formatSelect').value;
-        const statusBox = document.getElementById('status');
         const runBtn = document.getElementById('runBtn');
 
         if (!token) {
@@ -142,14 +144,14 @@
 
         localStorage.setItem('humanos_pat', token);
         runBtn.disabled = true;
-        showStatus('⏳ Transmitting selected variables to automation server layers...', 'success');
+        showStatus('⏳ Transmitting signal to GitHub Actions cloud server...', 'info');
 
         const repoOwner = "justicephysics";
         const repoName = "Nalanda";
-        const url = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
+        const dispatchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`;
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch(dispatchUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -158,31 +160,75 @@
                 },
                 body: JSON.stringify({
                     event_type: "dashboard_trigger",
-                    client_payload: {
-                        topic: topic,
-                        format: format
-                    }
+                    client_payload: { topic: topic, format: format }
                 })
             });
 
             if (response.status === 204) {
-                showStatus('🚀 SUCCESS! Grounded execution triggered via repository dispatch. The machine is generating your document now. Check back in 60 seconds.', 'success');
+                showStatus('🟡 [1/3] Signal Received by GitHub. Waiting for Cloud Runner to initialize...', 'info');
+                // Start live polling of the workflow runner
+                pollWorkflowStatus(token, repoOwner, repoName, Date.now());
             } else {
-                const errorData = await response.json().catch(() => ({ message: 'Endpoint alignment mismatch.' }));
-                showStatus(`❌ API Error (${response.status}): ${errorData.message}`, 'error');
+                const errorData = await response.json().catch(() => ({ message: 'Endpoint mismatch' }));
+                showStatus(`❌ API Dispatch Error (${response.status}): ${errorData.message}`, 'error');
+                runBtn.disabled = false;
             }
         } catch (err) {
-            showStatus(`❌ Connection Crash: ${err.message}`, 'error');
-        } finally {
+            showStatus(`❌ Connection Failure: ${err.message}`, 'error');
             runBtn.disabled = false;
         }
+    }
+
+    async function pollWorkflowStatus(token, owner, repo, triggerTime) {
+        const runsUrl = `https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=3`;
+        const runBtn = document.getElementById('runBtn');
+        let checks = 0;
+
+        const interval = setInterval(async () => {
+            checks++;
+            try {
+                const res = await fetch(runsUrl, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                
+                if (data.workflow_runs && data.workflow_runs.length > 0) {
+                    const latestRun = data.workflow_runs[0];
+                    const status = latestRun.status;         // queued, in_progress, completed
+                    const conclusion = latestRun.conclusion; // success, failure, null
+                    const htmlUrl = latestRun.html_url;
+
+                    if (status === 'queued') {
+                        showStatus(`🟡 [1/3] Cloud Runner Queued... (Attempt ${checks})`, 'info');
+                    } else if (status === 'in_progress') {
+                        showStatus(`🔵 [2/3] Cloud Runner Active! Executing Python Engine & Diagnostics...\n\n🔗 View Live Terminal: <a href="${htmlUrl}" target="_blank" class="log-link">Click Here to Watch Logs Live</a>`, 'info');
+                    } else if (status === 'completed') {
+                        clearInterval(interval);
+                        runBtn.disabled = false;
+                        if (conclusion === 'success') {
+                            showStatus(`🟢 [3/3] SUCCESS! Master report compiled and published live!\n\n👉 <a href="index.html" class="log-link">Open Public Portal (index.html) to view report</a>`, 'success');
+                        } else {
+                            showStatus(`🔴 [3/3] CLOUD RUNNER FAILED (${conclusion.toUpperCase()})!\n\n👉 <a href="${htmlUrl}" target="_blank" class="log-link">Click here to open GitHub Logs and see exact error</a>`, 'error');
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Polling error:", e);
+            }
+
+            if (checks > 30) { // Timeout after ~2.5 mins
+                clearInterval(interval);
+                runBtn.disabled = false;
+                showStatus('⚠️ Timed out waiting for status update. Please check the Actions tab on GitHub manually.', 'error');
+            }
+        }, 5000); // Check every 5 seconds
     }
 
     function showStatus(msg, type) {
         const statusBox = document.getElementById('status');
         statusBox.style.display = 'block';
         statusBox.className = `status-box ${type}`;
-        statusBox.innerText = msg;
+        statusBox.innerHTML = msg.replace(/\n/g, '<br>');
     }
 </script>
 </body>
