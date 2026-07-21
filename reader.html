@@ -3,81 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nalanda Ledger Viewport</title>
-    <!-- Core layout styling engines -->
+    <title>Inversion Core Reader</title>
+
+    <!-- Marked.js for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- KaTeX CSS & JS for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Mermaid.js for Diagram Rendering -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         body {
-            background-color: #0B0C10;
-            color: #C5C6C7;
+            background-color: #0b0c10;
+            color: #c5c6c7;
             font-family: 'Segoe UI', system-ui, sans-serif;
             line-height: 1.7;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
         }
-        .viewport-card {
-            width: 100%;
-            max-width: 850px;
-            background: #11141a;
-            border: 1px solid #2e3c4e;
+        .content-card {
+            background: #1f2833;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 1px solid #2e3c4e;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
-        a { color: #66FCF1; text-decoration: none; }
-        a:hover { text-underline-offset: 4px; text-decoration: underline; }
-        h1, h2, h3 { color: #FFFFFF; border-bottom: 1px solid #2e3c4e; padding-bottom: 8px; margin-top: 30px; }
-        h1 { color: #66FCF1; }
-        pre, code { font-family: monospace; background: #1f2833; color: #FFFFFF; padding: 3px 6px; border-radius: 4px; }
-        pre { padding: 15px; overflow-x: auto; border-left: 3px solid #66FCF1; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { border: 1px solid #2e3c4e; padding: 12px; text-align: left; }
-        th { background: #1f2833; color: #66FCF1; }
-        .back-nav { display: inline-block; margin-bottom: 30px; font-family: monospace; font-size: 14px; }
+        h1, h2, h3 { color: #66fcf1; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #0b0c10;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #45a29e;
+            text-align: left;
+        }
+        th { background: #1f2833; color: #66fcf1; }
+        .mermaid {
+            background: #0b0c10;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="viewport-card">
-    <a href="index.html" class="back-nav"> ◄◄ Return to 8 Frontiers Directory Matrix</a>
-    <div id="renderZone">📡 Establishing secure connection to ledger asset layers...</div>
+<div class="content-card" id="documentRenderArea">
+    <p>⏳ Loading master document...</p>
 </div>
 
 <script>
+    // Initialize Mermaid.js
     mermaid.initialize({ startOnLoad: false, theme: 'dark' });
 
-    async function loadAndCompileMarkdownAsset() {
+    async function loadAndRenderDocument() {
+        const renderArea = document.getElementById('documentRenderArea');
         const urlParams = new URLSearchParams(window.location.search);
-        const fileTarget = urlParams.get('file');
-        const displayZone = document.getElementById('renderZone');
-
-        if (!fileTarget) {
-            displayZone.innerHTML = "❌ Error: System request parameters missing target asset path location.";
-            return;
-        }
+        const filePath = urlParams.get('file') || 'staged_outputs/latest_report.md';
 
         try {
-            const response = await fetch(fileTarget);
-            if (!response.ok) throw new Error("Asset missing from folder vault register.");
-            let markdownText = await response.text();
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error("Document not found at path: " + filePath);
             
-            // Compile raw text to high-fidelity HTML layout structures
-            displayZone.innerHTML = marked.parse(markdownText);
-            
-            // Re-fire visual engines to draw equations and diagrams cleanly
-            await mermaid.run();
-            if (window.MathJax) {
-                MathJax.typesetPromise();
+            const markdownText = await response.text();
+
+            // 1. Convert Markdown to HTML
+            renderArea.innerHTML = marked.parse(markdownText);
+
+            // 2. Transform Mermaid code blocks into renderable divs
+            const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+            codeBlocks.forEach((block, index) => {
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                mermaidDiv.textContent = block.textContent;
+                block.parentElement.replaceWith(mermaidDiv);
+            });
+
+            // 3. Render Mermaid Diagrams
+            await mermaid.run({ nodes: renderArea.querySelectorAll('.mermaid') });
+
+            // 4. Render KaTeX Math (handling both $ inline $ and $$ display $$)
+            if (window.renderMathInElement) {
+                renderMathInElement(renderArea, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true }
+                    ],
+                    throwOnError: false
+                });
             }
         } catch (err) {
-            displayZone.innerHTML = `❌ System Telemetry Failure: ${err.message}`;
+            renderArea.innerHTML = `<h3 style="color:#ef9a9a;">❌ Render Failure</h3><p>${err.message}</p>`;
         }
     }
 
-    window.onload = loadAndCompileMarkdownAsset;
+    // Execute rendering on page load
+    window.addEventListener('DOMContentLoaded', loadAndRenderDocument);
 </script>
 </body>
 </html>
