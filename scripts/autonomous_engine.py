@@ -6,6 +6,21 @@ import requests
 from bs4 import BeautifulSoup
 import google.generativeai as genai
 from datetime import datetime
+import re
+
+def sanitize_latex_ampersands(markdown_text):
+    """
+    Finds every \text{...} block in LaTeX equations and replaces 
+    unescaped '&' symbols with the word 'and'.
+    """
+    def fix_text_block(match):
+        inner_content = match.group(1)
+        # Replace & with 'and' inside \text{}
+        cleaned_content = inner_content.replace("&", "and")
+        return f"\\text{{{cleaned_content}}}"
+
+    # Target \text{...} blocks across inline and display math
+    return re.sub(r'\\text\{([^}]*)\}', fix_text_block, markdown_text)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commodity Extraction"
