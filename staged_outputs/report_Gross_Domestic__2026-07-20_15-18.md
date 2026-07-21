@@ -4,7 +4,7 @@ This section establishes the real-time baseline configuration of the global macr
 
 Legacy GDP operates as an inflationary accounting illusion that registers debt expansion as economic value creation. To correct for this systemic distortion, we define the **Debt-Opium Bypass Theorem**, which measures the reliance of the economic superstructure on continuous synthetic credit injections to prevent catastrophic deleveraging.
 
-The **Opium Index ($$O_{\text{Index}}$$)** is formulated as follows:
+The **Opium Index ($O_{\text{Index}}$)** is formulated as follows:
 
 $$O_{\text{Index}} = \frac{D_{\text{Systemic}}}{GDP_{\text{Nominal}}}$$
 
