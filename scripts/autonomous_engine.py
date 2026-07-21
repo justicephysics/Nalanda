@@ -80,7 +80,7 @@ def fetch_live_macro_news(topic_string):
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
     """Compiles the targeted execution document using absolute structural constraints."""
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-3.5-flash')
         
         prompt = f"""
         [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
