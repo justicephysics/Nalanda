@@ -65,6 +65,13 @@
     // Initialize Mermaid.js
     mermaid.initialize({ startOnLoad: false, theme: 'dark' });
 
+    function sanitizeLatexForKaTeX(rawText) {
+        // Replaces & with 'and' inside \text{...} blocks to prevent KaTeX parse errors
+        return rawText.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
+            return '\\text{' + innerText.replace(/&/g, 'and') + '}';
+        });
+    }
+
     async function loadAndRenderDocument() {
         const renderArea = document.getElementById('documentRenderArea');
         const urlParams = new URLSearchParams(window.location.search);
@@ -74,24 +81,29 @@
             const response = await fetch(filePath);
             if (!response.ok) throw new Error("Document not found at path: " + filePath);
             
-            const markdownText = await response.text();
+            let markdownText = await response.text();
 
-            // 1. Convert Markdown to HTML
+            // 1. Sanitize LaTeX ampersands programmatically before parsing
+            markdownText = sanitizeLatexForKaTeX(markdownText);
+
+            // 2. Convert Markdown to HTML
             renderArea.innerHTML = marked.parse(markdownText);
 
-            // 2. Transform Mermaid code blocks into renderable divs
+            // 3. Transform Mermaid code blocks into renderable divs
             const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-            codeBlocks.forEach((block, index) => {
+            codeBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
                 mermaidDiv.textContent = block.textContent;
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            // 3. Render Mermaid Diagrams
-            await mermaid.run({ nodes: renderArea.querySelectorAll('.mermaid') });
+            // 4. Render Mermaid Diagrams
+            if (renderArea.querySelectorAll('.mermaid').length > 0) {
+                await mermaid.run({ nodes: renderArea.querySelectorAll('.mermaid') });
+            }
 
-            // 4. Render KaTeX Math (handling both $ inline $ and $$ display $$)
+            // 5. Render KaTeX Math (handling both $ inline $ and $$ display $$)
             if (window.renderMathInElement) {
                 renderMathInElement(renderArea, {
                     delimiters: [
