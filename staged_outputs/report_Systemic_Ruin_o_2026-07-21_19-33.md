@@ -149,7 +149,7 @@ Across the country, the youth are refusing to accept this manufactured failure.
 $$\begin{aligned}
 \text{"Education is Not a Commodity"} \\
 \text{"Empathy Over Empire"} \\
-\text{"Free, Fair \& Quality Education is a Right of All"}
+\text{"Free, Fair & Quality Education is a Right of All"}
 \end{aligned}$$
 
 This is not a simple demand for exam reform. It is a fundamental struggle for the survival of the youth and the cognitive sovereignty of the nation.
