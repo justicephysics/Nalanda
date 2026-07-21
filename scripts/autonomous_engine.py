@@ -15,7 +15,6 @@ def sanitize_latex_ampersands(markdown_text):
     """
     def fix_text_block(match):
         inner_content = match.group(1)
-        # Replace & with 'and' inside \text{}
         cleaned_content = inner_content.replace("&", "and")
         return f"\\text{{{cleaned_content}}}"
 
@@ -83,13 +82,12 @@ def fetch_live_macro_news(topic_string):
     return f"Live Telemetry Baseline: Active tracking engaged for vector '{topic_string}' matching 2026 state variables."
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    # Try gemini-3.5-flash or gemini-3.0-flash with retry exponential backoff
-    models_to_try = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash']
+    models_to_try = ['gemini-3.5-flash', 'gemini-3.0-flash', 'gemini-2.5-flash']
     
     prompt = f"""
     [STRICT LATEX & GRAPHICS CONSTRAINTS]:
-    - In LaTeX equations ($...$ or $$...$$), NEVER use the ampersand symbol '&' inside \text{} blocks. Always spell out the word 'and' (e.g., use \text{Wealth and Power} instead of \text{Wealth & Power}).
-    - For inline math, use single dollar signs without spaces around the formula (e.g., $\eta_{\text{Edu}}$ or $S$).
+    - In LaTeX equations ($...$ or $$...$$), NEVER use the ampersand symbol '&' inside \\text{{}} blocks. Always spell out the word 'and' (e.g., use \\text{{Wealth and Power}} instead of \\text{{Wealth & Power}}).
+    - For inline math, use single dollar signs without spaces around the formula (e.g., $\\eta_{{\\text{{Edu}}}}$ or $S$).
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
@@ -189,6 +187,9 @@ if __name__ == "__main__":
     live_telemetry = fetch_live_macro_news(TARGET_TOPIC)
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
+    
+    # 🔒 Programmatically sanitize LaTeX ampersands before writing to file
+    final_report = sanitize_latex_ampersands(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
