@@ -1,3 +1,6 @@
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 ### `[SYSTEM_EXECUTION_STEP_01]` SYSTEMIC TELEMETRY & THE DEBT-OPIUM BYPASS THEOREM
 
 This section establishes the real-time baseline configuration of the global macroeconomic framework under the legacy Gross Domestic Product (GDP) vector. 
