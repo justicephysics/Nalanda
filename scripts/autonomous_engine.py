@@ -7,8 +7,8 @@ import google.generativeai as genai
 from datetime import datetime
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Gross Domestic Product (GDP)"
-TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "LinkedIn Professional Article Format"
+TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commodity Extraction"
+TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "Common Man"
 
 if not GEMINI_API_KEY:
     print("❌ FATAL ERROR: GEMINI_API_KEY missing from system secret registers.")
@@ -16,18 +16,48 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-def load_core_matrix_context():
-    """Ingests the structural mathematical axioms from the universal matrix ledger."""
-    matrix_path = "src/universal_matrix.md"
-    if not os.path.exists(matrix_path):
-        print("⚠️ Matrix reference folder empty.")
-        return ""
-    with open(matrix_path, "r", encoding="utf-8") as file:
-        return file.read()
+def get_vector_key(topic_string):
+    """Maps the topic string from dashboard.html to its vertical file key."""
+    topic_map = {
+        "Systemic Ruin of Education and Commodity Extraction": "education",
+        "Gross Domestic Product (GDP)": "macroeconomics",
+        "Economic Inequality and Wealth Distribution": "inequality",
+        "Climate Change and Resource Exhaustion": "ecology",
+        "Artificial General Intelligence (AGI) Allocation": "agi"
+    }
+    return topic_map.get(topic_string, "education")
+
+def load_vertical_matrix_context(topic_string):
+    """
+    Loads BOTH the Local Empirical Matrix and Universal Physics Matrix 
+    for the selected vertical from src/verticals/local/ and src/verticals/universal/.
+    """
+    vector_key = get_vector_key(topic_string)
+    
+    local_path = f"src/verticals/local/{vector_key}_matrix.md"
+    universal_path = f"src/verticals/universal/{vector_key}_matrix.md"
+    
+    context_payload = ""
+    
+    if os.path.exists(local_path):
+        with open(local_path, "r", encoding="utf-8") as f:
+            context_payload += f"\n--- LOCAL EMPIRICAL MATRIX ({vector_key.upper()}) ---\n" + f.read()
+            print(f"✅ Loaded Local Matrix: {local_path}")
+    else:
+        print(f"⚠️ Local matrix missing at {local_path}")
+
+    if os.path.exists(universal_path):
+        with open(universal_path, "r", encoding="utf-8") as f:
+            context_payload += f"\n--- UNIVERSAL PHYSICS MATRIX ({vector_key.upper()}) ---\n" + f.read()
+            print(f"✅ Loaded Universal Matrix: {universal_path}")
+    else:
+        print(f"⚠️ Universal matrix missing at {universal_path}")
+        
+    return context_payload
 
 def fetch_live_macro_news(topic_string):
     """Scrapes live real-time wire telemetry matched to the selected domain vector."""
-    search_query = f"latest global {topic_string} trends analysis news 2026"
+    search_query = f"latest {topic_string} paper leak protests news 2026"
     search_url = f"https://html.duckduckgo.com/html/?q={search_query.replace(' ', '+')}"
     headers = {"User-Agent": "Mozilla/5.0 InversionControlDashboard/3.0"}
     
@@ -41,16 +71,16 @@ def fetch_live_macro_news(topic_string):
             return f"Baseline Status: Tracking layout limits for {topic_string}."
         
         context_pack = []
-        for i in range(min(3, len(titles))):
+        for i in range(min(4, len(titles))):
             context_pack.append(f"Telemetry {i+1}: {titles[i].text.strip()} - {snippets[i].text.strip()}")
         return "\n".join(context_pack)
     except Exception as e:
         return f"Telemetry Bypass: Search engine tracking timeout for {topic_string}."
 
-def compile_custom_inversion_report(news_payload, core_context, topic, format_style):
+def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
     """Compiles the targeted execution document using absolute structural constraints."""
     try:
-        model = genai.GenerativeModel('gemini-3.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         prompt = f"""
         [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
@@ -67,11 +97,11 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
 
         [NATIVE VISUALIZATION & DIAGRAMMING MANDATE]:
         - You MUST integrate native Markdown visual components directly within the content steps.
-        - Embed at least ONE comprehensive, native **Mermaid.js flowchart** (using ```mermaid ... ``` blocks) that visually charts out the extraction architecture, the debt ventilator pipelines, or structural barriers.
+        - Embed at least ONE comprehensive, native **Mermaid.js flowchart** (using ```mermaid ... ``` blocks) that visually charts out the extraction architecture or structural barriers.
         - Embed detailed, highly clean **Markdown structural data matrices / comparison grids** to visually plot numeric variances side-by-side.
 
-        [CORE UNIVERSAL GROUNDING LOGIC]:
-        {core_context}
+        [CORE MATRIX CONTEXT (LOCAL + UNIVERSAL DUAL SYNTHESIS)]:
+        {matrix_context}
         
         [LIVE COMPILATION VARIABLES]:
         - Targeted Systemic Vector Query: {topic}
@@ -79,18 +109,14 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         
         [REAL-TIME WIRE TELEMETRY]:
         {news_payload}
-        
-        [THE DEBT-OPIUM & EXAM LOTTERY BYPASS MANDATE]:
-        - When evaluating any macroeconomic parameters (especially GDP or Economic Inequality), you must integrate the "Debt-Opium Bypass Theorem." Explicitly calculate the Opium Index (O_Index = Systemic Debt / Nominal GDP ≈ 3.50), proving that the legacy feudal superstructure is on a synthetic credit ventilator.
-        - When evaluating the "Systemic Ruin of Education and Commodity Extraction" vector, you must integrate the 2009 Algebra of the Broken Democratic Pipeline alongside the latest structural rejection telemetry: UPSC (99.92%), JEE (99%), and NEET (98%+). Expose the ₹3.5 Lakh Crore private coaching industry as a predatory wealth drain filter, and anchor the systemic toll using the data tracking over 13,000 student suicides annually. Connect all structural pathways back to the ultimate collapse of the True Index (TI) floor.
 
         [FORMAT-SPECIFIC EXECUTION MATRIX]:
-        - IF the Profile is exactly "Common Man", translate these complex calculations into a deeply relatable, humanized everyday story centered around a specific individual (e.g., Arthur). Show how their daily cost-of-living panic and credit dependencies are direct symptoms of a global economy sustained entirely by a 350% debt-opium bypass or an elimination lottery exam matrix. Weave flowcharts and data tables directly into the narrative.
+        - IF the Profile is "Common Man", translate these calculations into a deeply relatable, humanized everyday story centered around a student or family navigating the education system. Weave flowcharts and data tables directly into the narrative.
         - FOR ALL OTHER PROFILES (Ledger, Pitch, Academic, etc.), maintain the precise, highly specialized, professional institutional format requested by that profile name, formatting the findings as a formal quantitative theorem.
 
         [YOUR COMPILATION DIRECTIONS]:
         1. Evaluate the real-time wire telemetry specifically regarding the selected vector domain: {topic}.
-        2. Seamlessly execute and present the mathematical proofs detailed in your core universal grounding logic (The 38× Disparity Mechanism, the 103.5× NGDI execution, the True Index formulas, and the 350% Opium Bypass Index). Run the numbers transparently based on the telemetry.
+        2. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
         3. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
         4. At the absolute bottom of the document, generate your explicit blocks for the CANVA INFOGRAPHIC BLUEPRINT and the VEO 3.1 CINEMATIC TEXT SCRIPT PROMPT.
         """
@@ -102,33 +128,24 @@ def compile_custom_inversion_report(news_payload, core_context, topic, format_st
         sys.exit(1)
 
 def auto_update_registry_ledger(filename, topic, format_style, timestamp):
-    """Automatically parses and registers the entry metadata into the root catalog json."""
+    """Automatically parses and registers the entry metadata into root registry.json."""
     registry_path = "registry.json"
     current_date = datetime.now().strftime("%Y-%m-%d")
     
-    # Map the selected vector keyword cleanly to the corresponding public 8 Frontiers tab
     topic_to_discipline = {
+        "Systemic Ruin of Education and Commodity Extraction": "Commodity Extraction Dynamics",
         "Gross Domestic Product (GDP)": "Macroeconomic Inversion",
         "Economic Inequality and Wealth Distribution": "Macroeconomic Inversion",
-        "Systemic Ruin of Education and Commodity Extraction": "Commodity Extraction Dynamics",
         "Climate Change and Resource Exhaustion": "Resource Exhaustion Entropy",
         "Artificial General Intelligence (AGI) Allocation": "Cognitive Network Exploitation"
     }
-    assigned_discipline = topic_to_discipline.get(topic, "Macroeconomic Inversion")
+    assigned_discipline = topic_to_discipline.get(topic, "Commodity Extraction Dynamics")
     
-    # Generate structured descriptive tags
     clean_topic = "".join([c if c.isalnum() else "_" for c in topic[:12]])
     report_id = f"N-SYS-{clean_topic.upper()}-{timestamp}"
     
-    if format_style == "Common Man":
-        title = f"{topic} Inversion Narrative // The Arthur Case Matrix"
-        description = f"A deeply empathetic humanized story mapping the localized cost-of-living panic onto global resource concentration vectors."
-    elif format_style == "Academic University Professor Abstract Paper":
-        title = f"The Thermodynamic Disruption of {topic} Accounting Models"
-        description = f"A formal, peer-grade analytical manuscript detailing mathematical divergence boundaries and systemic arterial plaque thresholds."
-    else:
-        title = f"{topic} Systemic Inversion Analysis"
-        description = f"A structural ledger tracking real-time wire telemetry trends through the metric grounding parameters of the universal matrix."
+    title = f"{topic} Inversion Analysis // {format_style}"
+    description = f"Dual-synthesis (Local + Universal) structural master document evaluated under real-time wire telemetry."
 
     new_record = {
         "id": report_id,
@@ -139,7 +156,6 @@ def auto_update_registry_ledger(filename, topic, format_style, timestamp):
         "file_path": filename
     }
 
-    # Load, append, and write metadata records securely
     try:
         if os.path.exists(registry_path):
             with open(registry_path, "r", encoding="utf-8") as f:
@@ -160,15 +176,15 @@ def auto_update_registry_ledger(filename, topic, format_style, timestamp):
         print(f"⚠️ REGISTRY ERROR: Mismatch during indexing mapping operations: {str(e)}")
 
 if __name__ == "__main__":
-    print(f"🚀 Dashboard Activation Request Captured via Repository Dispatch.")
+    print(f"🚀 Dynamic Modular Execution Triggered.")
     print(f"📡 Selected Systemic Vector: {TARGET_TOPIC}")
-    print(f"📋 Selected Content Destination: {TARGET_FORMAT}")
+    print(f"📋 Selected Target Profile: {TARGET_FORMAT}")
     
-    core_logic = load_core_matrix_context()
+    matrix_context = load_vertical_matrix_context(TARGET_TOPIC)
     live_telemetry = fetch_live_macro_news(TARGET_TOPIC)
     
     print("🧠 Ingesting payloads into dynamic Gemini template compiler...")
-    final_report = compile_custom_inversion_report(live_telemetry, core_logic, TARGET_TOPIC, TARGET_FORMAT)
+    final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
@@ -179,6 +195,4 @@ if __name__ == "__main__":
         file.write(final_report)
         
     print(f"✅ SUCCESS: Formatted output successfully locked into ledger path: {filename}")
-    
-    # Fire the automated cataloging routine to update index.html links instantly
     auto_update_registry_ledger(filename, TARGET_TOPIC, TARGET_FORMAT, time_stamp_str)
