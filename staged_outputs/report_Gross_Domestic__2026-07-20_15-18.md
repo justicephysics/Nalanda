@@ -9,8 +9,8 @@ The **Opium Index ($O_{\text{Index}}$)** is formulated as follows:
 $$O_{\text{Index}} = \frac{D_{\text{Systemic}}}{GDP_{\text{Nominal}}}$$
 
 Where:
-*   $D_{\text{Systemic}}$ = Aggregate global public, corporate, and household debt layers.
-*   $GDP_{\text{Nominal}}$ = Total nominal global economic output.
+*   $$D_{\text{Systemic}}$$ = Aggregate global public, corporate, and household debt layers.
+*   $$GDP_{\text{Nominal}}$$ = Total nominal global economic output.
 
 ### Real-Time Parameter Telemetry:
 *   **Global Nominal GDP ($GDP_{\text{Nominal}}$):** ~$105.0 \times 10^{12}$ USD
