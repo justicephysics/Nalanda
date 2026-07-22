@@ -106,9 +106,9 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     
     prompt = f"""
     [STRICT LATEX & LIST CONSTRAINTS]:
-    - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\\&') inside \\text{{}} blocks. Always spell out the word 'and'.
-    - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $ ... $ math delimiters.
-    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
+    - In LaTeX equations ($$...$$), NEVER use ampersand symbols ('&' or '\\&') inside \\text{{}} blocks. Always spell out the word 'and'.
+    - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $$ ... $$ math delimiters.
+    - Inside bulleted or numbered lists, use compact inline math ($$ ... $$) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
     - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
     
