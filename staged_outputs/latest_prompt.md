@@ -84,6 +84,11 @@
 
 ## 5. THE SOVEREIGNTY TRIAD DEPENDENCY (TI COUPLING)
 - True Index Interdependence: TI = (PI + EI + SI) × (PI × EI × SI)
+- PI = 0.90
+- EI = 0.08
+- SI = 0.80
+- TI = (0.90 + 0.08 + 0.70) × (0.90 × 0.08 × 0.70)
+- TI = 0.084672
 - Sovereignty Coupling:
   * Political Independence (PI) collapses due to mass psychological manipulation and demagoguery of uneducated nodes.
   * Economic Independence (EI) collapses as youth incur massive credential debt without gaining functional skills (EI -> 0.08).
@@ -98,13 +103,13 @@
     
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Academic University Professor Abstract Paper
+    - Required Presentation Layout Profile: Common Man
     
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Academic University Professor Abstract Paper.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Common Man.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
