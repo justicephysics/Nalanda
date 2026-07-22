@@ -21,6 +21,11 @@
 
 ## 5. THE SOVEREIGNTY TRIAD DEPENDENCY (TI COUPLING)
 - True Index Interdependence: TI = (PI + EI + SI) × (PI × EI × SI)
+- PI = 0.90
+- EI = 0.08
+- SI = 0.80
+- TI = (0.90 + 0.08 + 0.70) × (0.90 × 0.08 × 0.70)
+- TI = 0.084672
 - Sovereignty Coupling:
   * Political Independence (PI) collapses due to mass psychological manipulation and demagoguery of uneducated nodes.
   * Economic Independence (EI) collapses as youth incur massive credential debt without gaining functional skills (EI -> 0.08).
