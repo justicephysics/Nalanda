@@ -44,6 +44,6 @@ jobs:
         run: |
           git config --global user.name "Nalanda Automation Engine"
           git config --global user.email "engine@nalanda.internal"
-          git add staged_outputs/* registry.json debug_log.txt
+          git add staged_outputs/* registry.json debug_log.txt prompt.md
           git commit -m "Systemic Ledger Update: Staged dynamically [skip ci]" || echo "No variations detected."
           git push origin main
