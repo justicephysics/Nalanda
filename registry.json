@@ -48,6 +48,14 @@
       "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
       "discipline": "Commodity Extraction Dynamics",
       "file_path": "staged_outputs/report_Systemic_Ruin_o_2026-07-22_05-16.md"
+    },
+    {
+      "id": "N-SYS-GROSS_DOMEST-2026-07-22_05-22",
+      "date": "2026-07-22",
+      "title": "Gross Domestic Product (GDP) Inversion Analysis // Common Man",
+      "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
+      "discipline": "Macroeconomic Inversion",
+      "file_path": "staged_outputs/report_Gross_Domestic__2026-07-22_05-22.md"
     }
   ]
 }
