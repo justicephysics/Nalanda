@@ -1,8 +1,8 @@
 
     [STRICT LATEX & LIST CONSTRAINTS]:
-    - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\&') inside \text{} blocks. Always spell out the word 'and'.
-    - NEVER put raw \text{...} commands in standard prose unless enclosed within $ ... $ math delimiters.
-    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
+    - In LaTeX equations ($$...$$), NEVER use ampersand symbols ('&' or '\&') inside \text{} blocks. Always spell out the word 'and'.
+    - NEVER put raw \text{...} commands in standard prose unless enclosed within $$ ... $$ math delimiters.
+    - Inside bulleted or numbered lists, use compact inline math ($$ ... $$) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
     - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
     
@@ -103,13 +103,13 @@
     
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Common Man
+    - Required Presentation Layout Profile: Long Comprehensive System Ledger
     
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Common Man.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Long Comprehensive System Ledger.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
