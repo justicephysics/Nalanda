@@ -30,7 +30,7 @@ if not GEMINI_API_KEY:
     print("❌ FATAL ERROR: _API_KEY missing from system secret registers.")
     sys.exit(1)
 
-genai.configure(api_key=_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
 
 def get_vector_key(topic_string):
     topic_map = {
