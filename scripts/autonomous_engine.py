@@ -18,12 +18,8 @@ def sanitize_latex_in_markdown(markdown_text):
         cleaned_content = inner_content.replace("\\&", "and").replace("&", "and")
         return f"\\text{{{cleaned_content}}}"
 
-    # Replace ampersands inside \text{}
     text = re.sub(r'\\text\{([^}]*)\}', fix_text_block, markdown_text)
-    
-    # Wrap orphan \text{...} appearing in prose without $ delimiters
     text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
-    
     return text
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -86,14 +82,33 @@ def fetch_live_macro_news(topic_string):
         
     return f"Live Telemetry Baseline: Active tracking engaged for vector '{topic_string}' matching 2026 state variables."
 
+def dump_prompt_audit_file(prompt_text):
+    """
+    Saves the exact generated prompt string to prompt.md (root) 
+    and staged_outputs/latest_prompt.md for inspection on GitHub.
+    """
+    try:
+        # Save to root prompt.md
+        with open("prompt.md", "w", encoding="utf-8") as f:
+            f.write(prompt_text)
+            
+        # Save to staged_outputs/latest_prompt.md
+        os.makedirs("staged_outputs", exist_ok=True)
+        with open("staged_outputs/latest_prompt.md", "w", encoding="utf-8") as f:
+            f.write(prompt_text)
+            
+        print("📝 PROMPT AUDIT DUMP SUCCESS: Prompt written to 'prompt.md' and 'staged_outputs/latest_prompt.md'.")
+    except Exception as e:
+        print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
+
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-3.5-flash', 'gemini-3.0-flash', 'gemini-2.5-flash']
+    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
     
     prompt = f"""
     [STRICT LATEX & LIST CONSTRAINTS]:
-    - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\&') inside \\text{{}} blocks. Always spell out the word 'and'.
+    - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\\&') inside \\text{{}} blocks. Always spell out the word 'and'.
     - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $ ... $ math delimiters.
-    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items, as it distorts list formatting.
+    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
     - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
     
@@ -117,6 +132,9 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     """
+
+    # 📌 DUMP THE GENERATED PROMPT TO DISK
+    dump_prompt_audit_file(prompt)
 
     for model_name in models_to_try:
         for attempt in range(3):
@@ -195,7 +213,6 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # Sanitize LaTeX ampersands and orphan \text{} blocks
     final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
