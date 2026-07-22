@@ -102,7 +102,7 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    models_to_try = ['gemini-3.5-flash', 'gemini-3.0-flash', 'gemini-2.5-flash']
     
     prompt = f"""
     [STRICT LATEX & LIST CONSTRAINTS]:
