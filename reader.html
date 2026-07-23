@@ -18,7 +18,6 @@
 
     <style>
         :root {
-            /* Default Dark Mode Theme */
             --bg-color: #0b0c10;
             --card-bg: #1f2833;
             --text-main: #c5c6c7;
@@ -30,7 +29,6 @@
         }
 
         body.light-theme {
-            /* Day Mode Theme */
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #2d3748;
@@ -217,21 +215,24 @@
         if (!rawText) return '';
         let cleaned = rawText;
 
-        // 1. Fix list bullets missing space and opening $: *\text{ -> * $\text{
+        // 1. Repair ASCII TAB (0x09) / space / backslash corruption before 'ext{' or 'text{'
+        cleaned = cleaned.replace(/\\?[\t\s]*\$?\\?\s*(?:text|ext)\{/g, '\\text{');
+
+        // 2. Strip nested '$' inside subscripts/superscripts: _{$\text{Word}$} -> _{\text{Word}}
+        cleaned = cleaned.replace(/(_|\^)\{\s*\$*\\text\{([^}]+)\}\$*\}?/g, '$1{\\text{$2}}');
+
+        // 3. Clean display math $$ ... $$ blocks containing rogue internal single '$' signs
+        cleaned = cleaned.replace(/\$\$([\s\S]*?)\$\$/g, function(match, displayContent) {
+            let innerCleaned = displayContent.replace(/\$/g, '');
+            return '$$' + innerCleaned + '$$';
+        });
+
+        // 4. Fix list bullets missing space and opening $: *\text{ -> * $\text{
         cleaned = cleaned.replace(/^(\s*\*\s*)\\text\{/gm, '$1$\\text{');
 
-        // 2. Fix Rupee + Dollar currency collisions (₹$50\text{Lakh} -> $₹50\text{Lakh}$)
-        cleaned = cleaned.replace(/₹\$\s*([\d\.]+\s*\\text\{[^}]+\})/g, '$₹$1$');
-        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+(?:\s*\\text\{[^}]+\})?)/g, '$₹$1$');
-
-        // 3. Fix split math blocks like $, \text{ -> , \text{ inside expressions
-        cleaned = cleaned.replace(/\$\s*,\s*\\text\{/g, ', \\text{');
-
-        // 4. Fix mismatched display math delimiters: $\text{...}$$ -> $$\text{...}$$
-        cleaned = cleaned.replace(/^\$\s*(\\text\{[\s\S]*?\}|\\[a-zA-Z]+[\s\S]*?)\s*\$\$$/gm, '$$\\1$$');
-
-        // 5. Fix lines starting with \text{} and ending with $ lacking opening $ (e.g. \text{TI} \approx 0.0847$)
-        cleaned = cleaned.replace(/^(\\text\{[^}\n]+\}\s*[\approx\=].*?)\$/gm, '$\\1$');
+        // 5. Fix Rupee + Dollar currency collisions (₹$50\text{Lakh} -> ₹50 Lakh)
+        cleaned = cleaned.replace(/₹\$\s*([\d\.]+\s*\\text\{[^}]+\})/g, '₹$1');
+        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+(?:\s*\\text\{[^}]+\})?)/g, '₹$1');
 
         // 6. Wrap orphan \text{...} in prose with single $
         cleaned = cleaned.replace(/(?<!\$)\\text\{([^}]+)\}(?!\$)/g, '$\\text{$1}$');
