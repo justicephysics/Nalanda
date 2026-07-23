@@ -4,10 +4,10 @@
        - WRONG: $S_{\text{Civilization}}$ with internal dollar signs
        - CORRECT: $S_{\text{Civilization}}$ or $$\frac{dS_{\text{Civilization}}}{dt}$$
     2. CLEAN SUB-SCRIPTS: Write clean subscripts like $S_{\text{Civilization}}$ or $\eta_{\text{Edu}}$ without internal '$' signs.
-    3. NO AMPERSANDS IN \text{}: Inside \text{} blocks, NEVER use '&' or '\&'. Always spell out the word 'and' (e.g., \text{Wealth and Power}).
+    3. NO AMPERSANDS IN \text{}: Inside \text{} blocks, NEVER use '&' or '\&'. Always spell out the word 'and'.
     4. NO ORPHAN \text{} IN PROSE: Every \text{} command MUST be enclosed inside math delimiters ($...$ or $$...$$).
-    5. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text. NEVER use display math ($$...$$) on newlines inside list items.
-    6. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity"), NEVER as LaTeX display blocks.
+    5. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text.
+    6. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity").
     7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
@@ -107,13 +107,13 @@
     
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Common Man
+    - Required Presentation Layout Profile: Long Comprehensive System Ledger
     
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Common Man.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Long Comprehensive System Ledger.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
