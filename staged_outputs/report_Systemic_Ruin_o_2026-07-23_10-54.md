@@ -8,7 +8,7 @@
 Data from the Annual Status of Education Report (ASER) and national educational telemetry indicates a structural collapse at the primary and secondary base:
 * **Learning Deficits**: Over $50\%$ of Grade 5 students in rural public schools are unable to read a Grade 2 level textbook or perform basic 3-digit division.
 * **Multigrade Classrooms and School Shrinkage**: $66\%$ of Grade I and II public primary classrooms operate under multigrade arrangements (a single instructor managing multiple grades concurrently). Over $52\%$ of public primary schools maintain an enrollment of $<60$ total students due to parental flight toward low-fee private institutions.
-* **Instructional Vacancies**: Over $1,000,000$ ($10\text{Lakh}) sanctioned public teaching posts remain vacant across primary and secondary tiers nationwide.
+* **Instructional Vacancies**: Over $1,000,000$ ($10\text{Lakh}$) sanctioned public teaching posts remain vacant across primary and secondary tiers nationwide.
 
 ### 1.2 Higher Education Bottlenecks and Hyper-Inflation
 * **Central University Gatekeeping (CUET UG)**: Cut-off percentiles for top-tier public colleges (e.g., DU North Campus: SRCC, Hindu, Hansraj, St. Stephen's) sit between $98.5\%$ and $99.8\%$ percentile ($780\text{--}795+ / 800$) for general candidates in high-demand disciplines.
@@ -53,15 +53,15 @@ When a civilization constructs artificial energy barriers—such as hyper-inflat
 ### 2.3 The Skill Floor Theory of Class Generation
 Access to high-quality education and industry-grade skill acquisition is artificially restricted to a $2\%\text{--}5\%$ numerical threshold of the population matrix. This artificial numerical restriction directly generates the elite class.
 
-By constraining the skill floor, the system systematically manufactures an underprivileged, low-wage majority ($95\%\text{--}98\%$), driving economic inequality ($L_{\text{Gini}} \approx 0.92$,\text{EI} \approx 0.08$,\text{TI} \approx 0.0847$).
+By constraining the skill floor, the system systematically manufactures an underprivileged, low-wage majority ($95\%\text{--}98\%$), driving economic inequality ($$L_{\text{Gini}} \approx 0.92,\text{EI} \approx 0.08,\text{TI} \approx 0.0847$$).
 
 ---
 
 ## 3. THE TRIAD OF EDUCATIONAL EXTORTION & COMMODITY INVERSION
 
 ### 3.1 Extraction Axes
-1. **Axis 1 (Test-Prep and Coaching Industry)**: Extracts ₹$1.0\text{Lakh Crore} to ₹$3.5\text{Lakh Crore} ($\$12\text{B}\text{--}\$42\text{B USD}) annually from household savings. Aspirants are funneled into 12–14 hour rote memorization factories via "dummy school" arrangements.
-2. **Axis 2 (Private Seat and Capitation Fee Structure)**: Total cost for private or deemed university MBBS seats ranges from ₹$50\text{Lakh} to ₹$1.5+\text{Crore}. Private engineering and management degrees cost between ₹$10\text{Lakh} and ₹$25\text{Lakh} for substandard instruction and outdated curricula.
+1. **Axis 1 (Test-Prep and Coaching Industry)**: Extracts $$₹1.0\text{Lakh Crore} \to  ₹3.5\text{Lakh Crore} (12\text{B}\text{--} 42\text{B USD})$$ annually from household savings. Aspirants are funneled into 12–14 hour rote memorization factories via "dummy school" arrangements.
+2. **Axis 2 (Private Seat and Capitation Fee Structure)**: Total cost for private or deemed university MBBS seats ranges from $₹50\text{Lakh} \to ₹1.5+\text{Crore}$. Private engineering and management degrees cost between $₹10\text{Lakh} and ₹25\text{Lakh}$ for substandard instruction and outdated curricula.
 3. **Axis 3 (Examination Integrity Breakdown)**: Over 70 major competitive and recruitment exam paper leaks recorded across 15+ states (NEET-UG, REET, UP Police Constable, Bihar BPSC, SSC CGL), impacting $>15,000,000$ to $20,000,000$ aspirants. Dark-channel paper leaks and arbitrary grace marks corrupt national testing agencies (e.g., NTA).
 
 ### 3.2 The Cattle Fodder Paradox (The Fake Equilibrium)
@@ -91,18 +91,19 @@ Student-led mobilizations (e.g., Sansad Chalo march, Jantar Mantar rallies, CJP 
 
 ## 5. MATHEMATICAL SYNTHESIS: SOVEREIGNTY TRIAD DEPENDENCY (TI COUPLING)
 
-The Total Independence Index (\text{TI}) quantifies civilizational resilience through the coupling of Political Independence (\text{PI}), Economic Independence (\text{EI}), and Social Independence (\text{SI}):
+The Total Independence Index $(\text{TI})$ quantifies civilizational resilience through the coupling of Political Independence $(\text{PI})$, Economic Independence $(\text{EI})$, and Social Independence $(\text{SI})$:
 
-$\text{TI} = (\text{PI} +\text{EI} +\text{SI}) \times (\text{PI} \times\text{EI} \times\text{SI})$$
+$$\text{TI} = (\text{PI} +\text{EI} +\text{SI}) \times (\text{PI} \times\text{EI} \times\text{SI})$$
 
 Given current educational commodification telemetry where:
-*\text{PI} = 0.90$ (High formal political sovereignty)
-*\text{EI} = 0.08$ (Severe economic vulnerability due to unviable skill generation and debt traps)
-*\text{SI} = 0.70$ (Social cohesion degraded by competitive elimination stress)
 
-$\text{TI} = (0.90 + 0.08 + 0.70) \times (0.90 \times 0.08 \times 0.70)$$
+* $\text{PI} = 0.90$ (High formal political sovereignty)
+* $\text{EI} = 0.08$ (Severe economic vulnerability due to unviable skill generation and debt traps)
+* $\text{SI} = 0.70$ (Social cohesion degraded by competitive elimination stress)
 
-$\text{TI} = (1.68) \times (0.0504) = 0.084672$$
+$$\text{TI} = (0.90 + 0.08 + 0.70) \times (0.90 \times 0.08 \times 0.70)$$
+
+$$\text{TI} = (1.68) \times (0.0504) = 0.084672$$
 
 ### Conclusion
-A Total Independence Index of\text{TI} \approx 0.0847$ confirms that systemic educational breakdown acts as a primary vector of civilizational weakness. Converting learning into an extortionate lottery degrades human capital, inducing systemic entropic decay and technological dependency.
+A Total Independence Index of$\text{TI} \approx 0.0847$ confirms that systemic educational breakdown acts as a primary vector of civilizational weakness. Converting learning into an extortionate lottery degrades human capital, inducing systemic entropic decay and technological dependency.
