@@ -11,8 +11,9 @@ import re
 def sanitize_latex_in_markdown(markdown_text):
     """
     Self-healing LaTeX sanitizer for Python backend:
-    1. Fixes ASCII tab-corrupted \text commands (\t ext{ -> \text{)
-    2. Strips nested dollars in subscripts: _{$...$} -> _{\text{...}}
+    1. Fixes ASCII tab-corrupted \text commands (\t	ext{ -> \text{)
+    2. Fixes ASCII tab-corrupted \text commands (\t$	ext{ -> \text{)
+    3. Strips nested dollars in subscripts: _{$...$} -> _{\text{...}}
     3. Replaces & with 'and' inside \text{}
     """
     if not markdown_text:
