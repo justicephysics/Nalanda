@@ -98,7 +98,7 @@
             line-height: 1.3;
         }
 
-        /* --- FIX FOR LIST ITEM DISTORTION & SPACING EXPLOSIONS --- */
+        /* --- LIST & SPACING SPACING FIXES --- */
         ul, ol {
             padding-left: 24px;
             margin: 12px 0;
@@ -109,13 +109,11 @@
             line-height: 1.6;
         }
 
-        /* Prevents Marked.js <p> tags inside <li> from breaking into huge blocks */
         li > p {
             display: inline;
             margin: 0;
         }
 
-        /* Keeps display math inside list items clean and compact */
         li .katex-display {
             display: block;
             margin: 6px 0 !important;
@@ -214,16 +212,33 @@
         window.location.reload();
     }
 
+    /**
+     * ADVANCED MULTI-LAYER SANITIZER
+     * Cleans AI-introduced LaTeX errors, nested dollar signs, and currency traps.
+     */
     function sanitizeLatexForKaTeX(rawText) {
         let cleaned = rawText;
 
-        // 1. Fix unescaped ampersands inside \text{...}
+        // 1. Repair tab/space corrupted \text commands (\t ext, \ text,  ext{ -> \text{)
+        cleaned = cleaned.replace(/\\?\s*ext\{/g, '\\text{');
+        cleaned = cleaned.replace(/\\text\s+\{/g, '\\text{');
+
+        // 2. STRIP NESTED DOLLAR SIGNS inside subscripts, superscripts, or math blocks
+        // Fixes: $S_{$ \text{Civilization} }$ -> $S_{\text{Civilization}}$
+        cleaned = cleaned.replace(/(_|\^)\{\$?\s*\\text\{([^}]*)\}\$?\}?/g, '$1{\\text{$2}}');
+        cleaned = cleaned.replace(/_\{\$+/g, '_{');
+        cleaned = cleaned.replace(/\$+\}/g, '}');
+
+        // 3. Fix unescaped ampersands inside \text{...} blocks
         cleaned = cleaned.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
             let sanitized = innerText.replace(/\\&/g, 'and').replace(/&/g, 'and');
             return '\\text{' + sanitized + '}';
         });
 
-        // 2. FIX FOR RAW LATEX LEAKS: Wraps orphan \text{...} in prose with $ delimiters
+        // 4. CURRENCY GUARD: Escape currency dollar signs ($50, $1.5Cr, $12B) so KaTeX ignores them
+        cleaned = cleaned.replace(/\$(\d+(?:\.\d+)?\s*(?:[kKMmBb]|Lakh|Crore|Cr|USD)?)/gi, '\\$$1');
+
+        // 5. PROSE LEAK GUARD: Wrap orphan \text{...} appearing outside math blocks in $...$
         cleaned = cleaned.replace(/(?<!\$)\\text\{([^}]+)\}(?!\$)/g, '$\\text{$1}$');
 
         return cleaned;
@@ -241,27 +256,38 @@
             
             let markdownText = await response.text();
 
-            // Sanitize LaTeX strings before Markdown parsing
+            // Run Multi-Layer Sanitizer before parsing
             markdownText = sanitizeLatexForKaTeX(markdownText);
 
             // Parse Markdown to HTML
             renderArea.innerHTML = marked.parse(markdownText);
 
-            // Transform Mermaid blocks
+            // Transform Mermaid code blocks cleanly
             const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
             codeBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
-                mermaidDiv.textContent = block.textContent;
+                
+                // Decode HTML entities (e.g. &lt; -> <) so Mermaid parser doesn't fail
+                let rawCode = block.textContent || block.innerText;
+                rawCode = rawCode.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+                
+                mermaidDiv.textContent = rawCode;
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            // Render Diagrams
-            if (renderArea.querySelectorAll('.mermaid').length > 0) {
-                await mermaid.run({ nodes: renderArea.querySelectorAll('.mermaid') });
+            // SAFELY RENDER MERMAID DIAGRAMS (Isolated per diagram)
+            const mermaidNodes = renderArea.querySelectorAll('.mermaid');
+            for (const node of mermaidNodes) {
+                try {
+                    await mermaid.run({ nodes: [node] });
+                } catch (diagramErr) {
+                    console.warn("⚠️ Mermaid Diagram Syntax Warning:", diagramErr);
+                    node.innerHTML = `<pre style="color:#ef9a9a; font-size:12px; text-align:left; background:#0b0c10; padding:12px; border-radius:6px;">⚠️ Diagram Render Fallback:\n${node.textContent}</pre>`;
+                }
             }
 
-            // Render KaTeX Math cleanly
+            // SAFELY RENDER KATEX MATH (Fail-Safe Mode)
             if (window.renderMathInElement) {
                 renderMathInElement(renderArea, {
                     delimiters: [
@@ -270,7 +296,8 @@
                         { left: '\\(', right: '\\)', display: false },
                         { left: '\\[', right: '\\]', display: true }
                     ],
-                    throwOnError: false
+                    throwOnError: false, // Prevents KaTeX from crashing page on bad syntax
+                    errorColor: '#ef9a9a'
                 });
             }
         } catch (err) {
