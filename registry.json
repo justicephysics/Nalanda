@@ -1,37 +1,4 @@
 {
   "last_updated": "2026-07-23",
-  "reports": [
-    {
-      "id": "N-SYS-SYSTEMIC_RUI-2026-07-23_09-28",
-      "date": "2026-07-23",
-      "title": "Systemic Ruin of Education and Commodity Extraction Inversion Analysis // Long Comprehensive System Ledger",
-      "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
-      "discipline": "Commodity Extraction Dynamics",
-      "file_path": "staged_outputs/report_Systemic_Ruin_o_2026-07-23_09-28.md"
-    },
-    {
-      "id": "N-SYS-SYSTEMIC_RUI-2026-07-23_09-58",
-      "date": "2026-07-23",
-      "title": "Systemic Ruin of Education and Commodity Extraction Inversion Analysis // Academic University Professor Abstract Paper",
-      "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
-      "discipline": "Commodity Extraction Dynamics",
-      "file_path": "staged_outputs/report_Systemic_Ruin_o_2026-07-23_09-58.md"
-    },
-    {
-      "id": "N-SYS-SYSTEMIC_RUI-2026-07-23_10-32",
-      "date": "2026-07-23",
-      "title": "Systemic Ruin of Education and Commodity Extraction Inversion Analysis // Common Man",
-      "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
-      "discipline": "Commodity Extraction Dynamics",
-      "file_path": "staged_outputs/report_Systemic_Ruin_o_2026-07-23_10-32.md"
-    },
-    {
-      "id": "N-SYS-SYSTEMIC_RUI-2026-07-23_10-42",
-      "date": "2026-07-23",
-      "title": "Systemic Ruin of Education and Commodity Extraction Inversion Analysis // Short Note Summary",
-      "description": "Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry.",
-      "discipline": "Commodity Extraction Dynamics",
-      "file_path": "staged_outputs/report_Systemic_Ruin_o_2026-07-23_10-42.md"
-    }
-  ]
+  "reports": []
 }
