@@ -8,61 +8,40 @@ import google.generativeai as genai
 from datetime import datetime
 import re
 
-def sanitize_latex_in_markdown(text):
+def sanitize_latex_in_markdown(markdown_text):
     """
-    COMPREHENSIVE LATEX & MARKDOWN AUTO-SANITY ENGINE:
-    1. Neutralizes ASCII Tab (0x09) & string-escape corruption of \\text{} blocks.
-    2. Strips illegal nested '$' signs inside subscripts/superscripts (e.g., _{$\\text{...}$}).
-    3. Cleans display math $$...$$ blocks containing rogue single '$' delimiters.
-    4. Fixes currency symbol collisions (e.g., ₹$50\\text{Lakh} -> ₹50 Lakh).
-    5. Fixes unspaced list bullets (*\\text{PI} -> * $\\text{PI}).
-    6. Ensures all orphan \\text{} commands in prose are wrapped in math delimiters ($...$).
+    2-PASS AUTO-CORRECTION SANITIZER:
+    1. Strips all invalid single '$' signs nested inside display math ($$...$$).
+    2. Neutralizes '\t$', '\t$ext', '\t\\text', and ASCII tab corruptions, restoring clean \\text{...}.
     """
-    if not text:
+    if not markdown_text:
         return ""
-
-    # 1. Repair ASCII TAB (0x09) / space / backslash corruption before 'ext{' or 'text{'
-    text = re.sub(r'\\?[\t\s]*\$?\\?\s*(?:text|ext)\{', r'\\text{', text)
-
-    # 2. Strip nested '$' inside subscripts/superscripts: _{$\text{Word}$} -> _{\text{Word}}
-    text = re.sub(r'(_|\^)\{\s*\$*\\text\{([^}]+)\}\$*\}', r'\1{\\text{\2}}', text)
     
-    # Strip inner dollars from \text{$...$}
-    text = re.sub(r'\\text\{\s*\$([^$]+)\$\s*\}', r'\\text{\1}', text)
+    text = markdown_text
 
-    # 3. Clean display math $$ ... $$ blocks containing rogue internal single '$' signs
-    def clean_display_block(match):
-        inner = match.group(1)
-        inner_clean = inner.replace('$', '')
-        return f"$${inner_clean}$$"
+    # PASS 1: Strip single '$' nested inside display math $$...$$
+    def clean_display_math(match):
+        content = match.group(1)
+        cleaned = content.replace('$', '')
+        return f"$${cleaned}$$"
+
+    text = re.sub(r'\$\$(.*?)\$\$', clean_display_math, text, flags=re.DOTALL)
+
+    # PASS 2: Fix corrupted \t, \t$, \t\text, \t$text, \t$ext, ASCII tabs, etc.
+    corrupted_pattern = r'(?:\\[tT]|\t|\\|\s)*\$?\\?\s*(?:text|ext)\{\s*\$?([^}$]+)\$?\s*\}\$?'
     
-    text = re.sub(r'\$\$(.*?)\$\$', clean_display_block, text, flags=re.DOTALL)
+    def fix_corrupted_text(match):
+        inner = match.group(1).replace('&', 'and').strip()
+        return f"\\text{{{inner}}}"
 
-    # 4. Fix currency collisions like ₹$50\text{Lakh} or ₹$1.0\text{Lakh Crore}
-    text = re.sub(r'₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}', r'₹\1 \2', text)
-    text = re.sub(r'₹\$\s*([\d\.\+]+)', r'₹\1', text)
+    text = re.sub(corrupted_pattern, fix_corrupted_text, text)
 
-    # 5. Fix bullet points missing space and opening $: *\text{PI} -> * $\text{PI}
-    text = re.sub(r'^(\s*\*\s*)\\text\{', r'\1$\\text{', text, flags=re.MULTILINE)
-    
-    # 6. Fix mismatched math starts/ends like $\text{TI} = ...$$ -> $$\text{TI} = ...$$
-    text = re.sub(r'^\$\s*(\\text\{.*?\}|\\[a-zA-Z]+.*?)\s*\$\$$', r'$$\1$$', text, flags=re.MULTILINE)
-
-    # 7. Fix lines starting with \text{} lacking opening $ (e.g. \text{TI} \approx 0.0847$)
-    text = re.sub(r'^(\\text\{[^}\n]+\}\s*[\approx\=].*?)\$', r'$\1$', text, flags=re.MULTILINE)
-
-    # 8. Wrap orphan \text{...} in prose with single $
-    text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
-
-    # 9. Clean ampersands inside \text{}
+    # PASS 3: Sanitize remaining ampersands inside \text{}
     def clean_ampersands(match):
         inner = match.group(1).replace('\\&', 'and').replace('&', 'and')
         return f"\\text{{{inner}}}"
 
     text = re.sub(r'\\text\{([^}]*)\}', clean_ampersands, text)
-
-    # 10. Replace all remaining literal ASCII tabs with spaces
-    text = text.replace('\t', ' ')
 
     return text
 
@@ -142,21 +121,17 @@ def dump_prompt_audit_file(prompt_text):
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
     
+    # 🔒 Double backslashes (\\text) prevent Python string escaping bugs
     prompt = f"""
-    [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
-    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \\text{{Civilization}} or \\text{{Edu}}. NEVER insert dollar signs '$' or tabs inside \\text{{}} or subscripts.
+    [STRICT LATEX & GRAPHICS CONSTRAINTS - ZERO-ERROR ENFORCEMENT]:
+    1. STRICT LATEX TEXT FORMATTING: Always write text in equations as \\text{{Word}}. NEVER insert dollar signs '$' or ASCII tabs inside \\text{{}} or subscripts.
        - WRONG: S_{{\\t$ext{{Civilization}}$}}
-       - RIGHT: S_{{\\text{{Civilization}}}} or $$\\frac{{dS_{{\\text{{Civilization}}}}}}{{dt}}$$
-    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
-       - WRONG: $\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
-       - RIGHT: $$\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
-    3. CLEAN CURRENCY: Write plain currency terms (e.g. ₹50 Lakh or ₹1.0 Lakh Crore). NEVER combine symbols awkwardly like ₹$50\\text{{Lakh}}.
-    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
-       - WRONG: *\\text{{PI}} = 0.90$
-       - RIGHT: * $\\text{{PI}} = 0.90$
-    5. NO ORPHAN \\text{{}} IN PROSE: NEVER put raw \\text{{TI}} in plain text sentences. Write $(\\text{{TI}})$ or $\\text{{TI}}$.
-    6. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
-    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
+       - RIGHT: S_{{\\text{{Civilization}}}}
+    2. NO NESTED DOLLARS: Never place single '$' delimiters inside display math ($$...$$).
+    3. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
+    4. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text.
+    5. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity").
+    6. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
@@ -258,7 +233,7 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # 🔒 Comprehensive Auto-Sanitization before writing to disk
+    # 🔒 Clean LaTeX corruption before saving to disk
     final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
