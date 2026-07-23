@@ -27,7 +27,7 @@ TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commo
 TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "Common Man"
 
 if not GEMINI_API_KEY:
-    print("❌ FATAL ERROR: _API_KEY missing from system secret registers.")
+    print("❌ FATAL ERROR: GEMINI_API_KEY missing from system secret registers.")
     sys.exit(1)
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -102,12 +102,12 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.0-flash']
+    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
     
     prompt = f"""
     [STRICT LATEX & LIST CONSTRAINTS]:
-    - In LaTeX equations ($$...$$), NEVER use ampersand symbols ('\&') inside \text{} blocks. Always spell out the word 'and'.
-    - NEVER put raw \text{...} commands in standard prose unless enclosed within $ ... $ math delimiters.
+    - In LaTeX equations ($...$ or $$...$$), NEVER use ampersand symbols ('&' or '\\&') inside \\text{{}} blocks. Always spell out the word 'and'.
+    - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $ ... $ math delimiters.
     - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
     - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
     - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
