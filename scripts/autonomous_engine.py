@@ -10,18 +10,29 @@ import re
 
 def sanitize_latex_in_markdown(markdown_text):
     """
-    1. Sanitizes \text{... & ...} ampersands to avoid KaTeX crashes.
-    2. Wraps orphan \text{...} in prose with math delimiters $...$.
+    1. Fixes corrupted tab-escaped subscripts like _{$ ext{...}$} or _{$\text{...}$} -> _{\text{...}}
+    2. Sanitizes \text{... & ...} ampersands to avoid KaTeX crashes.
+    3. Wraps orphan \text{...} in prose with math delimiters $...$.
     """
+    # Fix tab-corrupted or nested-dollar subscripts (e.g. _{$ ext{Edu}$} -> _{\text{Edu}})
+    text = re.sub(r'(_|\^)\{\s*\$*\s*\\?(?:t|ext)?ext\{([^}]+)\}\$*\s*\}', r'\1{\\text{\2}}', markdown_text)
+    
+    # Strip double dollars nested inside \text{}
+    text = re.sub(r'\\text\{\$([^$]+)\$\}', r'\\text{\1}', text)
+
+    # Sanitize ampersands inside \text{}
     def fix_text_block(match):
         inner_content = match.group(1)
         cleaned_content = inner_content.replace("\\&", "and").replace("&", "and")
         return f"\\text{{{cleaned_content}}}"
 
-    text = re.sub(r'\\text\{([^}]*)\}', fix_text_block, markdown_text)
+    text = re.sub(r'\\text\{([^}]*)\}', fix_text_block, text)
+    
+    # Wrap orphan \text{} commands in prose
     text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
+    
     return text
-
+    
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commodity Extraction"
 TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "Common Man"
