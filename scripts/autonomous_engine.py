@@ -10,40 +10,38 @@ import re
 
 def sanitize_latex_in_markdown(markdown_text):
     """
-    Self-healing LaTeX sanitizer for Python backend:
-    1. Fixes ASCII tab-corrupted \text commands (t$	ext{ -> text{)
-    2. Fixes ASCII tab-corrupted \text commands (\t	ext{ -> \text{)
-    3. Fixes ASCII tab-corrupted \text commands (\t$	ext{ -> \text{)
-    4. Strips nested dollars in subscripts: _{$...$} -> _{\text{...}}
-    5. Strips nested dollars in subscripts: _{...$} -> _{text{...}}
-    6. Replaces & with 'and' inside \text{}
+    2-PASS AUTO-CORRECTION SANITIZER:
+    1. Strips all invalid single '$' signs nested inside display math ($$...$$).
+    2. Neutralizes '\t$', '\t$ext', '\t\\text', and ASCII tab corruptions, restoring clean \\text{...}.
     """
     if not markdown_text:
         return ""
     
     text = markdown_text
 
-    # 1. Repair tab/space corrupted \text commands
-    text = re.sub(r'\\?[\t\s]*ext\{', r'\\text{', text)
+    # PASS 1: Strip single '$' nested inside display math $$...$$
+    def clean_display_math(match):
+        content = match.group(1)
+        cleaned = content.replace('$', '')
+        return f"$${cleaned}$$"
 
-    # 2. Strip nested dollars from subscripts
-    text = re.sub(r'(_|\^)\{\s*\$+', r'\1{', text)
-    text = re.sub(r'\$+\s*\}', '}', text)
+    text = re.sub(r'\$\$(.*?)\$\$', clean_display_math, text, flags=re.DOTALL)
 
-    # 3. Strip inner dollars from \text{$...$}
-    text = re.sub(r'\\text\{\s*\$([^$]+)\$\s*\}', r'\\text{\1}', text)
-
-    # 4. Clean ampersands inside \text{}
-    def clean_text_block(match):
-        inner = match.group(1)
-        inner = inner.replace('$', '')
-        inner = inner.replace('\\&', 'and').replace('&', 'and')
+    # PASS 2: Fix corrupted \t, \t$, \t\text, \t$text, \t$ext, ASCII tabs, etc.
+    corrupted_pattern = r'(?:\\[tT]|\t|\\|\s)*\$?\\?\s*(?:text|ext)\{\s*\$?([^}$]+)\$?\s*\}\$?'
+    
+    def fix_corrupted_text(match):
+        inner = match.group(1).replace('&', 'and').strip()
         return f"\\text{{{inner}}}"
 
-    text = re.sub(r'\\text\{([^}]*)\}', clean_text_block, text)
+    text = re.sub(corrupted_pattern, fix_corrupted_text, text)
 
-    # 5. Fix orphan \text{} in prose
-    text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
+    # PASS 3: Sanitize remaining ampersands inside \text{}
+    def clean_ampersands(match):
+        inner = match.group(1).replace('\\&', 'and').replace('&', 'and')
+        return f"\\text{{{inner}}}"
+
+    text = re.sub(r'\\text\{([^}]*)\}', clean_ampersands, text)
 
     return text
 
@@ -123,17 +121,17 @@ def dump_prompt_audit_file(prompt_text):
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
     
+    # 🔒 Double backslashes (\\text) prevent Python string escaping bugs
     prompt = f"""
     [STRICT LATEX & GRAPHICS CONSTRAINTS - ZERO-ERROR ENFORCEMENT]:
-    1. NO NESTED DOLLAR SIGNS: Never place a '$' inside an existing math block or inside subscripts/superscripts.
-       - WRONG: $S_{{\\text{{Civilization}}}}$ with internal dollar signs
-       - CORRECT: $S_{{\\text{{Civilization}}}}$ or $$\\frac{{dS_{{\\text{{Civilization}}}}}}{{dt}}$$
-    2. CLEAN SUB-SCRIPTS: Write clean subscripts like $S_{{\\text{{Civilization}}}}$ or $\\eta_{{\\text{{Edu}}}}$ without internal '$' signs.
+    1. STRICT LATEX TEXT FORMATTING: Always write text in equations as \\text{{Word}}. NEVER insert dollar signs '$' or ASCII tabs inside \\text{{}} or subscripts.
+       - WRONG: S_{{\\t$ext{{Civilization}}$}}
+       - RIGHT: S_{{\\text{{Civilization}}}}
+    2. NO NESTED DOLLARS: Never place single '$' delimiters inside display math ($$...$$).
     3. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
-    4. NO ORPHAN \\text{{}} IN PROSE: Every \\text{{}} command MUST be enclosed inside math delimiters ($...$ or $$...$$).
-    5. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text.
-    6. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity").
-    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
+    4. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text.
+    5. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity").
+    6. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
@@ -235,7 +233,7 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # Run Self-Heal Sanitizer
+    # 🔒 Clean LaTeX corruption before saving to disk
     final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
