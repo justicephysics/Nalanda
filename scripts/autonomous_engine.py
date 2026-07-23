@@ -27,10 +27,10 @@ TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commo
 TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "Common Man"
 
 if not GEMINI_API_KEY:
-    print("❌ FATAL ERROR: GEMINI_API_KEY missing from system secret registers.")
+    print("❌ FATAL ERROR: _API_KEY missing from system secret registers.")
     sys.exit(1)
 
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=_API_KEY)
 
 def get_vector_key(topic_string):
     topic_map = {
@@ -102,7 +102,7 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
     
     prompt = f"""
     [STRICT LATEX & LIST CONSTRAINTS]:
