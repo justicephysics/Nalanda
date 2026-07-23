@@ -106,4 +106,4 @@ $$\text{TI} = (0.90 + 0.08 + 0.70) \times (0.90 \times 0.08 \times 0.70)$$
 $$\text{TI} = (1.68) \times (0.0504) = 0.084672$$
 
 ### Conclusion
-A Total Independence Index of$\text{TI} \approx 0.0847$ confirms that systemic educational breakdown acts as a primary vector of civilizational weakness. Converting learning into an extortionate lottery degrades human capital, inducing systemic entropic decay and technological dependency.
+A Total Independence Index of $\text{TI} \approx 0.0847$ confirms that systemic educational breakdown acts as a primary vector of civilizational weakness. Converting learning into an extortionate lottery degrades human capital, inducing systemic entropic decay and technological dependency.
