@@ -29,20 +29,20 @@ When access to functional skill acquisition is gated behind high economic and ps
 
 A civilization is fundamentally a low-entropy information engine. The preservation of complex physical, technological, and institutional infrastructure requires the continuous, un-distorted transfer of low-entropy cognitive patterns from mature nodes to developing nodes.
 
-Let $S_{\text{Civilization}$}$ represent the civilizational entropy state, and $\eta_{\text{Edu}$}$ represent the efficiency coefficient of the cognitive transmission network. The temporal derivative of civilizational entropy is inversely proportional to transmission efficiency:
+Let $S_{\text{Civilization}}$ represent the civilizational entropy state, and $\eta_{\text{Edu}}$ represent the efficiency coefficient of the cognitive transmission network. The temporal derivative of civilizational entropy is inversely proportional to transmission efficiency:
 
-$$\frac{d S_{\text{Civilization}$}}{d t} \propto \frac{1}{\eta_{\text{Edu}$}}$$
+$$\frac{d S_{\text{Civilization}}}{d t} \propto \frac{1}{\eta_{\text{Edu}}}$$
 
-When the cognitive transmission network is privatized and bottlenecked, the effective transmission efficiency $\eta_{\text{Edu}$}$ decays towards zero as an exponential function of the extraction rate $R_{\text{Ext}$}$:
+When the cognitive transmission network is privatized and bottlenecked, the effective transmission efficiency $\eta_{\text{Edu}}$ decays towards zero as an exponential function of the extraction rate $R_{\text{Ext}$}$:
 
-$$\eta_{\text{Edu}$} = \eta_{0} e^{-\alpha R_{\text{Ext}$}}$$
+$$\eta_{\text{Edu}} = \eta_{0} e^{-\alpha R_{\text{Ext}}}$$
 
 Where:
 * $\eta_{0}$ is the baseline transmission capacity under non-commodified conditions.
 * $\alpha$ is the systemic distortion constant driven by test-prep commercialization and gatekeeping fees.
-* $R_{\text{Ext}$}$ is the capital extracted per candidate node relative to median household income.
+* $R_{\text{Ext}}$ is the capital extracted per candidate node relative to median household income.
 
-As $R_{\text{Ext}$} \to \infty$, $\eta_{\text{Edu}$} \to 0$, forcing $\frac{d S_{\text{Civilization}$}}{d t} \to \infty$. Under these conditions, the civilizational matrix undergoes accelerated entropic decay, characterized by technological stagnation, institutional brittleness, and pervasive cognitive paralysis.
+As $$R_{\text{Ext}} \to \infty, \eta_{\text{Edu}} \to 0, forcing \frac{d S_{\text{Civilization}}}{d t} \to \infty$$. Under these conditions, the civilizational matrix undergoes accelerated entropic decay, characterized by technological stagnation, institutional brittleness, and pervasive cognitive paralysis.
 
 ---
 
@@ -56,10 +56,10 @@ The empirical realization of this theoretical model is vividly observable within
 * **Instructional Vacancies:** Over $1.0 \t\text{ Million}$ sanctioned public teaching posts remain vacant nationwide.
 
 ### 3.2 Public University Hyper-Inflation and Extreme Elimination Rates
-At the tertiary entry level, the Central Universities Entrance Test (CUET-UG) demonstrates severe gatekeeping. Cut-off scores for general candidates in premier institutions (e.g., Delhi University North Campus) consistently range between $98.5\%$ and $99.8\%$ percentile ($780\text{--}$795+ / 800$). Premier public higher education seats represent less than $1.5\%$ of the over $40 \t\text{ Million}$ national applicants.
+At the tertiary entry level, the Central Universities Entrance Test (CUET-UG) demonstrates severe gatekeeping. Cut-off scores for general candidates in premier institutions (e.g., Delhi University North Campus) consistently range between $$98.5\% and 99.8\% percentile (780\text{--}795+ / 800$$). Premier public higher education seats represent less than $1.5\%$ of the over $40 \t\text{ Million}$ national applicants.
 
 The national selection pipeline operates as an extreme elimination matrix rather than an educational system:
-* **UPSC Civil Services Examination (CSE):** $\approx 1.3 \t\text{ Million}$ applicants for $\approx 1,000$ seats $\implies$ Rejection Rate: $99.92\%$.
+* **UPSC Civil Services Examination (CSE):** $$\approx 1.3 \t\text{ Million} applicants for \approx 1,000 seats \implies Rejection Rate: 99.92\%$$.
 * **IIT-JEE Advanced:** $\approx 1.45 \t\text{ Million}$ candidate pool for $\approx 17,500$ seats $\implies$ Rejection Rate: $98.80\%$.
 * **NEET-UG (Medical):** $\approx 2.4 \t\text{ Million}$ applicants for $\approx 55,000$ public MBBS seats $\implies$ Rejection Rate: $97.71\%$ (Overall public seat rejection rate: $98.15\%$).
 * **CAT (Management):** $\approx 330,000$ applicants for $\approx 5,500$ IIM seats $\implies$ Rejection Rate: $98.34\%$.
