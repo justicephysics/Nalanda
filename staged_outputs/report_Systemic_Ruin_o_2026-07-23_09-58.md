@@ -29,20 +29,20 @@ When access to functional skill acquisition is gated behind high economic and ps
 
 A civilization is fundamentally a low-entropy information engine. The preservation of complex physical, technological, and institutional infrastructure requires the continuous, un-distorted transfer of low-entropy cognitive patterns from mature nodes to developing nodes.
 
-Let $S_{\t$	ext{Civilization}$}$ represent the civilizational entropy state, and $\eta_{\t$	ext{Edu}$}$ represent the efficiency coefficient of the cognitive transmission network. The temporal derivative of civilizational entropy is inversely proportional to transmission efficiency:
+Let $S_{\text{Civilization}$}$ represent the civilizational entropy state, and $\eta_{\text{Edu}$}$ represent the efficiency coefficient of the cognitive transmission network. The temporal derivative of civilizational entropy is inversely proportional to transmission efficiency:
 
-$$\frac{d S_{\t$	ext{Civilization}$}}{d t} \propto \frac{1}{\eta_{\t$	ext{Edu}$}}$$
+$$\frac{d S_{\text{Civilization}$}}{d t} \propto \frac{1}{\eta_{\text{Edu}$}}$$
 
-When the cognitive transmission network is privatized and bottlenecked, the effective transmission efficiency $\eta_{\t$	ext{Edu}$}$ decays towards zero as an exponential function of the extraction rate $R_{\t$	ext{Ext}$}$:
+When the cognitive transmission network is privatized and bottlenecked, the effective transmission efficiency $\eta_{\text{Edu}$}$ decays towards zero as an exponential function of the extraction rate $R_{\text{Ext}$}$:
 
-$$\eta_{\t$	ext{Edu}$} = \eta_{0} e^{-\alpha R_{\t$	ext{Ext}$}}$$
+$$\eta_{\text{Edu}$} = \eta_{0} e^{-\alpha R_{\text{Ext}$}}$$
 
 Where:
 * $\eta_{0}$ is the baseline transmission capacity under non-commodified conditions.
 * $\alpha$ is the systemic distortion constant driven by test-prep commercialization and gatekeeping fees.
-* $R_{\t$	ext{Ext}$}$ is the capital extracted per candidate node relative to median household income.
+* $R_{\text{Ext}$}$ is the capital extracted per candidate node relative to median household income.
 
-As $R_{\t$	ext{Ext}$} \to \infty$, $\eta_{\t$	ext{Edu}$} \to 0$, forcing $\frac{d S_{\t$	ext{Civilization}$}}{d t} \to \infty$. Under these conditions, the civilizational matrix undergoes accelerated entropic decay, characterized by technological stagnation, institutional brittleness, and pervasive cognitive paralysis.
+As $R_{\text{Ext}$} \to \infty$, $\eta_{\text{Edu}$} \to 0$, forcing $\frac{d S_{\text{Civilization}$}}{d t} \to \infty$. Under these conditions, the civilizational matrix undergoes accelerated entropic decay, characterized by technological stagnation, institutional brittleness, and pervasive cognitive paralysis.
 
 ---
 
@@ -56,7 +56,7 @@ The empirical realization of this theoretical model is vividly observable within
 * **Instructional Vacancies:** Over $1.0 \t\text{ Million}$ sanctioned public teaching posts remain vacant nationwide.
 
 ### 3.2 Public University Hyper-Inflation and Extreme Elimination Rates
-At the tertiary entry level, the Central Universities Entrance Test (CUET-UG) demonstrates severe gatekeeping. Cut-off scores for general candidates in premier institutions (e.g., Delhi University North Campus) consistently range between $98.5\%$ and $99.8\%$ percentile ($780\t$	ext{--}$795+ / 800$). Premier public higher education seats represent less than $1.5\%$ of the over $40 \t\text{ Million}$ national applicants.
+At the tertiary entry level, the Central Universities Entrance Test (CUET-UG) demonstrates severe gatekeeping. Cut-off scores for general candidates in premier institutions (e.g., Delhi University North Campus) consistently range between $98.5\%$ and $99.8\%$ percentile ($780\text{--}$795+ / 800$). Premier public higher education seats represent less than $1.5\%$ of the over $40 \t\text{ Million}$ national applicants.
 
 The national selection pipeline operates as an extreme elimination matrix rather than an educational system:
 * **UPSC Civil Services Examination (CSE):** $\approx 1.3 \t\text{ Million}$ applicants for $\approx 1,000$ seats $\implies$ Rejection Rate: $99.92\%$.
@@ -78,17 +78,17 @@ The national selection pipeline operates as an extreme elimination matrix rather
 ```
 
 ### 3.3 The Triad of Educational Extortion
-1. **Axis 1 (The Test-Prep and Coaching Mafia):** Extracts ₹$1.0 \t\text{ Lakh Crore}$ to ₹$3.5 \t\text{ Lakh Crore}$ ($\$12\t$	ext{B}$\t$	ext{--}$\$42\t\text{B USD}$) annually from household savings. It enforces 12–14 hour daily rote factories via illegal "dummy school" arrangements.
+1. **Axis 1 (The Test-Prep and Coaching Mafia):** Extracts ₹$1.0 \t\text{ Lakh Crore}$ to ₹$3.5 \t\text{ Lakh Crore}$ ($\$12\text{B}$\text{--}$\$42\t\text{B USD}$) annually from household savings. It enforces 12–14 hour daily rote factories via illegal "dummy school" arrangements.
 2. **Axis 2 (Private Seat and Capitation Fee Mafia):** Total costs for private/deemed university MBBS seats range from ₹$50 \t\text{ Lakh}$ to ₹$1.5+ \t\text{ Crore}$, while private engineering degrees cost ₹$10 \t\text{ Lakh}$ to ₹$25 \t\text{ Lakh}$ for substandard instruction.
-3. **Axis 3 (Paper Leak and Institutional Corruption):** Over 70 major recruitment and entrance exam paper leaks (NEET-UG, REET, UP Police Constable, Bihar BPSC, SSC CGL) have affected over $1.5\t$	ext{--}$2.0 \t\text{ Crore}$ aspirants. Institutional failures in testing bodies (e.g., NTA) manifest as score inflation (67 perfect 720/720 scores in NEET-UG) and arbitrary grace marks.
+3. **Axis 3 (Paper Leak and Institutional Corruption):** Over 70 major recruitment and entrance exam paper leaks (NEET-UG, REET, UP Police Constable, Bihar BPSC, SSC CGL) have affected over $1.5\text{--}$2.0 \t\text{ Crore}$ aspirants. Institutional failures in testing bodies (e.g., NTA) manifest as score inflation (67 perfect 720/720 scores in NEET-UG) and arbitrary grace marks.
 
 ### 3.4 Physiological Mortalities and Psychological Toll
 * **Student Suicides:** National Crime Records Bureau (NCRB) tracking documents over $13,000$ student suicides annually ($>35 \t\text{ deaths/day}$).
 * **Exam Mortalities:** Over a 5-year window, $12,598$ youth deaths ($<30 \t\text{ years old}$) were officially recorded as directly caused by examination failure.
-* **Batch Toxicity:** Public weekly rank boards, color-coded uniforms, and "Star vs. Lower Batch" segregation drive clinical depression and panic disorders in $40\%\t$	ext{--}$50\%$ of enrolled aspirants.
+* **Batch Toxicity:** Public weekly rank boards, color-coded uniforms, and "Star vs. Lower Batch" segregation drive clinical depression and panic disorders in $40\%\text{--}$50\%$ of enrolled aspirants.
 
 ### 3.5 The Cattle Fodder Paradox (Degrees Without Capability)
-The system exhibits a surface equilibrium covering deep structural fraud. While $14.90 \t\text{ Lakh}$ undergraduate engineering seats exist for $14.50 \t\text{ Lakh}$ JEE applicants (a near 1:1 ratio), only $\approx 52,500$ seats ($\approx 3.5\%$) across IITs, NITs, and Tier-1 institutions offer industry-grade training. Industry benchmarks indicate that only $3.84\%$ of engineering graduates possess viable software/algorithmic skills, leaving over $80\%\t$	ext{--}$85\%$ unemployable in the knowledge economy. Families liquidating assets for non-viable degrees results in graduates entering gig platforms, low-wage delivery logistics, or non-technical call centers.
+The system exhibits a surface equilibrium covering deep structural fraud. While $14.90 \t\text{ Lakh}$ undergraduate engineering seats exist for $14.50 \t\text{ Lakh}$ JEE applicants (a near 1:1 ratio), only $\approx 52,500$ seats ($\approx 3.5\%$) across IITs, NITs, and Tier-1 institutions offer industry-grade training. Industry benchmarks indicate that only $3.84\%$ of engineering graduates possess viable software/algorithmic skills, leaving over $80\%\text{--}$85\%$ unemployable in the knowledge economy. Families liquidating assets for non-viable degrees results in graduates entering gig platforms, low-wage delivery logistics, or non-technical call centers.
 
 ---
 
@@ -133,25 +133,25 @@ graph TD
 ### 6.1 Revision of Class Generation Dynamics
 19th-century materialist theory posited that class structure originated strictly on the factory floor through ownership of physical means of production. In the modern knowledge economy, class structure is generated at the **skill floor**.
 
-By artificially bottlenecking access to high-quality education and high-value technical skill acquisition to a strict $2\%\t$	ext{--}$5\%$ numerical threshold, the state and market joint venture manufactures an elite class within that restricted domain. The restriction is the cause; the elite is the effect. This artificial bottlenecking systematically constructs an underprivileged, low-wage $95\%\t$	ext{--}$98\%$ majority, inflating structural inequality ($L_{\t$	ext{Gini}$} \approx 0.92$).
+By artificially bottlenecking access to high-quality education and high-value technical skill acquisition to a strict $2\%\text{--}$5\%$ numerical threshold, the state and market joint venture manufactures an elite class within that restricted domain. The restriction is the cause; the elite is the effect. This artificial bottlenecking systematically constructs an underprivileged, low-wage $95\%\text{--}$98\%$ majority, inflating structural inequality ($L_{\text{Gini}$} \approx 0.92$).
 
 ### 6.2 The Sovereign Triad Dependency Analysis
-Systemic civilizational sovereignty ($T_{\t$	ext{I}$}$) is defined as the multiplicative product of political independence ($P_{\t$	ext{I}$}$), economic independence ($E_{\t$	ext{I}$}$), and social independence ($S_{\t$	ext{I}$}$):
+Systemic civilizational sovereignty ($T_{\text{I}$}$) is defined as the multiplicative product of political independence ($P_{\text{I}$}$), economic independence ($E_{\text{I}$}$), and social independence ($S_{\text{I}$}$):
 
-$$T_{\t$	ext{I}$} = (P_{\t$	ext{I}$} + E_{\t$	ext{I}$} + S_{\t$	ext{I}$}) \times (P_{\t$	ext{I}$} \times E_{\t$	ext{I}$} \times S_{\t$	ext{I}$})$$
+$$T_{\text{I}$} = (P_{\text{I}$} + E_{\text{I}$} + S_{\text{I}$}) \times (P_{\text{I}$} \times E_{\text{I}$} \times S_{\text{I}$})$$
 
 Using empirical baseline data from the affected structural matrix:
-* **Political Independence ($P_{\t$	ext{I}$}$):** $0.90$ (High formal sovereignty, but vulnerable to demagoguery due to educational deficits).
-* **Economic Independence ($E_{\t$	ext{I}$}$):** $0.08$ (Severe failure; massive youth debt coupled with $3.84\%$ functional skill employability).
-* **Social Independence ($S_{\t$	ext{I}$}$):** $0.70$ (Widespread psychological stress and elimination anxiety).
+* **Political Independence ($P_{\text{I}$}$):** $0.90$ (High formal sovereignty, but vulnerable to demagoguery due to educational deficits).
+* **Economic Independence ($E_{\text{I}$}$):** $0.08$ (Severe failure; massive youth debt coupled with $3.84\%$ functional skill employability).
+* **Social Independence ($S_{\text{I}$}$):** $0.70$ (Widespread psychological stress and elimination anxiety).
 
 Substituting these values into the sovereignty formulation:
 
-$$T_{\t$	ext{I}$} = (0.90 + 0.08 + 0.70) \times (0.90 \times 0.08 \times 0.70)$$
+$$T_{\text{I}$} = (0.90 + 0.08 + 0.70) \times (0.90 \times 0.08 \times 0.70)$$
 
-$$T_{\t$	ext{I}$} = (1.68) \times (0.0504) = 0.084672 \approx 0.0847$$
+$$T_{\text{I}$} = (1.68) \times (0.0504) = 0.084672 \approx 0.0847$$
 
-The calculation yields $T_{\t$	ext{I}$} \approx 0.0847$. The structural decay of $E_{\t$	ext{I}$}$ (driven directly by cognitive commodification and degree degradation) acts as a multiplicative zero, reducing overall civilizational sovereignty by over $91\%$ from its theoretical baseline.
+The calculation yields $T_{\text{I}$} \approx 0.0847$. The structural decay of $E_{\text{I}$}$ (driven directly by cognitive commodification and degree degradation) acts as a multiplicative zero, reducing overall civilizational sovereignty by over $91\%$ from its theoretical baseline.
 
 ---
 
@@ -169,7 +169,7 @@ The primary demands of these street mobilizations frame the fundamental conflict
 > "Free, Fair and Quality Education is a Right of All"
 
 ### 7.2 Non-Commodified Policy Directives
-To reverse the entropy vector $\frac{d S_{\t$	ext{Civilization}$}}{d t}$, the following structural interventions are required:
+To reverse the entropy vector $\frac{d S_{\text{Civilization}$}}{d t}$, the following structural interventions are required:
 
 * Every candidate node must be provided with direct, un-bottlenecked access to high-value technical and analytical instruction.
 * Standardized, high-stakes elimination exams must be replaced with continuous, decentralized competency validation.
@@ -181,7 +181,7 @@ To reverse the entropy vector $\frac{d S_{\t$	ext{Civilization}$}}{d t}$, the fo
 
 ## 8. CONCLUSION
 
-The conversion of an educational system into an extractive commodity matrix induces rapid cognitive entropy ($\frac{d S_{\t$	ext{Civilization}$}}{d t} \to \infty$). As demonstrated by both empirical parameters and physics-based formulations, gating functional skill acquisition behind artificial bottlenecks reduces economic independence ($E_{\t$	ext{I}$} \to 0.08$) and collapses total civilizational sovereignty ($T_{\t$	ext{I}$} \approx 0.0847$). A nation cannot maintain structural independence or technical leadership while operating its educational system as a zero-sum elimination lottery. True civilizational resilience requires restoring education as a low-entropy public utility.
+The conversion of an educational system into an extractive commodity matrix induces rapid cognitive entropy ($\frac{d S_{\text{Civilization}$}}{d t} \to \infty$). As demonstrated by both empirical parameters and physics-based formulations, gating functional skill acquisition behind artificial bottlenecks reduces economic independence ($E_{\text{I}$} \to 0.08$) and collapses total civilizational sovereignty ($T_{\text{I}$} \approx 0.0847$). A nation cannot maintain structural independence or technical leadership while operating its educational system as a zero-sum elimination lottery. True civilizational resilience requires restoring education as a low-entropy public utility.
 
 ---
 
