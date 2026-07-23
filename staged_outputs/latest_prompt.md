@@ -106,13 +106,13 @@
     
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Institutional Investor Strategy Pitch Brief
+    - Required Presentation Layout Profile: Academic University Professor Abstract Paper
     
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Institutional Investor Strategy Pitch Brief.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Academic University Professor Abstract Paper.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
