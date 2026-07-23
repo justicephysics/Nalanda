@@ -27,10 +27,10 @@ TARGET_TOPIC = os.getenv("INPUT_TOPIC") or "Systemic Ruin of Education and Commo
 TARGET_FORMAT = os.getenv("INPUT_FORMAT") or "Common Man"
 
 if not GEMINI_API_KEY:
-    print("❌ FATAL ERROR: _API_KEY missing from system secret registers.")
+    print("❌ FATAL ERROR: GEMINI_API_KEY missing from system secret registers.")
     sys.exit(1)
 
-genai.configure(api_key = GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
 
 def get_vector_key(topic_string):
     topic_map = {
@@ -88,11 +88,9 @@ def dump_prompt_audit_file(prompt_text):
     and staged_outputs/latest_prompt.md for inspection on GitHub.
     """
     try:
-        # Save to root prompt.md
         with open("prompt.md", "w", encoding="utf-8") as f:
             f.write(prompt_text)
             
-        # Save to staged_outputs/latest_prompt.md
         os.makedirs("staged_outputs", exist_ok=True)
         with open("staged_outputs/latest_prompt.md", "w", encoding="utf-8") as f:
             f.write(prompt_text)
@@ -102,17 +100,16 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
+    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
     
-    # 🔒 Notice rf""" (Raw f-string) prevents Python from escaping \t into TAB characters!
-    prompt = rf"""
+    prompt = f"""
     [STRICT LATEX & GRAPHICS CONSTRAINTS - ZERO-ERROR ENFORCEMENT]:
     1. NO NESTED DOLLAR SIGNS: Never place a '$' inside an existing math block or inside subscripts/superscripts.
-       - ❌ WRONG: $S_{{$ \text{{Civilization}} }}$  or  $$\frac{{dS_{{$ \text{{Civilization}} $}}}}{{dt}}$$
-       - ✅ CORRECT: $S_{{\text{{Civilization}}}}$  or  $$\frac{{dS_{{\text{{Civilization}}}}}}{{dt}}$$
-    2. CLEAN SUB-SCRIPTS: Write clean subscripts like $S_{{\text{{Civilization}}}}$ or $\eta_{{\text{{Edu}}}}$ without internal '$' signs.
-    3. NO AMPERSANDS IN \text{{}}: Inside \text{{}} blocks, NEVER use '&' or '\&'. Always spell out the word 'and' (e.g., \text{{Wealth and Power}}).
-    4. NO ORPHAN \text{{}} IN PROSE: Every \text{{}} command MUST be enclosed inside math delimiters ($...$ or $$...$$).
+       - WRONG: $S_{{\\text{{Civilization}}}}$ with internal dollar signs
+       - CORRECT: $S_{{\\text{{Civilization}}}}$ or $$\\frac{{dS_{{\\text{{Civilization}}}}}}{{dt}}$$
+    2. CLEAN SUB-SCRIPTS: Write clean subscripts like $S_{{\\text{{Civilization}}}}$ or $\\eta_{{\\text{{Edu}}}}$ without internal '$' signs.
+    3. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and' (e.g., \\text{{Wealth and Power}}).
+    4. NO ORPHAN \\text{{}} IN PROSE: Every \\text{{}} command MUST be enclosed inside math delimiters ($...$ or $$...$$).
     5. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text. NEVER use display math ($$...$$) on newlines inside list items.
     6. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity"), NEVER as LaTeX display blocks.
     7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
@@ -138,7 +135,6 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     """
 
-    # 📌 DUMP THE GENERATED PROMPT TO DISK
     dump_prompt_audit_file(prompt)
 
     for model_name in models_to_try:
