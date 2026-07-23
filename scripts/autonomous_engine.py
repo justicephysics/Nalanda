@@ -10,33 +10,41 @@ import re
 
 def sanitize_latex_in_markdown(markdown_text):
     """
-    2-PASS AUTO-CORRECTION SANITIZER:
-    1. Strips all invalid single '$' signs nested inside display math ($$...$$).
-    2. Neutralizes '\t$', '\t$ext', '\t\\text', and ASCII tab corruptions, restoring clean \\text{...}.
+    MULTI-PASS COMPREHENSIVE LATEX SANITIZER:
+    1. Fixes list bullets missing space and opening $: *\text{ -> * $\text{
+    2. Fixes corrupted Rupee/Dollar combinations: ₹$50\text{Lakh} -> $₹50\text{Lakh}$
+    3. Fixes split math blocks: $, \text{ -> , \text{
+    4. Fixes mismatched display math: $\text{...}$$ -> $$\text{...}$$
+    5. Wraps orphan \text{} in prose or lines ending in $ with proper $ delimiters
     """
     if not markdown_text:
         return ""
     
     text = markdown_text
 
-    # PASS 1: Strip single '$' nested inside display math $$...$$
-    def clean_display_math(match):
-        content = match.group(1)
-        cleaned = content.replace('$', '')
-        return f"$${cleaned}$$"
+    # 1. Fix bullet points missing space and opening $: *\text{ -> * $\text{
+    text = re.sub(r'^(\s*\*\s*)\\text\{', r'\1$\\text{', text, flags=re.MULTILINE)
 
-    text = re.sub(r'\$\$(.*?)\$\$', clean_display_math, text, flags=re.DOTALL)
+    # 2. Fix Rupee + Dollar currency collisions (₹$50\text{Lakh} -> $₹50\text{Lakh}$)
+    text = re.sub(r'₹\$\s*([\d\.]+\s*\\text\{[^}]+\})', r'$₹\1$', text)
+    text = re.sub(r'₹\$\s*([\d\.\+]+(?:\s*\\text\{[^}]+\})?)', r'$₹\1$', text)
 
-    # PASS 2: Fix corrupted \t, \t$, \t\text, \t$text, \t$ext, ASCII tabs, etc.
-    corrupted_pattern = r'(?:\\[tT]|\t|\\|\s)*\$?\\?\s*(?:text|ext)\{\s*\$?([^}$]+)\$?\s*\}\$?'
-    
-    def fix_corrupted_text(match):
-        inner = match.group(1).replace('&', 'and').strip()
-        return f"\\text{{{inner}}}"
+    # 3. Fix split math blocks like $, \text{ -> , \text{ inside expressions
+    text = re.sub(r'\$\s*,\s*\\text\{', r', \\text{', text)
 
-    text = re.sub(corrupted_pattern, fix_corrupted_text, text)
+    # 4. Fix mismatched display math delimiters: $\text{...}$$ -> $$\text{...}$$
+    text = re.sub(r'^\$\s*(\\text\{.*?\}|\\[a-zA-Z]+.*?)\s*\$\$$', r'$$\1$$', text, flags=re.MULTILINE)
 
-    # PASS 3: Sanitize remaining ampersands inside \text{}
+    # 5. Fix lines starting with \text{} and ending with $ lacking opening $ (e.g. \text{TI} \approx 0.0847$)
+    text = re.sub(r'^(\\text\{[^}\n]+\}\s*[\approx\=].*?)\$', r'$\1$', text, flags=re.MULTILINE)
+
+    # 6. Wrap orphan \text{...} in prose with single $
+    text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
+
+    # 7. Clean up double/broken dollar signs
+    text = re.sub(r'\$\$+', '$$', text)
+
+    # 8. Clean ampersands inside \text{}
     def clean_ampersands(match):
         inner = match.group(1).replace('\\&', 'and').replace('&', 'and')
         return f"\\text{{{inner}}}"
@@ -119,19 +127,23 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
+    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
     
-    # 🔒 Double backslashes (\\text) prevent Python string escaping bugs
     prompt = f"""
-    [STRICT LATEX & GRAPHICS CONSTRAINTS - ZERO-ERROR ENFORCEMENT]:
-    1. STRICT LATEX TEXT FORMATTING: Always write text in equations as \\text{{Word}}. NEVER insert dollar signs '$' or ASCII tabs inside \\text{{}} or subscripts.
-       - WRONG: S_{{\\t$ext{{Civilization}}$}}
-       - RIGHT: S_{{\\text{{Civilization}}}}
-    2. NO NESTED DOLLARS: Never place single '$' delimiters inside display math ($$...$$).
-    3. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
-    4. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text.
-    5. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity").
-    6. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
+    [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
+    1. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
+       - WRONG: $\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
+       - RIGHT: $$\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
+    2. CLEAN CURRENCY: NEVER combine Rupee/Dollar symbols awkwardly like ₹$50\\text{{Lakh}}. Write $₹50\\text{{Lakh}}$ or ₹50 Lakh.
+    3. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
+       - WRONG: *\\text{{PI}} = 0.90$
+       - RIGHT: * $\\text{{PI}} = 0.90$
+    4. NO ORPHAN \\text{{}} IN PROSE: NEVER put raw \\text{{TI}} in plain text sentences. Write $(\\text{{TI}})$ or $\\text{{TI}}$.
+    5. SINGLE MATH BLOCK FOR TUPLES: Keep multi-variable lists inside ONE single math block.
+       - WRONG: ($L={{\\text{{Gini}}}}\\approx 0.92$,\\text{{EI}}\\approx 0.08$)
+       - RIGHT: ($$L_{{\\text{{Gini}}}} \\approx 0.92, \\text{{EI}} \\approx 0.08$$)
+    6. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
+    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
@@ -233,7 +245,7 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # 🔒 Clean LaTeX corruption before saving to disk
+    # 🔒 Auto-Sanitize LaTeX bugs before saving to disk
     final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
