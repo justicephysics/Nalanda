@@ -1,16 +1,16 @@
 
     [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
-    1. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
+    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \text{Civilization} or \text{Edu}. NEVER insert dollar signs '$' or tabs inside \text{} or subscripts.
+       - WRONG: S_{\t$ext{Civilization}$}
+       - RIGHT: S_{\text{Civilization}} or $$\frac{dS_{\text{Civilization}}}{dt}$$
+    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
        - WRONG: $\text{TI} = (\text{PI} + \text{EI})$$
        - RIGHT: $$\text{TI} = (\text{PI} + \text{EI})$$
-    2. CLEAN CURRENCY: NEVER combine Rupee/Dollar symbols awkwardly like ₹$50\text{Lakh}. Write $₹50\text{Lakh}$ or ₹50 Lakh.
-    3. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
+    3. CLEAN CURRENCY: Write plain currency terms (e.g. ₹50 Lakh or ₹1.0 Lakh Crore). NEVER combine symbols awkwardly like ₹$50\text{Lakh}.
+    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
        - WRONG: *\text{PI} = 0.90$
        - RIGHT: * $\text{PI} = 0.90$
-    4. NO ORPHAN \text{} IN PROSE: NEVER put raw \text{TI} in plain text sentences. Write $(\text{TI})$ or $\text{TI}$.
-    5. SINGLE MATH BLOCK FOR TUPLES: Keep multi-variable lists inside ONE single math block.
-       - WRONG: ($L={\text{Gini}}\approx 0.92$,\text{EI}\approx 0.08$)
-       - RIGHT: ($$L_{\text{Gini}} \approx 0.92, \text{EI} \approx 0.08$$)
+    5. NO ORPHAN \text{} IN PROSE: NEVER put raw \text{TI} in plain text sentences. Write $(\text{TI})$ or $\text{TI}$.
     6. NO AMPERSANDS IN \text{}: Inside \text{} blocks, NEVER use '&' or '\&'. Always spell out the word 'and'.
     7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
@@ -111,13 +111,13 @@
     
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Long Comprehensive System Ledger
+    - Required Presentation Layout Profile: Common Man
     
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Long Comprehensive System Ledger.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Common Man.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
