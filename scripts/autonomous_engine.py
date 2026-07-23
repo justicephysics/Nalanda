@@ -8,48 +8,61 @@ import google.generativeai as genai
 from datetime import datetime
 import re
 
-def sanitize_latex_in_markdown(markdown_text):
+def sanitize_latex_in_markdown(text):
     """
-    MULTI-PASS COMPREHENSIVE LATEX SANITIZER:
-    1. Fixes list bullets missing space and opening $: *\text{ -> * $\text{
-    2. Fixes corrupted Rupee/Dollar combinations: ₹$50\text{Lakh} -> $₹50\text{Lakh}$
-    3. Fixes split math blocks: $, \text{ -> , \text{
-    4. Fixes mismatched display math: $\text{...}$$ -> $$\text{...}$$
-    5. Wraps orphan \text{} in prose or lines ending in $ with proper $ delimiters
+    COMPREHENSIVE LATEX & MARKDOWN AUTO-SANITY ENGINE:
+    1. Neutralizes ASCII Tab (0x09) & string-escape corruption of \\text{} blocks.
+    2. Strips illegal nested '$' signs inside subscripts/superscripts (e.g., _{$\\text{...}$}).
+    3. Cleans display math $$...$$ blocks containing rogue single '$' delimiters.
+    4. Fixes currency symbol collisions (e.g., ₹$50\\text{Lakh} -> ₹50 Lakh).
+    5. Fixes unspaced list bullets (*\\text{PI} -> * $\\text{PI}).
+    6. Ensures all orphan \\text{} commands in prose are wrapped in math delimiters ($...$).
     """
-    if not markdown_text:
+    if not text:
         return ""
+
+    # 1. Repair ASCII TAB (0x09) / space / backslash corruption before 'ext{' or 'text{'
+    text = re.sub(r'\\?[\t\s]*\$?\\?\s*(?:text|ext)\{', r'\\text{', text)
+
+    # 2. Strip nested '$' inside subscripts/superscripts: _{$\text{Word}$} -> _{\text{Word}}
+    text = re.sub(r'(_|\^)\{\s*\$*\\text\{([^}]+)\}\$*\}', r'\1{\\text{\2}}', text)
     
-    text = markdown_text
+    # Strip inner dollars from \text{$...$}
+    text = re.sub(r'\\text\{\s*\$([^$]+)\$\s*\}', r'\\text{\1}', text)
 
-    # 1. Fix bullet points missing space and opening $: *\text{ -> * $\text{
+    # 3. Clean display math $$ ... $$ blocks containing rogue internal single '$' signs
+    def clean_display_block(match):
+        inner = match.group(1)
+        inner_clean = inner.replace('$', '')
+        return f"$${inner_clean}$$"
+    
+    text = re.sub(r'\$\$(.*?)\$\$', clean_display_block, text, flags=re.DOTALL)
+
+    # 4. Fix currency collisions like ₹$50\text{Lakh} or ₹$1.0\text{Lakh Crore}
+    text = re.sub(r'₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}', r'₹\1 \2', text)
+    text = re.sub(r'₹\$\s*([\d\.\+]+)', r'₹\1', text)
+
+    # 5. Fix bullet points missing space and opening $: *\text{PI} -> * $\text{PI}
     text = re.sub(r'^(\s*\*\s*)\\text\{', r'\1$\\text{', text, flags=re.MULTILINE)
-
-    # 2. Fix Rupee + Dollar currency collisions (₹$50\text{Lakh} -> $₹50\text{Lakh}$)
-    text = re.sub(r'₹\$\s*([\d\.]+\s*\\text\{[^}]+\})', r'$₹\1$', text)
-    text = re.sub(r'₹\$\s*([\d\.\+]+(?:\s*\\text\{[^}]+\})?)', r'$₹\1$', text)
-
-    # 3. Fix split math blocks like $, \text{ -> , \text{ inside expressions
-    text = re.sub(r'\$\s*,\s*\\text\{', r', \\text{', text)
-
-    # 4. Fix mismatched display math delimiters: $\text{...}$$ -> $$\text{...}$$
+    
+    # 6. Fix mismatched math starts/ends like $\text{TI} = ...$$ -> $$\text{TI} = ...$$
     text = re.sub(r'^\$\s*(\\text\{.*?\}|\\[a-zA-Z]+.*?)\s*\$\$$', r'$$\1$$', text, flags=re.MULTILINE)
 
-    # 5. Fix lines starting with \text{} and ending with $ lacking opening $ (e.g. \text{TI} \approx 0.0847$)
+    # 7. Fix lines starting with \text{} lacking opening $ (e.g. \text{TI} \approx 0.0847$)
     text = re.sub(r'^(\\text\{[^}\n]+\}\s*[\approx\=].*?)\$', r'$\1$', text, flags=re.MULTILINE)
 
-    # 6. Wrap orphan \text{...} in prose with single $
+    # 8. Wrap orphan \text{...} in prose with single $
     text = re.sub(r'(?<!\$)\\text\{([^}]+)\}(?!\$)', r'$\text{\1}$', text)
 
-    # 7. Clean up double/broken dollar signs
-    text = re.sub(r'\$\$+', '$$', text)
-
-    # 8. Clean ampersands inside \text{}
+    # 9. Clean ampersands inside \text{}
     def clean_ampersands(match):
         inner = match.group(1).replace('\\&', 'and').replace('&', 'and')
         return f"\\text{{{inner}}}"
 
     text = re.sub(r'\\text\{([^}]*)\}', clean_ampersands, text)
+
+    # 10. Replace all remaining literal ASCII tabs with spaces
+    text = text.replace('\t', ' ')
 
     return text
 
@@ -127,21 +140,21 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
+    models_to_try = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
     
     prompt = f"""
     [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
-    1. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
+    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \\text{{Civilization}} or \\text{{Edu}}. NEVER insert dollar signs '$' or tabs inside \\text{{}} or subscripts.
+       - WRONG: S_{{\\t$ext{{Civilization}}$}}
+       - RIGHT: S_{{\\text{{Civilization}}}} or $$\\frac{{dS_{{\\text{{Civilization}}}}}}{{dt}}$$
+    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
        - WRONG: $\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
        - RIGHT: $$\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
-    2. CLEAN CURRENCY: NEVER combine Rupee/Dollar symbols awkwardly like ₹$50\\text{{Lakh}}. Write $₹50\\text{{Lakh}}$ or ₹50 Lakh.
-    3. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
+    3. CLEAN CURRENCY: Write plain currency terms (e.g. ₹50 Lakh or ₹1.0 Lakh Crore). NEVER combine symbols awkwardly like ₹$50\\text{{Lakh}}.
+    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
        - WRONG: *\\text{{PI}} = 0.90$
        - RIGHT: * $\\text{{PI}} = 0.90$
-    4. NO ORPHAN \\text{{}} IN PROSE: NEVER put raw \\text{{TI}} in plain text sentences. Write $(\\text{{TI}})$ or $\\text{{TI}}$.
-    5. SINGLE MATH BLOCK FOR TUPLES: Keep multi-variable lists inside ONE single math block.
-       - WRONG: ($L={{\\text{{Gini}}}}\\approx 0.92$,\\text{{EI}}\\approx 0.08$)
-       - RIGHT: ($$L_{{\\text{{Gini}}}} \\approx 0.92, \\text{{EI}} \\approx 0.08$$)
+    5. NO ORPHAN \\text{{}} IN PROSE: NEVER put raw \\text{{TI}} in plain text sentences. Write $(\\text{{TI}})$ or $\\text{{TI}}$.
     6. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
     7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
@@ -245,7 +258,7 @@ if __name__ == "__main__":
     
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
     
-    # 🔒 Auto-Sanitize LaTeX bugs before saving to disk
+    # 🔒 Comprehensive Auto-Sanitization before writing to disk
     final_report = sanitize_latex_in_markdown(final_report)
     
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
