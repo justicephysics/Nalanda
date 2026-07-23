@@ -102,15 +102,20 @@ def dump_prompt_audit_file(prompt_text):
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
-    models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
+     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
     
-    prompt = f"""
-    [STRICT LATEX & LIST CONSTRAINTS]:
-    - In LaTeX equations ($$...$$), NEVER use ampersand symbols ('&' or '\\&') inside \\text{{}} blocks. Always spell out the word 'and'.
-    - NEVER put raw \\text{{...}} commands in standard prose unless enclosed within $ ... $ math delimiters.
-    - Inside bulleted or numbered lists, use compact inline math ($ ... $) on the same line as the bullet text. NEVER put display math ($$...$$) on newlines inside list items.
-    - Format all quotes and slogans as clean Markdown Blockquotes (e.g., > "Education is Not a Commodity") or as bullet points.
-    - Render all flowcharts using standard ```mermaid ... ``` code block syntax.
+    # 🔒 Notice rf""" (Raw f-string) prevents Python from escaping \t into TAB characters!
+    prompt = rf"""
+    [STRICT LATEX & GRAPHICS CONSTRAINTS - ZERO-ERROR ENFORCEMENT]:
+    1. NO NESTED DOLLAR SIGNS: Never place a '$' inside an existing math block or inside subscripts/superscripts.
+       - ❌ WRONG: $S_{{$ \text{{Civilization}} }}$  or  $$\frac{{dS_{{$ \text{{Civilization}} $}}}}{{dt}}$$
+       - ✅ CORRECT: $S_{{\text{{Civilization}}}}$  or  $$\frac{{dS_{{\text{{Civilization}}}}}}{{dt}}$$
+    2. CLEAN SUB-SCRIPTS: Write clean subscripts like $S_{{\text{{Civilization}}}}$ or $\eta_{{\text{{Edu}}}}$ without internal '$' signs.
+    3. NO AMPERSANDS IN \text{{}}: Inside \text{{}} blocks, NEVER use '&' or '\&'. Always spell out the word 'and' (e.g., \text{{Wealth and Power}}).
+    4. NO ORPHAN \text{{}} IN PROSE: Every \text{{}} command MUST be enclosed inside math delimiters ($...$ or $$...$$).
+    5. INLINE MATH IN LISTS: Inside bulleted or numbered lists, use ONLY compact inline math ($...$) on the exact same line as the bullet text. NEVER use display math ($$...$$) on newlines inside list items.
+    6. BLOCKQUOTES FOR SLOGANS: Format all slogans, quotes, and street demands as standard Markdown Blockquotes (e.g., > "Education is Not a Commodity"), NEVER as LaTeX display blocks.
+    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
     
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
