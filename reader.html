@@ -52,7 +52,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Navigation Bar */
         .nav-bar {
             display: flex;
             justify-content: space-between;
@@ -98,7 +97,6 @@
             line-height: 1.3;
         }
 
-        /* LIST & SPACING FIXES */
         ul, ol {
             padding-left: 24px;
             margin: 12px 0;
@@ -213,35 +211,30 @@
     }
 
     /**
-     * SELF-HEAL LATEX SANITIZER
-     * Strips ASCII Tabs, removes nested dollar signs, and fixes subscript blocks.
+     * 2-PASS AUTO-CORRECTION LATEX SANITIZER
      */
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
 
-        // 1. Repair ASCII Tab / Space corrupted \text commands
-        cleaned = cleaned.replace(/\\?[\t\s]*ext\{/g, '\\text{');
-
-        // 2. Strip nested dollar signs from subscripts: _{$...$} or _{$ \text{...} $}
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+/g, '$1{');
-        cleaned = cleaned.replace(/\$+\s*\}/g, '}');
-
-        // 3. Strip inner dollars from \text{$...$}
-        cleaned = cleaned.replace(/\\text\{\s*\$([^$]+)\$\s*\}/g, '\\text{$1}');
-
-        // 4. Sanitize ampersands inside \text{...} blocks
-        cleaned = cleaned.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
-            let noDollars = innerText.replace(/\$/g, '');
-            let sanitized = noDollars.replace(/\\&/g, 'and').replace(/&/g, 'and');
-            return '\\text{' + sanitized + '}';
+        // Pass 1: Strip single '$' nested inside display math $$...$$
+        cleaned = cleaned.replace(/\$\$([\s\S]*?)\$\$/g, function(match, displayContent) {
+            let innerCleaned = displayContent.replace(/\$/g, '');
+            return '$$' + innerCleaned + '$$';
         });
 
-        // 5. Wrap orphan \text{} in prose with single $
-        cleaned = cleaned.replace(/(?<!\$)\\text\{([^}]+)\}(?!\$)/g, '$\\text{$1}$');
+        // Pass 2: Fix corrupted \t, \t$, \t\text, \t$text, \t$ext, ASCII tabs, etc.
+        const corruptedPattern = /(?:\\[tT]|\t|\\|\s)*\$?\\?\s*(?:text|ext)\{\s*\$?([^}$]+)\$?\s*\}\$?/g;
+        cleaned = cleaned.replace(corruptedPattern, function(match, innerText) {
+            let cleanLabel = innerText.replace(/&/g, 'and').trim();
+            return '\\text{' + cleanLabel + '}';
+        });
 
-        // 6. Currency guard: Escape plain currency dollar amounts ($50 Lakh, $12B)
-        cleaned = cleaned.replace(/\$(\d+(?:\.\d+)?\s*(?:[kKMmBb]|Lakh|Crore|Cr|USD|INR)?)(?!\$)/gi, '\\$$1');
+        // Pass 3: Clean remaining ampersands inside \text{...}
+        cleaned = cleaned.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
+            let sanitized = innerText.replace(/\\&/g, 'and').replace(/&/g, 'and');
+            return '\\text{' + sanitized + '}';
+        });
 
         return cleaned;
     }
@@ -258,13 +251,13 @@
             
             let markdownText = await response.text();
 
-            // Run Self-Heal Sanitizer
+            // Run Auto-Correction Sanitizer
             markdownText = sanitizeLatexForKaTeX(markdownText);
 
             // Parse Markdown to HTML
             renderArea.innerHTML = marked.parse(markdownText);
 
-            // Transform Mermaid blocks
+            // Transform Mermaid code blocks
             const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
             codeBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
