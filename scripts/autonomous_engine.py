@@ -25,7 +25,7 @@ def sanitize_latex_in_markdown(text):
     text = text.replace(r'\t\text', r'\text')
     text = text.replace(r'\t$', '')
 
-    # 3. Convert math-mode percentages ($99.92\%$ or $99.92\%$) to plain Markdown (99.92%)
+    # 3. Convert math-mode percentages ($99.92\%$ or $99.92\%$ or $>99.92\%$ or $<99.92\%$) to plain Markdown (99.92%)
     text = re.sub(r'\$\s*([\d\.]+)\s*\\?%\s*\$', r'\1%', text)
 
     # 4. Convert escaped currency dollars before numbers inside math blocks (\$42 -> 42)
