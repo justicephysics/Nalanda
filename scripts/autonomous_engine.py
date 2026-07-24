@@ -11,6 +11,18 @@ import re
 # =====================================================================
 # 📐 THE 8 OFFICIAL DISCIPLINE MAPPINGS
 # =====================================================================
+FORMAT_MAP = {
+    "Common Man": ("Easy Snapshot", "EZS"),
+    "Easy snapshot": ("Easy Snapshot", "EZS"),
+    "Short System Profile": ("Short System Profile", "SSP"),
+    "Medium System Profile": ("Medium System Profile", "MSP"),
+    "Long System Profile": ("Long System Profile", "LSP"),
+    "X (Twitter) Post Thread": ("Twitter Post Thread", "XPT"),
+    "LinkedIn Post Asset": ("LinkedIn Post Asset", "LPA"),
+    "YouTube Video Script": ("YouTube Video Script", "YVS"),
+    "Institutional Investor Pitch": ("Investor Pitch", "IIP"),
+    "University Professor Paper": ("Professor Paper", "UPP")
+}
 
 DISCIPLINE_MAP = {
     # 1. Macroeconomic Inversion
