@@ -1,25 +1,16 @@
 
     [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
-    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \text{Civilization} or \text{Edu}. NEVER insert dollar signs '$' or tabs inside \text{} or subscripts.
-       - WRONG: S_{\t$ext{Civilization}$}
-       - RIGHT: S_{\text{Civilization}} or $$\frac{dS_{\text{Civilization}}}{dt}$$
-    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
-       - WRONG: $\text{TI} = (\text{PI} + \text{EI})$$
-       - RIGHT: $$\text{TI} = (\text{PI} + \text{EI})$$
-    3. CLEAN CURRENCY: Write plain currency terms (e.g., ₹50 Lakh or ₹1.0 Lakh Crore). NEVER combine symbols awkwardly like ₹$50\text{Lakh}.
-    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
-       - WRONG: *\text{PI} = 0.90$
-       - RIGHT: * $\text{PI} = 0.90$
-    5. NO ORPHAN \text{} IN PROSE: NEVER put raw \text{TI} in plain text sentences. Write $(\text{TI})$ or $\text{TI}$.
-    6. NO AMPERSANDS IN \text{}: Inside \text{} blocks, NEVER use '&' or '\&'. Always spell out the word 'and'.
-    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
+    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \text{Civilization} or \text{Edu}.
+    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions with matching dollar signs ($...$ or $$...$$).
+    3. CLEAN CURRENCY: Write plain currency terms (e.g., ₹50 Lakh or ₹1.0 Lakh Crore).
+    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars (* $\text{PI} = 0.90$).
+    5. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
 
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
-    - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted.
-    - Begin printing the requested production document IMMEDIATELY from the very first character of your output.
+    - Begin printing the requested production document IMMEDIATELY from the very first character.
 
-    [CORE MATRIX CONTEXT (LOCAL + UNIVERSAL DUAL SYNTHESIS)]:
+    [CORE MATRIX CONTEXT]:
     
 --- LOCAL EMPIRICAL MATRIX (EDUCATION) ---
 # VERTICAL 1: EDUCATION & EXAMINATION INTEGRITY (LOCAL SYNTHESIS - INDIA)
@@ -111,13 +102,8 @@
 
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: Easy snapshot
+    - Required Presentation Layout Profile: Long System Profiler
 
     [REAL-TIME WIRE TELEMETRY]:
-    Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
-
-    [YOUR COMPILATION DIRECTIONS]:
-    1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Easy snapshot.
-    3. Include Mermaid.js flowcharts and Markdown data comparison tables.
+    Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction'.
     
