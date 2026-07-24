@@ -218,12 +218,16 @@
             container.innerHTML = filtered.map(report => `
                 <div class="report-card">
                     <div class="report-meta">
-                        📄 ID: ${report.id || report.file_code || 'N/A'} 
-                        // 📅 ${report.date_ist || 'Unknown date'} 
-                        ${report.time_ist ? `// ⏰ ${report.time_ist}` : ''}
+                        📄 ID: ${report.id || 'N/A'} 
+                        // 📅 ${report.date || 'Unknown'} 
+                        ${report.time ? `// ⏰ ${report.time}` : ''}
                     </div>
                     <h3 class="report-title">${report.title || 'Untitled Report'}</h3>
-                    <a href="reader.html?file=${encodeURIComponent(report.file_path)}" class="master-link">
+                    <p style="color: var(--text-main); font-size: 14px; margin-bottom: 16px;">
+                        <strong>Topic:</strong> ${report.topic || 'N/A'} 
+                        <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
+                    </p>
+                    <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
                         📖 Open Master Document →
                     </a>
                 </div>
