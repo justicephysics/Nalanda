@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversion Core Reader</title>
+    <title>Inversion Core Reader [Diagnostic Mode]</title>
 
+    <!-- Marked.js for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- KaTeX CSS & JS for Math Rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Mermaid.js for Diagram Rendering -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 
     <style>
@@ -18,7 +23,6 @@
             --text-main: #c5c6c7;
             --accent: #66fcf1;
             --border-color: #2e3c4e;
-            --code-bg: #0b0c10;
             --badge-bg: #151c24;
         }
 
@@ -28,7 +32,6 @@
             --text-main: #2d3748;
             --accent: #0284c7;
             --border-color: #e2e8f0;
-            --code-bg: #f8fafc;
             --badge-bg: #edf2f7;
         }
 
@@ -63,14 +66,14 @@
             text-decoration: none;
         }
 
-        /* 📐 UNIFIED METADATA HEADER CONSOLE */
+        /* METADATA DISPLAY CONSOLE */
         .meta-console {
             background: var(--badge-bg);
             border: 1px solid var(--border-color);
             border-left: 4px solid var(--accent);
-            padding: 16px 20px;
+            padding: 14px 20px;
             border-radius: 8px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
@@ -87,6 +90,41 @@
             font-weight: 600;
             font-family: monospace;
         }
+
+        /* 🐛 ON-SCREEN DIAGNOSTIC CONSOLE LOG */
+        .debug-panel {
+            background: #05080c;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 12px;
+            color: #00ff66;
+            max-height: 280px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .debug-panel h4 {
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            border-bottom: 1px dashed #334155;
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .debug-log-entry {
+            margin: 3px 0;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .debug-log-entry.info { color: #38bdf8; }
+        .debug-log-entry.success { color: #4ade80; }
+        .debug-log-entry.warn { color: #facc15; }
+        .debug-log-entry.error { color: #f87171; font-weight: bold; }
 
         .content-card {
             background: var(--card-bg);
@@ -108,23 +146,58 @@
     <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()">🌙 Night Mode</button>
 </div>
 
-<!-- 📐 UNIFIED METADATA DISPLAY CONSOLE -->
 <div class="meta-console" id="metaConsole">
-    <span>⏳ Extracting System Metadata...</span>
+    <span>⏳ Extracting Metadata...</span>
+</div>
+
+<!-- 🐛 ON-SCREEN DIAGNOSTIC CONSOLE -->
+<div class="debug-panel" id="debugPanel">
+    <h4>
+        <span>🔍 EXECUTION DIAGNOSTIC CONSOLE</span>
+        <span id="debugStatus">INITIALIZING...</span>
+    </h4>
+    <div id="debugLogs"></div>
 </div>
 
 <div class="content-card" id="documentRenderArea">
-    <p>⏳ Loading master document...</p>
+    <p>⏳ Waiting for document rendering pipeline...</p>
 </div>
 
 <script>
+    function logDebug(message, type = 'info') {
+        const logsDiv = document.getElementById('debugLogs');
+        const timestamp = new Date().toLocaleTimeString();
+        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warn' ? '⚠️' : 'ℹ️';
+        
+        const entry = document.createElement('div');
+        entry.className = `debug-log-entry ${type}`;
+        entry.textContent = `[${timestamp}] ${icon} ${message}`;
+        if (logsDiv) {
+            logsDiv.appendChild(entry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+        console.log(`[DIAGNOSTIC - ${type.toUpperCase()}] ${message}`);
+    }
+
+    function setDebugStatus(statusText, color = '#38bdf8') {
+        const statusSpan = document.getElementById('debugStatus');
+        if (statusSpan) {
+            statusSpan.textContent = statusText;
+            statusSpan.style.color = color;
+        }
+    }
+
     function applySavedTheme() {
-        const savedTheme = localStorage.getItem('nalanda_theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-            mermaid.initialize({ startOnLoad: false, theme: 'default' });
-        } else {
-            mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        try {
+            const savedTheme = localStorage.getItem('nalanda_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                if (window.mermaid) mermaid.initialize({ startOnLoad: false, theme: 'default' });
+            } else {
+                if (window.mermaid) mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+            }
+        } catch (e) {
+            logDebug(`Theme Warning: ${e.message}`, "warn");
         }
     }
 
@@ -155,33 +228,112 @@
     }
 
     async function loadAndRenderDocument() {
-        applySavedTheme();
+        setDebugStatus("RUNNING", "#facc15");
+        logDebug("Initializing Reader execution pipeline...", "info");
+
         const renderArea = document.getElementById('documentRenderArea');
         const metaConsole = document.getElementById('metaConsole');
+
+        // Step 1: Detect URL and Parameters
+        logDebug(`Browser Location URL: ${window.location.href}`, "info");
         const urlParams = new URLSearchParams(window.location.search);
-        const filePath = urlParams.get('file') || 'published/latest_report.md';
+        const queryFileParam = urlParams.get('file');
+        
+        logDebug(`Query Param '?file=': ${queryFileParam || 'NONE (Falling back to default)'}`, "info");
 
+        const filePath = queryFileParam || 'published/latest_report.md';
+        logDebug(`Targeting document path: '${filePath}'`, "info");
+
+        // Step 2: Dependency check
+        logDebug(`CDN Status -> Marked: ${typeof marked !== 'undefined'}, KaTeX: ${typeof renderMathInElement !== 'undefined'}, Mermaid: ${typeof mermaid !== 'undefined'}`, "info");
+
+        // Step 3: Fetch file
+        let markdownText = '';
         try {
+            logDebug(`Requesting file via fetch('${filePath}')...`, "info");
             const response = await fetch(filePath);
-            if (!response.ok) throw new Error("Document not found at path: " + filePath);
             
-            let markdownText = await response.text();
+            logDebug(`Fetch Response Status: ${response.status} (${response.statusText})`, response.ok ? "success" : "error");
 
-            // Render Header Metadata Console from Path or Fallback
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status} ${response.statusText} - Document not found at '${filePath}'`);
+            }
+
+            markdownText = await response.text();
+            logDebug(`Fetch complete. Received ${markdownText.length} bytes.`, "success");
+
+            if (!markdownText || markdownText.trim().length === 0) {
+                throw new Error(`File at '${filePath}' is empty (0 bytes).`);
+            }
+
+        } catch (fetchErr) {
+            setDebugStatus("FETCH ERROR", "#f87171");
+            logDebug(`FETCH FAILURE: ${fetchErr.message}`, "error");
+            
+            if (window.location.protocol === 'file:') {
+                logDebug("⚠️ CORS LOCAL FILE BLOCK: You opened reader.html directly via file://. Browsers block local fetch! Run 'python -m http.server 8000' and go to http://localhost:8000/reader.html", "warn");
+            }
+
+            renderArea.innerHTML = `
+                <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
+                    <h3>❌ Document Fetch Failed</h3>
+                    <p><b>Requested File:</b> <code>${filePath}</code></p>
+                    <p><b>Error Details:</b> ${fetchErr.message}</p>
+                    <hr style="border-color: #334155;">
+                    <p><b>Common Causes:</b></p>
+                    <ul>
+                        <li>The filename was updated by the new titling scheme, but the URL param still points to the old filename.</li>
+                        <li>The file was saved in <code>published/</code> under a slightly different name.</li>
+                        <li>You are opening the file via <code>file:///</code> protocol instead of a local web server (<code>http://localhost:8000</code>).</li>
+                    </ul>
+                </div>
+            `;
+            return;
+        }
+
+        // Step 4: Metadata Header
+        try {
             const pathParts = filePath.split('/');
             const fileName = pathParts[pathParts.length - 1];
             
             metaConsole.innerHTML = `
                 <span class="meta-badge">📄 File: ${fileName}</span>
-                <span class="meta-badge">📍 Location: published/</span>
-                <span class="meta-badge">⚡ Status: Verified & Rendered</span>
+                <span class="meta-badge">📍 Path: ${filePath}</span>
+                <span class="meta-badge">⚡ Size: ${markdownText.length} bytes</span>
             `;
+        } catch (metaErr) {
+            logDebug(`Metadata Header Warn: ${metaErr.message}`, "warn");
+        }
 
+        // Step 5: Sanitize LaTeX
+        try {
+            logDebug("Running LaTeX multi-pass sanitizer...", "info");
             markdownText = sanitizeLatexForKaTeX(markdownText);
-            renderArea.innerHTML = marked.parse(markdownText);
+            logDebug("LaTeX sanitization finished.", "success");
+        } catch (sanErr) {
+            logDebug(`Sanitizer Error: ${sanErr.message}`, "error");
+        }
 
-            // Transform Mermaid Blocks
+        // Step 6: Marked.js Markdown Parsing
+        try {
+            logDebug("Parsing Markdown with Marked.js...", "info");
+            if (typeof marked === 'undefined') {
+                throw new Error("Marked.js library is not loaded.");
+            }
+            renderArea.innerHTML = marked.parse(markdownText);
+            logDebug("Markdown parsed & rendered to HTML DOM.", "success");
+        } catch (markErr) {
+            setDebugStatus("PARSE ERROR", "#f87171");
+            logDebug(`Marked Error: ${markErr.message}`, "error");
+            renderArea.innerHTML = `<h3 style="color:#f87171;">❌ Markdown Parsing Failed</h3><p>${markErr.message}</p>`;
+            return;
+        }
+
+        // Step 7: Mermaid Diagrams
+        try {
             const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+            logDebug(`Detected ${codeBlocks.length} Mermaid diagram blocks.`, "info");
+
             codeBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
@@ -189,12 +341,22 @@
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            const mermaidNodes = renderArea.querySelectorAll('.mermaid');
-            for (const node of mermaidNodes) {
-                try { await mermaid.run({ nodes: [node] }); } catch (e) {}
+            if (codeBlocks.length > 0 && typeof mermaid !== 'undefined') {
+                const mermaidNodes = renderArea.querySelectorAll('.mermaid');
+                for (const node of mermaidNodes) {
+                    try { await mermaid.run({ nodes: [node] }); } catch (mErr) {
+                        logDebug(`Mermaid Diagram Warn: ${mErr.message}`, "warn");
+                    }
+                }
+                logDebug("Mermaid diagrams rendered.", "success");
             }
+        } catch (mBlockErr) {
+            logDebug(`Mermaid Stage Warn: ${mBlockErr.message}`, "warn");
+        }
 
-            if (window.renderMathInElement) {
+        // Step 8: KaTeX Math Render
+        try {
+            if (typeof renderMathInElement !== 'undefined') {
                 renderMathInElement(renderArea, {
                     delimiters: [
                         { left: '$$', right: '$$', display: true },
@@ -202,13 +364,20 @@
                     ],
                     throwOnError: false
                 });
+                logDebug("KaTeX math formulas rendered.", "success");
             }
-        } catch (err) {
-            renderArea.innerHTML = `<h3 style="color:#ef9a9a;">❌ Render Failure</h3><p>${err.message}</p>`;
+        } catch (katexErr) {
+            logDebug(`KaTeX Stage Warn: ${katexErr.message}`, "warn");
         }
+
+        setDebugStatus("RENDERED OK", "#4ade80");
+        logDebug("🎉 Pipeline execution completed successfully!", "success");
     }
 
-    window.addEventListener('DOMContentLoaded', loadAndRenderDocument);
+    window.addEventListener('DOMContentLoaded', () => {
+        applySavedTheme();
+        loadAndRenderDocument();
+    });
 </script>
 </body>
 </html>
