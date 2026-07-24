@@ -1,27 +1,6 @@
 {
   "last_updated": "2026-07-25",
   "reports": [
-    {
-      "id": "N-EDU-SSP-20260725-0123",
-      "file_code": "N-EDU-SSP-20260725-0123",
-      "topic_simple": "Systemic Ruin of Education and Commodity Extraction",
-      "discipline": "Education",
-      "file_type": "Short System Profile",
-      "date_ist": "2026-07-25",
-      "time_ist": "01-23 IST",
-      "title": "N-EDU-SSP-20260725-0123 // Systemic Ruin of Education and Commodity Extraction // Education // Short System Profile // 2026-07-25 01-23 IST",
-      "file_path": "published/N-EDU-SSP-Education_SystemicRuin_ShortSystemP_2026-07-25_01-23.md"
-    },
-    {
-      "id": "N-EDU-PROFILE-20260725-0132",
-      "file_code": "N-EDU-PROFILE-20260725-0132",
-      "topic_simple": "Systemic Ruin of Education and Commodity Extraction",
-      "discipline": "Education",
-      "file_type": "Long System Profiler",
-      "date_ist": "2026-07-25",
-      "time_ist": "01-32 IST",
-      "title": "N-EDU-PROFILE-20260725-0132 // Systemic Ruin of Education and Commodity Extraction // Education // Long System Profiler // 2026-07-25 01-32 IST",
-      "file_path": "published/N-EDU-PROFILE-Education_SystemicRuin_LongSystemPr_2026-07-25_01-32.md"
-    }
+
   ]
 }
