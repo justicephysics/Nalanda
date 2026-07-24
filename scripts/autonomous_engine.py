@@ -195,7 +195,10 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     sys.exit(1)
 
 def auto_update_registry_ledger(filename, topic, format_style, timestamp):
-    registry_path = "registry.json"
+    # Force path to project root relative to this script
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    registry_path = os.path.join(base_dir, "registry.json")
+    
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     topic_to_discipline = {
@@ -213,31 +216,39 @@ def auto_update_registry_ledger(filename, topic, format_style, timestamp):
     title = f"{topic} Inversion Analysis // {format_style}"
     description = f"Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry."
 
+    # Normalize file path to forward slashes for web compatibility
+    clean_file_path = filename.replace("\\", "/")
+
     new_record = {
         "id": report_id,
         "date": current_date,
         "title": title,
         "description": description,
         "discipline": assigned_discipline,
-        "file_path": filename
+        "file_path": clean_file_path
     }
 
     try:
+        data = {"last_updated": current_date, "reports": []}
         if os.path.exists(registry_path):
             with open(registry_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        else:
-            data = {"last_updated": current_date, "reports": []}
-
-        if "reports" not in data:
-            data["reports"] = []
+                try:
+                    loaded = json.load(f)
+                    if isinstance(loaded, dict) and "reports" in loaded:
+                        data = loaded
+                except json.JSONDecodeError:
+                    print("⚠️ REGISTRY WARN: Invalid JSON structure in registry.json. Re-initializing.")
 
         data["last_updated"] = current_date
+        
+        # Deduplicate entry by ID
+        data["reports"] = [r for r in data.get("reports", []) if r.get("id") != report_id]
         data["reports"].append(new_record)
 
         with open(registry_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
-        print(f"📁 REGISTRY LEDGER UPDATED: Entry {report_id} mapped to '{assigned_discipline}'.")
+            
+        print(f"📁 REGISTRY LEDGER UPDATED SUCCESS: {registry_path} (Entry: {report_id})")
     except Exception as e:
         print(f"⚠️ REGISTRY ERROR: {str(e)}")
 
