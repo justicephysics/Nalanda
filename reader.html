@@ -211,10 +211,12 @@
             logDebug(`Received file (${markdownText.length} bytes).`, "success");
 
             const fileName = filePath.split('/').pop();
+            // Remove .md extension for display
+            const displayName = fileName.replace('.md', '');
             metaConsole.innerHTML = `
-                <span class="meta-badge">📄 File: ${fileName}</span>
-                <span class="meta-badge">📍 Path: ${filePath}</span>
-                <span class="meta-badge">⚡ Size: ${markdownText.length} bytes</span>
+                <span class="meta-badge">📄 ${displayName}</span>
+                <span class="meta-badge">📅 ${displayName.split('_')[0] || 'Unknown date'}</span>
+                <span class="meta-badge">⚡ ${markdownText.length} bytes</span>
             `;
 
             logDebug("Sanitizing LaTeX...", "info");
