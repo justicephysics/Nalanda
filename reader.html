@@ -260,7 +260,7 @@
         applySavedTheme();
         const renderArea = document.getElementById('documentRenderArea');
         const urlParams = new URLSearchParams(window.location.search);
-        const filePath = urlParams.get('file') || 'staged_outputs/latest_report.md';
+        const filePath = urlParams.get('file') || 'published/latest_report.md';
 
         try {
             const response = await fetch(filePath);
