@@ -1,7 +1,6 @@
 {
-  "last_updated": "2026-07-24",
+  "last_updated": "2026-07-25",
   "reports": [
-
     {
       "id": "N-EDU-PROFILE-20260724-2254",
       "file_code": "N-EDU-PROFILE-20260724-2254",
@@ -12,6 +11,17 @@
       "time_ist": "22-54 IST",
       "title": "N-EDU-PROFILE-20260724-2254 // Systemic Ruin of Education and Commodity Extraction // Education // Academic University Professor Abstract Paper // 2026-07-24 22-54 IST",
       "file_path": "published/N-EDU-PROFILE-Education_SystemicRuin_AcademicUniv_2026-07-24_22-54.md"
+    },
+    {
+      "id": "N-CED-SSP-20260725-0050",
+      "file_code": "N-CED-SSP-20260725-0050",
+      "topic_simple": "Systemic Ruin of Education and Commodity Extraction",
+      "discipline": "Commodity Extraction Dynamics",
+      "file_type": "Short System Profile",
+      "date_ist": "2026-07-25",
+      "time_ist": "00-50 IST",
+      "title": "N-CED-SSP-20260725-0050 // Systemic Ruin of Education and Commodity Extraction // Commodity Extraction Dynamics // Short System Profile // 2026-07-25 00-50 IST",
+      "file_path": "published/N-CED-SSP-Commodity Extraction Dynamics_SystemicRuin_ShortSystemP_2026-07-25_00-50.md"
     }
   ]
 }
