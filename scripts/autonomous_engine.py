@@ -295,7 +295,7 @@ if __name__ == "__main__":
     with open(meta["published_path"], "w", encoding="utf-8") as f:
         f.write(final_report)
 
-    //# Update latest fallback
+    # Update latest fallback
     #with open("published/latest_report.md", "w", encoding="utf-8") as f:
     #    f.write(final_report)
 
