@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 
 log_entries = []
+fatal_error = False
 
 def log_step(step_num, step_name, status, details=""):
     symbol = "✅ [PASS]" if status == "PASS" else "❌ [FAIL]"
@@ -23,6 +24,7 @@ try:
     log_step(1, "Python Modules Import", "PASS", "google-generativeai, requests, bs4 ready.")
 except Exception as e:
     log_step(1, "Python Modules Import", "FAIL", f"Missing dependency: {str(e)}")
+    fatal_error = True
 
 # STEP 2: Secrets Check
 gemini_key = os.getenv("GEMINI_API_KEY")
@@ -34,6 +36,7 @@ if gemini_key:
     log_step(2, "GEMINI_API_KEY Secrets Check", "PASS", f"Key present: {masked_key} | Topic: '{topic}'")
 else:
     log_step(2, "GEMINI_API_KEY Secrets Check", "FAIL", "GEMINI_API_KEY missing from environment secrets!")
+    fatal_error = True
 
 # STEP 3: Directory Structure Check
 dirs = ["src/verticals/local", "src/verticals/universal", "staged_outputs"]
@@ -42,14 +45,30 @@ if not missing:
     log_step(3, "Directory Structure Verification", "PASS", f"All paths verified: {dirs}")
 else:
     log_step(3, "Directory Structure Verification", "FAIL", f"Missing paths: {missing}")
+    fatal_error = True
 
-# STEP 4: Matrix Files Check
-local_file = "src/verticals/local/education_matrix.md"
-univ_file = "src/verticals/universal/education_matrix.md"
+# STEP 4: Matrix Files Check (Dynamic - checks the matrix relevant to the selected topic)
+# Map topic to its discipline key
+discipline_map = {
+    "Systemic Ruin of Education and Commodity Extraction": "education",
+    "Gross Domestic Product (GDP)": "macroeconomics",
+    "Economic Inequality and Wealth Distribution": "macroeconomics",
+    "Climate Change and Resource Exhaustion": "ecology",
+    "Artificial General Intelligence (AGI) Allocation": "agi"
+}
+matrix_key = discipline_map.get(topic, "education")
+local_file = f"src/verticals/local/{matrix_key}_matrix.md"
+univ_file = f"src/verticals/universal/{matrix_key}_matrix.md"
+
+# Check if the specific matrix exists. If not, warn but don't stop (engine can still run with telemetry only)
 if os.path.exists(local_file) and os.path.exists(univ_file):
-    log_step(4, "Education Matrix Verification", "PASS", "Local & Universal Education matrices verified.")
+    log_step(4, f"Matrix Verification ({matrix_key.upper()})", "PASS", f"Local & Universal {matrix_key} matrices verified.")
 else:
-    log_step(4, "Education Matrix Verification", "FAIL", "One or both education matrix files missing.")
+    missing_files = []
+    if not os.path.exists(local_file): missing_files.append(local_file)
+    if not os.path.exists(univ_file): missing_files.append(univ_file)
+    log_step(4, f"Matrix Verification ({matrix_key.upper()})", "FAIL", f"Missing files: {missing_files}. Engine will run without matrix context.")
+    # We DO NOT set fatal_error here because the engine can still run with telemetry only.
 
 # STEP 5: Scraper Readiness Check (Non-blocking)
 try:
@@ -65,7 +84,22 @@ if gemini_key:
         log_step(6, "Gemini API Client Setup", "PASS", "API Key configured successfully without burning quota.")
     except Exception as e:
         log_step(6, "Gemini API Client Setup", "FAIL", f"Config Error: {str(e)}")
+        fatal_error = True
 
 # Save Log
 with open("debug_log.txt", "w", encoding="utf-8") as f:
     f.write("\n".join(log_entries))
+
+# FINAL DECISION: Exit with error if fatal flag is set
+if fatal_error:
+    print("\n" + "="*60)
+    print("❌ FATAL DIAGNOSTIC FAILURE DETECTED.")
+    print("Pipeline aborted to prevent wasting runner time.")
+    print("Please fix the issues listed above and re-run.")
+    print("="*60)
+    sys.exit(1)
+else:
+    print("\n" + "="*60)
+    print("✅ ALL CRITICAL CHECKS PASSED. Proceeding to Autonomous Engine.")
+    print("="*60)
+    sys.exit(0)
