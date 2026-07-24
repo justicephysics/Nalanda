@@ -295,9 +295,9 @@ if __name__ == "__main__":
     with open(meta["published_path"], "w", encoding="utf-8") as f:
         f.write(final_report)
 
-    # Update latest fallback
-    with open("published/latest_report.md", "w", encoding="utf-8") as f:
-        f.write(final_report)
+    //# Update latest fallback
+    #with open("published/latest_report.md", "w", encoding="utf-8") as f:
+    #    f.write(final_report)
 
     print(f"✅ STAGED DUMP: {meta['staged_path']}")
     print(f"✅ PUBLISHED:   {meta['published_path']}")
