@@ -288,7 +288,7 @@ if __name__ == "__main__":
     meta = build_unified_metadata(TARGET_TOPIC, TARGET_FORMAT)
 
     print(f"🚀 UNIFIED EXECUTION TRIGGERED")
-    print(f"🆔 File Code:   {meta['file_code']}")
+    print(f"🆔 ID:          {meta['id']}")
     print(f"📚 Discipline:  {meta['discipline']}")
     print(f"📄 File Type:   {meta['file_type']}")
     print(f"⏰ Timestamp:   {meta['date_ist']} {meta['time_ist']}")
