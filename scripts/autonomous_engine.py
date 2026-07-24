@@ -262,16 +262,36 @@ if __name__ == "__main__":
 
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
 
-    # 🔒 Comprehensive Auto-Sanitization before writing to disk
+    # 🔒 Comprehensive Auto-Sanitization
     final_report = sanitize_latex_in_markdown(final_report)
 
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
-    filename = f"staged_outputs/report_{clean_topic_name}_{time_stamp_str}.md"
-
+    
+    # Define directory paths
     os.makedirs("staged_outputs", exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as file:
+    os.makedirs("published", exist_ok=True)
+
+    # Define filenames
+    staged_filename = f"staged_outputs/report_{clean_topic_name}_{time_stamp_str}.md"
+    published_filename = f"published/report_{clean_topic_name}_{time_stamp_str}.md"
+    latest_published_filename = "published/latest_report.md"
+
+    # 1. Dump scratchpad copy into staged_outputs/
+    with open(staged_filename, "w", encoding="utf-8") as file:
         file.write(final_report)
 
-    print(f"✅ SUCCESS: Formatted output locked into ledger path: {filename}")
-    auto_update_registry_ledger(filename, TARGET_TOPIC, TARGET_FORMAT, time_stamp_str)
+    # 2. Publish master report copy into published/
+    with open(published_filename, "w", encoding="utf-8") as file:
+        file.write(final_report)
+
+    # 3. Update published/latest_report.md for reader.html default fallback
+    with open(latest_published_filename, "w", encoding="utf-8") as file:
+        file.write(final_report)
+
+    print(f"✅ STAGED OUTPUT: Saved to {staged_filename}")
+    print(f"✅ PUBLISHED OUTPUT: Saved to {published_filename}")
+    print(f"✅ LATEST FALLBACK: Updated {latest_published_filename}")
+
+    # 4. Update registry.json pointing to the published file path
+    auto_update_registry_ledger(published_filename, TARGET_TOPIC, TARGET_FORMAT, time_stamp_str)
