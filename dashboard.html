@@ -216,7 +216,7 @@
                 console.error("Polling error:", e);
             }
 
-            if (checks > 30) { // Timeout after ~2.5 mins
+            if (checks > 60) { // Timeout after ~5 mins (60 checks * 5 seconds)
                 clearInterval(interval);
                 runBtn.disabled = false;
                 showStatus('⚠️ Timed out waiting for status update. Please check the Actions tab on GitHub manually.', 'error');
