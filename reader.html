@@ -18,7 +18,6 @@
 
     <style>
         :root {
-            /* Default Dark Mode Theme */
             --bg-color: #0b0c10;
             --card-bg: #1f2833;
             --text-main: #c5c6c7;
@@ -30,7 +29,6 @@
         }
 
         body.light-theme {
-            /* Day Mode Theme */
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
             --text-main: #2d3748;
@@ -211,26 +209,39 @@
     }
 
     /**
-     * 2-PASS AUTO-CORRECTION LATEX SANITIZER
+     * DETERMINISTIC MULTI-PASS LATEX SANITIZER (JS EQUIVALENT)
      */
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
 
-        // Pass 1: Strip single '$' nested inside display math $$...$$
-        cleaned = cleaned.replace(/\$\$([\s\S]*?)\$\$/g, function(match, displayContent) {
-            let innerCleaned = displayContent.replace(/\$/g, '');
-            return '$$' + innerCleaned + '$$';
-        });
+        // 1. Strip literal ASCII tabs
+        cleaned = cleaned.replace(/\t/g, ' ');
 
-        // Pass 2: Fix corrupted \t, \t$, \t\text, \t$text, \t$ext, ASCII tabs, etc.
-        const corruptedPattern = /(?:\\[tT]|\t|\\|\s)*\$?\\?\s*(?:text|ext)\{\s*\$?([^}$]+)\$?\s*\}\$?/g;
-        cleaned = cleaned.replace(corruptedPattern, function(match, innerText) {
-            let cleanLabel = innerText.replace(/&/g, 'and').trim();
-            return '\\text{' + cleanLabel + '}';
-        });
+        // 2. Replace hard corruption sequences
+        cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
+        cleaned = cleaned.replaceAll('$\\ttext', '\\text');
+        cleaned = cleaned.replaceAll('\\t\\text', '\\text');
+        cleaned = cleaned.replaceAll('\\t$', '');
 
-        // Pass 3: Clean remaining ampersands inside \text{...}
+        // 3. Clean stray $ attached to \text{} before _, ^, or }
+        cleaned = cleaned.replace(/(\\text\{[^}]+\})\$([_\^}])/g, '$1$2');
+
+        // 4. Clean stray $ before \text{} in subscripts
+        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
+        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
+
+        // 5. Fix mismatched display math bounds ($...$$ -> $$...$$)
+        cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
+
+        // 6. Fix Rupee currency collisions
+        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
+        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
+
+        // 7. Fix list bullet formatting
+        cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
+
+        // 8. Clean ampersands inside \text{}
         cleaned = cleaned.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
             let sanitized = innerText.replace(/\\&/g, 'and').replace(/&/g, 'and');
             return '\\text{' + sanitized + '}';
@@ -251,7 +262,7 @@
             
             let markdownText = await response.text();
 
-            // Run Auto-Correction Sanitizer
+            // Run Multi-Pass Sanitizer
             markdownText = sanitizeLatexForKaTeX(markdownText);
 
             // Parse Markdown to HTML
