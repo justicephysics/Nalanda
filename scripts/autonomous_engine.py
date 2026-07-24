@@ -195,7 +195,7 @@ def fetch_live_macro_news(topic_string):
 
     return f"Live Telemetry Baseline: Active tracking engaged for vector '{topic_string}'."
 
-def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
+def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style, meta):
     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
 
     prompt = f"""
@@ -222,7 +222,21 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     """
 
     os.makedirs("staged_outputs", exist_ok=True)
-    with open("prompt.md", "w", encoding="utf-8") as f: f.write(prompt)
+    
+    # ✅ NEW: Append prompt to prompt.md with a clear header
+    header = f"""# Prompt: {meta['id']} – {meta['raw_topic']}
+> **Generated for:** {meta['display_title']}
+> **Date:** {meta['date_ist']} {meta['time_ist']}
+> **Discipline:** {meta['discipline']}
+> **Format:** {meta['file_type']}
+> **File:** {meta['published_path']}
+---
+"""
+    content = header + prompt + "\n\n---\n\n"
+    
+    # Open in APPEND mode ('a') so previous prompts are kept
+    with open("prompt.md", "a", encoding="utf-8") as f:
+        f.write(content)
 
     for model_name in models_to_try:
         for attempt in range(3):
@@ -296,7 +310,7 @@ if __name__ == "__main__":
     matrix_context = load_vertical_matrix_context(TARGET_TOPIC)
     live_telemetry = fetch_live_macro_news(TARGET_TOPIC)
 
-    final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
+    final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT, meta)
     final_report = sanitize_latex_in_markdown(final_report)
 
     os.makedirs("staged_outputs", exist_ok=True)
