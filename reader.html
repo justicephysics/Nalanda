@@ -223,31 +223,34 @@
         cleaned = cleaned.replaceAll('$\\ttext', '\\text');
         cleaned = cleaned.replaceAll('\\t\\text', '\\text');
         cleaned = cleaned.replaceAll('\\t$', '');
-
-        // 3. Convert math-mode percentages ($99.92\%$ or $99.92\%$) to plain Markdown (99.92%)
+        
+        // 3. Convert math-mode percentages ($99.92\%$ or $99.92\%$ or $>99.92\%$ or $<99.92\%$) to plain Markdown (99.92%)
         cleaned = cleaned.replace(/\$\s*([\d\.]+)\s*\\?%\s*\$/g, '$1%');
-
-        // 4. Convert escaped currency dollars before numbers inside math blocks (\$42 -> 42)
+    
+        // 4. Convert math-mode percentages ($98.92\% \text{--} 99.92\%$) to plain Markdown (98.92%--99.92%)
+        cleaned = cleaned.replace(/\$\s*([\d\.]+)\s*\\?%\s*\$/g, '$1%');
+    
+        // 5. Convert escaped currency dollars before numbers inside math blocks (\$42 -> 42)
         cleaned = cleaned.replace(/\\\$\s*(\d+)/g, '$1');
 
-        // 5. Clean stray $ attached to \text{} before _, ^, or }
+        // 6. Clean stray $ attached to \text{} before _, ^, or }
         cleaned = cleaned.replace(/(\\text\{[^}]+\})\$([_\^}])/g, '$1$2');
 
-        // 6. Clean stray $ before \text{} in subscripts
+        // 7. Clean stray $ before \text{} in subscripts
         cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
         cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
 
-        // 7. Fix mismatched display math bounds ($...$$ -> $$...$$)
+        // 8. Fix mismatched display math bounds ($...$$ -> $$...$$)
         cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
 
-        // 8. Fix Rupee currency collisions
+        // 9. Fix Rupee currency collisions
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
 
-        // 9. Fix list bullet formatting
+        // 10. Fix list bullet formatting
         cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
 
-        // 10. Clean ampersands inside \text{}
+        // 11. Clean ampersands inside \text{}
         cleaned = cleaned.replace(/\\text\{([^}]*)\}/g, function(match, innerText) {
             let sanitized = innerText.replace(/\\&/g, 'and').replace(/&/g, 'and');
             return '\\text{' + sanitized + '}';
