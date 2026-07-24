@@ -11,8 +11,9 @@ Data from the Annual Status of Education Report (ASER) and national educational 
 * **Instructional Vacancies**: Over $1,000,000$ $(10\text{ Lakh})$ sanctioned public teaching posts remain vacant across primary and secondary tiers nationwide.
 
 ### 1.2 Higher Education Bottlenecks and Hyper-Inflation
-* **Central University Gatekeeping (CUET UG)**: Cut-off percentiles for top-tier public colleges (e.g., DU North Campus: SRCC, Hindu, Hansraj, St. Stephen's) sit between $98.5\%$ and $99.8\%$ percentile ($780\text{--}795+ / 800$) for general candidates in high-demand disciplines.
-* **Public Capacity Scarcity**: Premier public higher education institutions accommodate less than $1.5\%$ of the $40,000,000+$ applicants nationwide, manufacturing an artificial bottleneck.
+* **Central University Gatekeeping (CUET UG)**: Cut-off percentiles for top-tier public colleges (e.g., DU North Campus: SRCC, Hindu, Hansraj, St. Stephen's) sit between **98.5 %** and **99.8 %**
+  percentile **$(780\text{--}795+ / 800)$** for general candidates in high-demand disciplines.
+* **Public Capacity Scarcity**: Premier public higher education institutions accommodate less than 1.5 % of the $40,000,000+$ applicants nationwide, manufacturing an artificial bottleneck.
 
 ### 1.3 The Extreme Elimination Matrix
 The public education infrastructure functions primarily as an elimination engine rather than a developmental system:
