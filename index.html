@@ -115,11 +115,6 @@
             font-size: 20px;
             margin: 0 0 12px 0;
         }
-        .report-desc {
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
         .master-link {
             display: inline-block;
             color: #0b0c10;
@@ -142,75 +137,100 @@
             color: var(--accent-dim);
             font-style: italic;
         }
+        .count-badge {
+            background: #2e3c4e;
+            color: var(--text-bright);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h2>8 Frontiers Matrix</h2>
-        <button class="discipline-btn active" onclick="switchDiscipline('Macroeconomic Inversion', this)">1. Macroeconomic Inversion</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Commodity Extraction Dynamics', this)">2. Commodity Extraction Matrix</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Thermodynamic Field Dynamics', this)">3. Thermodynamic Field Dynamics</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Sovereign Debt Debasement', this)">4. Debt & Leverage Velocity</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Cognitive Network Exploitation', this)">5. Cognitive Domination Layers</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Resource Exhaustion Entropy', this)">6. Ecology & Resource Entropy</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Institutional Policy Analysis', this)">7. Institutional Structural Laws</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Civilizational Phase Transition', this)">8. Phase Transition Forecasting</button>
+        <h2>📚 Discipline Vectors</h2>
+        <button class="discipline-btn active" onclick="switchDiscipline('Education', this)">1. Education</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Economics', this)">2. Economics</button>
+        <button class="discipline-btn" onclick="switchDiscipline('Ecology', this)">3. Ecology</button>
+        <button class="discipline-btn" onclick="switchDiscipline('AI-AGI', this)">4. AI / AGI</button>
     </div>
 
     <div class="main-content">
         <header>
-            <h1 id="disciplineTitle">Macroeconomic Inversion</h1>
-            <div class="status-badge">SYSTEM TELESCOPE STATUS: ACTIVE // ROOT VAULT</div>
+            <h1 id="disciplineTitle">Education</h1>
+            <div class="status-badge">📡 SYSTEM STATUS: ACTIVE // LEDGER READY</div>
         </header>
 
         <div id="reportsContainer" class="report-grid"></div>
     </div>
 
     <script>
-        let currentDiscipline = "Macroeconomic Inversion";
+        // Default discipline set to 'Education' to match the engine's output
+        let currentDiscipline = "Education";
         let masterRegistry = [];
 
         async function fetchRegistryData() {
             try {
-                // Pointing directly to the root ledger registry file
                 const response = await fetch('registry.json');
                 const data = await response.json();
                 masterRegistry = data.reports || [];
                 renderActiveReports();
             } catch (err) {
-                console.error("Registry mapping timeout:", err);
-                document.getElementById('reportsContainer').innerHTML = '<div class="empty-state">Systemic register alignment pending initialization.</div>';
+                console.error("Registry fetch error:", err);
+                document.getElementById('reportsContainer').innerHTML = 
+                    '<div class="empty-state">⚠️ Unable to load registry. Please ensure the engine has been run at least once.</div>';
             }
         }
 
         function switchDiscipline(disciplineName, element) {
             currentDiscipline = disciplineName;
             document.getElementById('disciplineTitle').innerText = disciplineName;
+            
+            // Update active button styling
             document.querySelectorAll('.discipline-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            }
             renderActiveReports();
         }
 
         function renderActiveReports() {
             const container = document.getElementById('reportsContainer');
+            
+            // Filter reports where the discipline matches the selected one
             const filtered = masterRegistry.filter(r => r.discipline === currentDiscipline);
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state">No real-time macro CT scans staged under this discipline vector yet. Launch your inversion engine dashboard to populate this vector.</div>`;
+                container.innerHTML = `
+                    <div class="empty-state">
+                        No reports found for <strong>${currentDiscipline}</strong>. 
+                        Launch the inversion engine from the dashboard to generate your first report.
+                    </div>
+                `;
                 return;
             }
 
+            // Sort reports by date (newest first) - assumes ISO date format
+            filtered.sort((a, b) => (b.date_ist || '').localeCompare(a.date_ist || ''));
+
             container.innerHTML = filtered.map(report => `
                 <div class="report-card">
-                    <div class="report-meta">ID: ${report.id} // RECORDED: ${report.date}</div>
-                    <h3 class="report-title">${report.title}</h3>
-                    <p class="report-desc">${report.description}</p>
-                    <a href="reader.html?file=${report.file_path}" class="master-link">Open Master Document ──►</a>
+                    <div class="report-meta">
+                        📄 ID: ${report.id || report.file_code || 'N/A'} 
+                        // 📅 ${report.date_ist || 'Unknown date'} 
+                        ${report.time_ist ? `// ⏰ ${report.time_ist}` : ''}
+                    </div>
+                    <h3 class="report-title">${report.title || 'Untitled Report'}</h3>
+                    <a href="reader.html?file=${encodeURIComponent(report.file_path)}" class="master-link">
+                        📖 Open Master Document →
+                    </a>
                 </div>
             `).join('');
         }
 
+        // Load the registry when the page loads
         window.onload = fetchRegistryData;
     </script>
 </body>
