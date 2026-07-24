@@ -49,12 +49,14 @@ graph TD
 ### 2.2 Conservation and Uniform Distribution of Cognitive Potential
 Raw cognitive potential and intelligence are uniformly distributed across the human population matrix. Intelligence is not localized to elite income brackets or specific geographies. 
 
-When a civilization constructs artificial energy barriers—such as hyper-inflated tuition fees, capitation extractions, and hyper-concentrated elimination tests—it clamps down on $>95\%$ of its population matrix, inducing severe structural resistance and cognitive paralysis across the collective body.
+When a civilization constructs artificial energy barriers—such as hyper-inflated tuition fees, capitation extractions, and hyper-concentrated elimination tests—it clamps down on >95 % of its population matrix, inducing severe structural resistance and cognitive paralysis across the collective body.
 
 ### 2.3 The Skill Floor Theory of Class Generation
-Access to high-quality education and industry-grade skill acquisition is artificially restricted to a $2\%\text{--}5\%$ numerical threshold of the population matrix. This artificial numerical restriction directly generates the elite class.
+Access to high-quality education and industry-grade skill acquisition is artificially restricted to a (2 %--5 %) numerical threshold of the population matrix. This artificial numerical restriction directly generates the elite class.
 
-By constraining the skill floor, the system systematically manufactures an underprivileged, low-wage majority ($95\%\text{--}98\%$), driving economic inequality ($$L_{\text{Gini}} \approx 0.92,\text{EI} \approx 0.08,\text{TI} \approx 0.0847$$).
+By constraining the skill floor, the system systematically manufactures an underprivileged, low-wage majority (95 % -- 98 %), driving economic inequality: 
+
+($$L_{\text{Gini}} \approx 0.92,\text{EI} \approx 0.08,\text{TI} \approx 0.0847$$).
 
 ---
 
@@ -68,7 +70,7 @@ By constraining the skill floor, the system systematically manufactures an under
 ### 3.2 The Cattle Fodder Paradox (The Fake Equilibrium)
 * **Surface Ratio Illusion**: $1,490,000$ approved undergraduate engineering seats vs. $1,450,000$ JEE registered applicants presents a surface ratio of $\sim 1:1$.
 * **Quality Rejection Reality**: Only $\sim 52,500$ seats ($\sim 3.5\%$) across IITs, NITs, and Tier-1 institutions provide industry-grade technical training.
-* **Employability Metric**: Only $3.84\%$ of engineering graduates possess industry-grade software and algorithmic skills; $>80\%$ to $85\%$ remain unemployable in high-value technical sectors, forcing graduates into low-wage gig economies, delivery networks, or non-technical support roles.
+* **Employability Metric**: Only $3.84\%$ of engineering graduates possess industry-grade software and algorithmic skills; >80 % to 85 % remain unemployable in high-value technical sectors, forcing graduates into low-wage gig economies, delivery networks, or non-technical support roles.
 
 ---
 
