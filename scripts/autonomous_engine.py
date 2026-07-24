@@ -9,10 +9,6 @@ from datetime import datetime, timezone, timedelta
 import re
 
 # =====================================================================
-# 📐 UNIFIED TITLING & MAPPING ENGINE
-# =====================================================================
-
-# =====================================================================
 # 📐 THE 8 OFFICIAL DISCIPLINE MAPPINGS
 # =====================================================================
 
@@ -50,7 +46,9 @@ DISCIPLINE_MAP = {
     "Systemic Collapse and Phase Shift": ("Civilizational Phase Transition", "CPT")
 }
 
-
+# =====================================================================
+# 📐 UNIFIED TITLING & MAPPING ENGINE
+# =====================================================================
 
 def get_ist_datetime():
     """Returns current date and time in Indian Standard Time (UTC+5:30)."""
