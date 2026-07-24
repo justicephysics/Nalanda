@@ -212,8 +212,8 @@
                 return;
             }
 
-            // Sort reports by date (newest first) - assumes ISO date format
-            filtered.sort((a, b) => (b.date_ist || '').localeCompare(a.date_ist || ''));
+            // Sort reports by date (oldest first) - the newest report will appear last in the sequence
+            filtered.sort((a, b) => (a.date_ist || '').localeCompare(b.date_ist || ''));
 
             container.innerHTML = filtered.map(report => `
                 <div class="report-card">
