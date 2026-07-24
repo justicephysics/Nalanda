@@ -11,7 +11,7 @@ import re
 def sanitize_latex_in_markdown(text):
     """
     DETERMINISTIC MULTI-PASS LATEX SANITIZER
-    Achieves 100% pass rate across all 10 historical corruption patterns.
+    Achieves 100% pass rate across all 11 historical corruption patterns.
     """
     if not text:
         return ""
@@ -27,28 +27,31 @@ def sanitize_latex_in_markdown(text):
 
     # 3. Convert math-mode percentages ($99.92\%$ or $99.92\%$ or $>99.92\%$ or $<99.92\%$) to plain Markdown (99.92%)
     text = re.sub(r'\$\s*([\d\.]+)\s*\\?%\s*\$', r'\1%', text)
+    
+    # 4. Convert math-mode percentages ($98.92\% \text{--} 99.92\%$) to plain Markdown (98.92%--99.92%)
+    text = re.sub(r'\$\s*([\d\.]+)\s*\\?%\s*\$', r'\1%', text)
 
-    # 4. Convert escaped currency dollars before numbers inside math blocks (\$42 -> 42)
+    # 5. Convert escaped currency dollars before numbers inside math blocks (\$42 -> 42)
     text = re.sub(r'\\\$\s*(\d+)', r'\1', text)
 
-    # 5. Clean stray dollar signs right after \text{...} but before _, ^, or }
+    # 6. Clean stray dollar signs right after \text{...} but before _, ^, or }
     text = re.sub(r'(\\text\{[^}]+\})\$([_\^}])', r'\1\2', text)
 
-    # 6. Clean stray dollar signs BEFORE \text{...} inside subscripts/superscripts
+    # 7. Clean stray dollar signs BEFORE \text{...} inside subscripts/superscripts
     text = re.sub(r'(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}', r'\1{\2}', text)
     text = re.sub(r'(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}', r'\1{\2}', text)
 
-    # 7. Fix Mismatched Display Math Bounds ($\text{...}$$ -> $$\text{...}$$)
+    # 8. Fix Mismatched Display Math Bounds ($\text{...}$$ -> $$\text{...}$$)
     text = re.sub(r'^\$(\s*\\text\{.*?)\$\$$', r'$$\1$$', text, flags=re.MULTILINE)
 
-    # 8. Fix Rupee currency symbol collisions (₹$1.0\text{Lakh Crore} -> ₹1.0 Lakh Crore)
+    # 9. Fix Rupee currency symbol collisions (₹$1.0\text{Lakh Crore} -> ₹1.0 Lakh Crore)
     text = re.sub(r'₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}', r'₹\1 \2', text)
     text = re.sub(r'₹\$\s*([\d\.\+]+)', r'₹\1', text)
 
-    # 9. Fix list item bullets missing space & opening dollar (*\text{PI} -> * $\text{PI})
+    # 10. Fix list item bullets missing space & opening dollar (*\text{PI} -> * $\text{PI})
     text = re.sub(r'^(\s*\*)\s*\\text\{', r'\1 $\\text{', text, flags=re.MULTILINE)
 
-    # 10. Clean ampersands inside \text{}
+    # 11. Clean ampersands inside \text{}
     def clean_ampersands(match):
         inner = match.group(1).replace('\\&', 'and').replace('&', 'and')
         return f"\\text{{{inner}}}"
