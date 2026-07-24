@@ -12,26 +12,45 @@ import re
 # 📐 UNIFIED TITLING & MAPPING ENGINE
 # =====================================================================
 
+# =====================================================================
+# 📐 THE 8 OFFICIAL DISCIPLINE MAPPINGS
+# =====================================================================
+
 DISCIPLINE_MAP = {
-    "Systemic Ruin of Education and Commodity Extraction": ("Education", "EDU"),
-    "Gross Domestic Product (GDP)": ("Economics", "ECO"),
-    "Economic Inequality and Wealth Distribution": ("Economics", "ECO"),
-    "Climate Change and Resource Exhaustion": ("Ecology", "ECL"),
-    "Artificial General Intelligence (AGI) Allocation": ("AI-AGI", "AGI")
+    # 1. Macroeconomic Inversion
+    "Gross Domestic Product (GDP)": ("Macroeconomic Inversion", "MAC"),
+    "Economic Inequality and Wealth Distribution": ("Macroeconomic Inversion", "MAC"),
+
+    # 2. Commodity Extraction Dynamics
+    "Systemic Ruin of Education and Commodity Extraction": ("Commodity Extraction Dynamics", "CED"),
+    "Labor Extraction and Exam Monopolies": ("Commodity Extraction Dynamics", "CED"),
+
+    # 3. Thermodynamic Field Dynamics
+    "Thermodynamic Field Dynamics": ("Thermodynamic Field Dynamics", "TFD"),
+    "Energy Systems and Field Entropy": ("Thermodynamic Field Dynamics", "TFD"),
+
+    # 4. Sovereign Debt Debasement
+    "Sovereign Debt Debasement": ("Sovereign Debt Debasement", "SDD"),
+    "Fiat Inflation and Debt Bubbles": ("Sovereign Debt Debasement", "SDD"),
+
+    # 5. Cognitive Network Exploitation
+    "Artificial General Intelligence (AGI) Allocation": ("Cognitive Network Exploitation", "CNE"),
+    "Cognitive Manipulation and Algorithmic Control": ("Cognitive Network Exploitation", "CNE"),
+
+    # 6. Resource Exhaustion Entropy
+    "Climate Change and Resource Exhaustion": ("Resource Exhaustion Entropy", "REE"),
+    "Ecological Collapse and Material Limits": ("Resource Exhaustion Entropy", "REE"),
+
+    # 7. Institutional Policy Analysis
+    "Institutional Policy Analysis": ("Institutional Policy Analysis", "IPA"),
+    "Governance Failure and Bureaucratic Decay": ("Institutional Policy Analysis", "IPA"),
+
+    # 8. Civilizational Phase Transition
+    "Civilizational Phase Transition": ("Civilizational Phase Transition", "CPT"),
+    "Systemic Collapse and Phase Shift": ("Civilizational Phase Transition", "CPT")
 }
 
-FORMAT_MAP = {
-    "Common Man": ("Easy Snapshot", "EZS"),
-    "Easy snapshot": ("Easy Snapshot", "EZS"),
-    "Short System Profile": ("Short System Profile", "SSP"),
-    "Medium System Profile": ("Medium System Profile", "MSP"),
-    "Long System Profile": ("Long System Profile", "LSP"),
-    "X (Twitter) Post Thread": ("Twitter Post Thread", "XPT"),
-    "LinkedIn Post Asset": ("LinkedIn Post Asset", "LPA"),
-    "YouTube Video Script": ("YouTube Video Script", "YVS"),
-    "Institutional Investor Pitch": ("Investor Pitch", "IIP"),
-    "University Professor Paper": ("Professor Paper", "UPP")
-}
+
 
 def get_ist_datetime():
     """Returns current date and time in Indian Standard Time (UTC+5:30)."""
