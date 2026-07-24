@@ -124,11 +124,11 @@ def dump_prompt_audit_file(prompt_text):
         with open("prompt.md", "w", encoding="utf-8") as f:
             f.write(prompt_text)
 
-        os.makedirs("published", exist_ok=True)
-        with open("published/latest_prompt.md", "w", encoding="utf-8") as f:
+        os.makedirs("staged_outputs", exist_ok=True)
+        with open("staged_outputs/latest_prompt.md", "w", encoding="utf-8") as f:
             f.write(prompt_text)
 
-        print("📝 PROMPT AUDIT DUMP SUCCESS: Prompt written to 'prompt.md' and 'published/latest_prompt.md'.")
+        print("📝 PROMPT AUDIT DUMP SUCCESS: Prompt written to 'prompt.md' and 'staged_outputs/latest_prompt.md'.")
     except Exception as e:
         print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
 
@@ -256,9 +256,9 @@ if __name__ == "__main__":
 
     time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
     clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
-    filename = f"published/report_{clean_topic_name}_{time_stamp_str}.md"
+    filename = f"staged_outputs/report_{clean_topic_name}_{time_stamp_str}.md"
 
-    os.makedirs("published", exist_ok=True)
+    os.makedirs("staged_outputs", exist_ok=True)
     with open(filename, "w", encoding="utf-8") as file:
         file.write(final_report)
 
