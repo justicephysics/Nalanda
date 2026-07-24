@@ -46,39 +46,43 @@ def get_ist_datetime():
     }
 
 def build_unified_metadata(raw_topic, raw_format):
-    """Generates 6-part unified titling structure across files, registry, and reader."""
-    discipline, disc_code = DISCIPLINE_MAP.get(raw_topic, ("General Dynamics", "GEN"))
-    file_type, format_code = FORMAT_MAP.get(raw_format, (raw_format or "Easy Snapshot", "PROFILE"))
+    """Generates clean, human-readable file naming and registry metadata."""
+    discipline, disc_code = DISCIPLINE_MAP.get(raw_topic, ("General", "GEN"))
+    file_type, format_code = FORMAT_MAP.get(raw_format, (raw_format or "Profile", "PROFILE"))
     
     ist = get_ist_datetime()
     
-    # 1. Codes
-    short_code = f"N-{disc_code}-{format_code}"
-    file_code = f"{short_code}-{ist['compact_ts']}"  # Unique ID for registry.json
+    # 1. Clean topic name (remove special characters, shorten)
+    topic_clean = raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "Education_SystemicRuin")
+    topic_clean = topic_clean.replace("Gross Domestic Product (GDP)", "GDP")
+    topic_clean = topic_clean.replace("Economic Inequality and Wealth Distribution", "Inequality")
+    topic_clean = topic_clean.replace("Climate Change and Resource Exhaustion", "Climate")
+    topic_clean = topic_clean.replace("Artificial General Intelligence (AGI) Allocation", "AGI")
+    topic_clean = topic_clean.replace(" ", "_")  # Replace spaces with underscores
     
-    # 2. Simple Topic & Format Clean
-    topic_clean = re.sub(r'[^a-zA-Z0-9]', '', raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "SystemicRuin")
-                                                           .replace("Gross Domestic Product (GDP)", "GDPInversion")
-                                                           .replace("Economic Inequality and Wealth Distribution", "Inequality")
-                                                           .replace("Climate Change and Resource Exhaustion", "ResourceExhaustion")
-                                                           .replace("Artificial General Intelligence (AGI) Allocation", "AGIAllocation"))[:16]
-
-    format_clean = re.sub(r'[^a-zA-Z0-9]', '', file_type)[:12]
+    # 2. Clean format name (remove spaces)
+    format_clean = file_type.replace(" ", "")
     
-    # 3. Clean File Name (e.g., N-EDU-PROFILE-Education_SystemicRuin_LongSystemPr_2026-07-24_20-45.md)
-    file_name = f"{short_code}-{discipline}_{topic_clean}_{format_clean}_{ist['date_str']}_{ist['time_str']}.md"
+    # 3. Build a SIMPLE human-readable filename
+    # Format: YYYY-MM-DD_Discipline_Topic_Format.md
+    file_name = f"{ist['date_str']}_{discipline}_{topic_clean}_{format_clean}.md"
+    
+    # 4. Simple file path (no codes in the filename)
     published_path = f"published/{file_name}"
     staged_path = f"staged_outputs/{file_name}"
     
-    # 4. Display Title for Registry & Web Reader
-    display_title = f"{file_code} // {raw_topic} // {discipline} // {file_type} // {ist['date_str']} {ist['time_str']} IST"
+    # 5. Simple display title (just topic and format)
+    display_title = f"{raw_topic} – {file_type} ({ist['date_str']})"
+    
+    # 6. Short ID (just date + discipline + format)
+    short_id = f"{ist['date_str']}-{disc_code}-{format_code}"
     
     return {
-        "file_code": file_code,
-        "short_code": short_code,
+        "id": short_id,
         "discipline": discipline,
         "file_type": file_type,
         "raw_topic": raw_topic,
+        "topic_clean": topic_clean,
         "date_ist": ist["date_str"],
         "time_ist": f"{ist['time_str']} IST",
         "published_path": published_path,
@@ -235,22 +239,24 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
     sys.exit(1)
 
 def auto_update_registry_ledger(meta):
+    """Updates registry.json with clean, minimal fields."""
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     registry_path = os.path.join(base_dir, "registry.json")
 
+    # Clean record with human-readable fields
     new_record = {
-        "id": meta["file_code"],
-        "file_code": meta["file_code"],
-        "topic_simple": meta["raw_topic"],
+        "id": meta["id"],
+        "date": meta["date_ist"],
+        "time": meta["time_ist"],
+        "topic": meta["raw_topic"],
         "discipline": meta["discipline"],
-        "file_type": meta["file_type"],
-        "date_ist": meta["date_ist"],
-        "time_ist": meta["time_ist"],
+        "format": meta["file_type"],
         "title": meta["display_title"],
-        "file_path": meta["published_path"].replace("\\", "/")
+        "file": meta["published_path"]
     }
 
     try:
+        # Load existing registry
         data = {"last_updated": meta["date_ist"], "reports": []}
         if os.path.exists(registry_path):
             with open(registry_path, "r", encoding="utf-8") as f:
@@ -261,15 +267,20 @@ def auto_update_registry_ledger(meta):
                 except Exception:
                     pass
 
+        # Update timestamp
         data["last_updated"] = meta["date_ist"]
-        # Deduplicate
-        data["reports"] = [r for r in data.get("reports", []) if r.get("id") != meta["file_code"]]
+        
+        # Remove duplicate if same ID exists (prevent duplicates)
+        data["reports"] = [r for r in data.get("reports", []) if r.get("id") != meta["id"]]
+        
+        # Append new record at the END (newest last)
         data["reports"].append(new_record)
 
+        # Write back
         with open(registry_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
 
-        print(f"📁 REGISTRY LEDGER UPDATED: {meta['file_code']}")
+        print(f"📁 REGISTRY UPDATED: {meta['id']}")
     except Exception as e:
         print(f"⚠️ REGISTRY ERROR: {str(e)}")
 
