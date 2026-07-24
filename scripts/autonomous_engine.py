@@ -50,10 +50,11 @@ def build_unified_metadata(raw_topic, raw_format):
     
     ist = get_ist_datetime()
     
-    # 1. File Code
-    file_code = f"N-{disc_code}-{format_code}-{ist['compact_ts']}"
+    # 1. Codes
+    short_code = f"N-{disc_code}-{format_code}"
+    file_code = f"{short_code}-{ist['compact_ts']}"  # Unique ID for registry.json
     
-    # 2. Simple Topic
+    # 2. Simple Topic & Format Clean
     topic_clean = re.sub(r'[^a-zA-Z0-9]', '', raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "SystemicRuin")
                                                            .replace("Gross Domestic Product (GDP)", "GDPInversion")
                                                            .replace("Economic Inequality and Wealth Distribution", "Inequality")
@@ -62,16 +63,17 @@ def build_unified_metadata(raw_topic, raw_format):
 
     format_clean = re.sub(r'[^a-zA-Z0-9]', '', file_type)[:12]
     
-    # 3. File Path
-    file_name = f"{file_code}_{discipline}_{topic_clean}_{format_clean}_{ist['date_str']}_{ist['time_str']}.md"
+    # 3. Clean File Name (e.g., N-EDU-PROFILE-Education_SystemicRuin_LongSystemPr_2026-07-24_20-45.md)
+    file_name = f"{short_code}-{discipline}_{topic_clean}_{format_clean}_{ist['date_str']}_{ist['time_str']}.md"
     published_path = f"published/{file_name}"
     staged_path = f"staged_outputs/{file_name}"
     
-    # 4. Display Title
+    # 4. Display Title for Registry & Web Reader
     display_title = f"{file_code} // {raw_topic} // {discipline} // {file_type} // {ist['date_str']} {ist['time_str']} IST"
     
     return {
         "file_code": file_code,
+        "short_code": short_code,
         "discipline": discipline,
         "file_type": file_type,
         "raw_topic": raw_topic,
@@ -81,7 +83,7 @@ def build_unified_metadata(raw_topic, raw_format):
         "staged_path": staged_path,
         "display_title": display_title
     }
-
+    
 def sanitize_latex_in_markdown(text):
     """
     DETERMINISTIC MULTI-PASS LATEX SANITIZER
