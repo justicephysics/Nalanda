@@ -6,8 +6,8 @@
 
 ### 1.1 Foundational Primary and Secondary Atrophy
 Data from the Annual Status of Education Report (ASER) and national educational telemetry indicates a structural collapse at the primary and secondary base:
-* **Learning Deficits**: Over $50\%$ of Grade 5 students in rural public schools are unable to read a Grade 2 level textbook or perform basic 3-digit division.
-* **Multigrade Classrooms and School Shrinkage**: $66\%$ of Grade I and II public primary classrooms operate under multigrade arrangements (a single instructor managing multiple grades concurrently). Over $52\%$ of public primary schools maintain an enrollment of $<60$ total students due to parental flight toward low-fee private institutions.
+* **Learning Deficits**: Over 50 % of Grade 5 students in rural public schools are unable to read a Grade 2 level textbook or perform basic 3-digit division.
+* **Multigrade Classrooms and School Shrinkage**: 66 % of Grade I and II public primary classrooms operate under multigrade arrangements (a single instructor managing multiple grades concurrently). Over 52 % of public primary schools maintain an enrollment of $<60$ total students due to parental flight toward low-fee private institutions.
 * **Instructional Vacancies**: Over $1,000,000$ ($10\text{Lakh}$) sanctioned public teaching posts remain vacant across primary and secondary tiers nationwide.
 
 ### 1.2 Higher Education Bottlenecks and Hyper-Inflation
@@ -19,10 +19,10 @@ The public education infrastructure functions primarily as an elimination engine
 
 | Examination Matrix | Applicant Pool | Sanctioned / Tier-1 Seats | Effective Rejection Rate |
 | :--- | :--- | :--- | :--- |
-| **UPSC Civil Services (CSE)** | $\sim 1,300,000$ | $\sim 1,000$ | **$99.92\%$** |
-| **IIT-JEE Advanced** | $\sim 1,450,000$ | $\sim 17,500$ | **$98.80\%$** |
-| **NEET-UG (Medical)** | $\sim 2,400,000$ | $\sim 55,000$ (Govt MBBS) | **$97.71\%$** |
-| **CAT (IIM Management)** | $\sim 330,000$ | $\sim 5,500$ | **$98.34\%$** |
+| **UPSC Civil Services (CSE)** | $\sim 1,300,000$ | $\sim 1,000$ | **99.92 %** |
+| **IIT-JEE Advanced** | $\sim 1,450,000$ | $\sim 17,500$ | **98.80 %** |
+| **NEET-UG (Medical)** | $\sim 2,400,000$ | $\sim 55,000$ (Govt MBBS) | **97.71 %** |
+| **CAT (IIM Management)** | $\sim 330,000$ | $\sim 5,500$ | **98.34 %** |
 
 ---
 
@@ -110,4 +110,3 @@ A Total Independence Index of $\text{TI} \approx 0.0847$ confirms that systemic 
 
 ---
 
-End
