@@ -111,13 +111,13 @@
 
     [LIVE COMPILATION VARIABLES]:
     - Targeted Systemic Vector Query: Systemic Ruin of Education and Commodity Extraction
-    - Required Presentation Layout Profile: YouTube Script Narrative Arc with Visual Markers
+    - Required Presentation Layout Profile: Easy snapshot
 
     [REAL-TIME WIRE TELEMETRY]:
     Live Telemetry Baseline: Active tracking engaged for vector 'Systemic Ruin of Education and Commodity Extraction' matching 2026 state variables.
 
     [YOUR COMPILATION DIRECTIONS]:
     1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: YouTube Script Narrative Arc with Visual Markers.
+    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: Easy snapshot.
     3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     
