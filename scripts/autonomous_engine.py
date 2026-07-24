@@ -30,7 +30,7 @@ DISCIPLINE_MAP = {
     "Economic Inequality and Wealth Distribution": ("Economics", "ECO"),
     "Climate Change and Resource Exhaustion": ("Ecology", "ECL"),
     "Artificial General Intelligence (AGI) Allocation": ("AI-AGI", "AGI")
-
+}
 # =====================================================================
 # 📐 UNIFIED TITLING & MAPPING ENGINE
 # =====================================================================
