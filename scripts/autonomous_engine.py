@@ -5,8 +5,82 @@ import time
 import requests
 from bs4 import BeautifulSoup
 import google.generativeai as genai
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import re
+
+# =====================================================================
+# 📐 UNIFIED TITLING & MAPPING ENGINE
+# =====================================================================
+
+DISCIPLINE_MAP = {
+    "Systemic Ruin of Education and Commodity Extraction": ("Education", "EDU"),
+    "Gross Domestic Product (GDP)": ("Economics", "ECO"),
+    "Economic Inequality and Wealth Distribution": ("Economics", "ECO"),
+    "Climate Change and Resource Exhaustion": ("Ecology", "ECL"),
+    "Artificial General Intelligence (AGI) Allocation": ("AI-AGI", "AGI")
+}
+
+FORMAT_MAP = {
+    "Common Man": ("Easy Snapshot", "EZS"),
+    "Easy snapshot": ("Easy Snapshot", "EZS"),
+    "Short System Profile": ("Short System Profile", "SSP"),
+    "Medium System Profile": ("Medium System Profile", "MSP"),
+    "Long System Profile": ("Long System Profile", "LSP"),
+    "X (Twitter) Post Thread": ("Twitter Post Thread", "XPT"),
+    "LinkedIn Post Asset": ("LinkedIn Post Asset", "LPA"),
+    "YouTube Video Script": ("YouTube Video Script", "YVS"),
+    "Institutional Investor Pitch": ("Investor Pitch", "IIP"),
+    "University Professor Paper": ("Professor Paper", "UPP")
+}
+
+def get_ist_datetime():
+    """Returns current date and time in Indian Standard Time (UTC+5:30)."""
+    ist_offset = timedelta(hours=5, minutes=30)
+    now_ist = datetime.now(timezone.utc) + ist_offset
+    return {
+        "date_str": now_ist.strftime("%Y-%m-%d"),
+        "time_str": now_ist.strftime("%H-%M"),
+        "compact_ts": now_ist.strftime("%Y%m%d-%H%M")
+    }
+
+def build_unified_metadata(raw_topic, raw_format):
+    """Generates 6-part unified titling structure across files, registry, and reader."""
+    discipline, disc_code = DISCIPLINE_MAP.get(raw_topic, ("General Dynamics", "GEN"))
+    file_type, format_code = FORMAT_MAP.get(raw_format, (raw_format or "Easy Snapshot", "PROFILE"))
+    
+    ist = get_ist_datetime()
+    
+    # 1. File Code
+    file_code = f"N-{disc_code}-{format_code}-{ist['compact_ts']}"
+    
+    # 2. Simple Topic
+    topic_clean = re.sub(r'[^a-zA-Z0-9]', '', raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "SystemicRuin")
+                                                           .replace("Gross Domestic Product (GDP)", "GDPInversion")
+                                                           .replace("Economic Inequality and Wealth Distribution", "Inequality")
+                                                           .replace("Climate Change and Resource Exhaustion", "ResourceExhaustion")
+                                                           .replace("Artificial General Intelligence (AGI) Allocation", "AGIAllocation"))[:16]
+
+    format_clean = re.sub(r'[^a-zA-Z0-9]', '', file_type)[:12]
+    
+    # 3. File Path
+    file_name = f"{file_code}_{discipline}_{topic_clean}_{format_clean}_{ist['date_str']}_{ist['time_str']}.md"
+    published_path = f"published/{file_name}"
+    staged_path = f"staged_outputs/{file_name}"
+    
+    # 4. Display Title
+    display_title = f"{file_code} // {raw_topic} // {discipline} // {file_type} // {ist['date_str']} {ist['time_str']} IST"
+    
+    return {
+        "file_code": file_code,
+        "discipline": discipline,
+        "file_type": file_type,
+        "raw_topic": raw_topic,
+        "date_ist": ist["date_str"],
+        "time_ist": f"{ist['time_str']} IST",
+        "published_path": published_path,
+        "staged_path": staged_path,
+        "display_title": display_title
+    }
 
 def sanitize_latex_in_markdown(text):
     """
@@ -69,18 +143,14 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-def get_vector_key(topic_string):
-    topic_map = {
-        "Systemic Ruin of Education and Commodity Extraction": "education",
-        "Gross Domestic Product (GDP)": "macroeconomics",
-        "Economic Inequality and Wealth Distribution": "inequality",
-        "Climate Change and Resource Exhaustion": "ecology",
-        "Artificial General Intelligence (AGI) Allocation": "agi"
-    }
-    return topic_map.get(topic_string, "education")
-
 def load_vertical_matrix_context(topic_string):
-    vector_key = get_vector_key(topic_string)
+    discipline, disc_code = DISCIPLINE_MAP.get(topic_string, ("education", "EDU"))
+    vector_key = disc_code.lower()
+    if vector_key == "edu": vector_key = "education"
+    elif vector_key == "eco": vector_key = "macroeconomics"
+    elif vector_key == "ecl": vector_key = "ecology"
+    elif vector_key == "agi": vector_key = "agi"
+
     local_path = f"src/verticals/local/{vector_key}_matrix.md"
     universal_path = f"src/verticals/universal/{vector_key}_matrix.md"
 
@@ -88,17 +158,15 @@ def load_vertical_matrix_context(topic_string):
     if os.path.exists(local_path):
         with open(local_path, "r", encoding="utf-8") as f:
             context_payload += f"\n--- LOCAL EMPIRICAL MATRIX ({vector_key.upper()}) ---\n" + f.read()
-            print(f"✅ Loaded Local Matrix: {local_path}")
 
     if os.path.exists(universal_path):
         with open(universal_path, "r", encoding="utf-8") as f:
             context_payload += f"\n--- UNIVERSAL PHYSICS MATRIX ({vector_key.upper()}) ---\n" + f.read()
-            print(f"✅ Loaded Universal Matrix: {universal_path}")
 
     return context_payload
 
 def fetch_live_macro_news(topic_string):
-    search_query = f"latest {topic_string} paper leak protests news 2026"
+    search_query = f"latest {topic_string} news 2026"
     search_url = f"https://html.duckduckgo.com/html/?q={search_query.replace(' ', '+')}"
     headers = {"User-Agent": "Mozilla/5.0 InversionControlDashboard/3.0"}
 
@@ -117,46 +185,24 @@ def fetch_live_macro_news(topic_string):
     except Exception as e:
         print(f"⚠️ Telemetry fetch skipped: {str(e)}")
 
-    return f"Live Telemetry Baseline: Active tracking engaged for vector '{topic_string}' matching 2026 state variables."
-
-def dump_prompt_audit_file(prompt_text):
-    try:
-        with open("prompt.md", "w", encoding="utf-8") as f:
-            f.write(prompt_text)
-
-        os.makedirs("staged_outputs", exist_ok=True)
-        with open("staged_outputs/latest_prompt.md", "w", encoding="utf-8") as f:
-            f.write(prompt_text)
-
-        print("📝 PROMPT AUDIT DUMP SUCCESS: Prompt written to 'prompt.md' and 'staged_outputs/latest_prompt.md'.")
-    except Exception as e:
-        print(f"⚠️ PROMPT AUDIT DUMP FAILED: {str(e)}")
+    return f"Live Telemetry Baseline: Active tracking engaged for vector '{topic_string}'."
 
 def compile_custom_inversion_report(news_payload, matrix_context, topic, format_style):
     models_to_try = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro']
 
     prompt = f"""
     [STRICT LATEX CURRENCY & MATH DELIMITER RULES]:
-    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \\text{{Civilization}} or \\text{{Edu}}. NEVER insert dollar signs '$' or tabs inside \\text{{}} or subscripts.
-       - WRONG: S_{{\\t$ext{{Civilization}}$}}
-       - RIGHT: S_{{\\text{{Civilization}}}} or $$\\frac{{dS_{{\\text{{Civilization}}}}}}{{dt}}$$
-    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions or variables with matching dollar signs ($...$ for inline, $$...$$ for display).
-       - WRONG: $\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
-       - RIGHT: $$\\text{{TI}} = (\\text{{PI}} + \\text{{EI}})$$
-    3. CLEAN CURRENCY: Write plain currency terms (e.g., ₹50 Lakh or ₹1.0 Lakh Crore). NEVER combine symbols awkwardly like ₹$50\\text{{Lakh}}.
-    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars.
-       - WRONG: *\\text{{PI}} = 0.90$
-       - RIGHT: * $\\text{{PI}} = 0.90$
-    5. NO ORPHAN \\text{{}} IN PROSE: NEVER put raw \\text{{TI}} in plain text sentences. Write $(\\text{{TI}})$ or $\\text{{TI}}$.
-    6. NO AMPERSANDS IN \\text{{}}: Inside \\text{{}} blocks, NEVER use '&' or '\\&'. Always spell out the word 'and'.
-    7. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
+    1. CLEAN LATEX TEXT: Write clean LaTeX commands like \\text{{Civilization}} or \\text{{Edu}}.
+    2. MATCHING DELIMITERS: ALWAYS wrap entire math expressions with matching dollar signs ($...$ or $$...$$).
+    3. CLEAN CURRENCY: Write plain currency terms (e.g., ₹50 Lakh or ₹1.0 Lakh Crore).
+    4. BULLET LIST SPACING: ALWAYS include a space and leading dollar sign after bullet stars (* $\\text{{PI}} = 0.90$).
+    5. MERMAID DIAGRAMS: Enclose all flowcharts inside ```mermaid ... ``` code blocks.
 
     [CRITICAL SYSTEM BOUNDARY & EXECUTION CONSTRAINTS]:
     - You act EXCLUSIVELY as a raw, programmatic ledger compilation machine.
-    - Absolutely ZERO conversational prefaces, friendly introductions, or postscripts are permitted.
-    - Begin printing the requested production document IMMEDIATELY from the very first character of your output.
+    - Begin printing the requested production document IMMEDIATELY from the very first character.
 
-    [CORE MATRIX CONTEXT (LOCAL + UNIVERSAL DUAL SYNTHESIS)]:
+    [CORE MATRIX CONTEXT]:
     {matrix_context}
 
     [LIVE COMPILATION VARIABLES]:
@@ -165,133 +211,95 @@ def compile_custom_inversion_report(news_payload, matrix_context, topic, format_
 
     [REAL-TIME WIRE TELEMETRY]:
     {news_payload}
-
-    [YOUR COMPILATION DIRECTIONS]:
-    1. Synthesize BOTH the Local Empirical Matrix and Universal Physics Matrix provided in the context.
-    2. Produce ONE highly detailed, comprehensive, production-grade master document formatted EXCLUSIVELY to fit the requested profile layout: {format_style}.
-    3. Include Mermaid.js flowcharts and Markdown data comparison tables.
     """
 
-    dump_prompt_audit_file(prompt)
+    os.makedirs("staged_outputs", exist_ok=True)
+    with open("prompt.md", "w", encoding="utf-8") as f: f.write(prompt)
 
     for model_name in models_to_try:
         for attempt in range(3):
             try:
-                print(f"🧠 Attempting compilation using '{model_name}' (Attempt {attempt+1}/3)...")
+                print(f"🧠 Attempting compilation using '{model_name}'...")
                 model = genai.GenerativeModel(model_name)
                 response = model.generate_content(prompt)
                 if response and response.text:
                     return response.text
             except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "quota" in err_str.lower():
-                    print(f"⏳ Rate limit encountered. Pausing 15 seconds before retry...")
-                    time.sleep(15)
-                else:
-                    print(f"⚠️ Model {model_name} failed: {err_str[:100]}... Trying next option.")
-                    break
+                time.sleep(10)
 
-    print("❌ FATAL COMPILER ERROR: All model attempts exhausted due to API limits or availability.")
+    print("❌ FATAL COMPILER ERROR: All model attempts exhausted.")
     sys.exit(1)
 
-def auto_update_registry_ledger(filename, topic, format_style, timestamp):
-    # Force path to project root relative to this script
+def auto_update_registry_ledger(meta):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     registry_path = os.path.join(base_dir, "registry.json")
-    
-    current_date = datetime.now().strftime("%Y-%m-%d")
-
-    topic_to_discipline = {
-        "Systemic Ruin of Education and Commodity Extraction": "Commodity Extraction Dynamics",
-        "Gross Domestic Product (GDP)": "Macroeconomic Inversion",
-        "Economic Inequality and Wealth Distribution": "Macroeconomic Inversion",
-        "Climate Change and Resource Exhaustion": "Resource Exhaustion Entropy",
-        "Artificial General Intelligence (AGI) Allocation": "Cognitive Network Exploitation"
-    }
-    assigned_discipline = topic_to_discipline.get(topic, "Commodity Extraction Dynamics")
-
-    clean_topic = "".join([c if c.isalnum() else "_" for c in topic[:12]])
-    report_id = f"N-SYS-{clean_topic.upper()}-{timestamp}"
-
-    title = f"{topic} Inversion Analysis // {format_style}"
-    description = f"Dual-synthesis (Local + Universal) master document evaluated under real-time telemetry."
-
-    # Normalize file path to forward slashes for web compatibility
-    clean_file_path = filename.replace("\\", "/")
 
     new_record = {
-        "id": report_id,
-        "date": current_date,
-        "title": title,
-        "description": description,
-        "discipline": assigned_discipline,
-        "file_path": clean_file_path
+        "id": meta["file_code"],
+        "file_code": meta["file_code"],
+        "topic_simple": meta["raw_topic"],
+        "discipline": meta["discipline"],
+        "file_type": meta["file_type"],
+        "date_ist": meta["date_ist"],
+        "time_ist": meta["time_ist"],
+        "title": meta["display_title"],
+        "file_path": meta["published_path"].replace("\\", "/")
     }
 
     try:
-        data = {"last_updated": current_date, "reports": []}
+        data = {"last_updated": meta["date_ist"], "reports": []}
         if os.path.exists(registry_path):
             with open(registry_path, "r", encoding="utf-8") as f:
                 try:
                     loaded = json.load(f)
                     if isinstance(loaded, dict) and "reports" in loaded:
                         data = loaded
-                except json.JSONDecodeError:
-                    print("⚠️ REGISTRY WARN: Invalid JSON structure in registry.json. Re-initializing.")
+                except Exception:
+                    pass
 
-        data["last_updated"] = current_date
-        
-        # Deduplicate entry by ID
-        data["reports"] = [r for r in data.get("reports", []) if r.get("id") != report_id]
+        data["last_updated"] = meta["date_ist"]
+        # Deduplicate
+        data["reports"] = [r for r in data.get("reports", []) if r.get("id") != meta["file_code"]]
         data["reports"].append(new_record)
 
         with open(registry_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
-            
-        print(f"📁 REGISTRY LEDGER UPDATED SUCCESS: {registry_path} (Entry: {report_id})")
+
+        print(f"📁 REGISTRY LEDGER UPDATED: {meta['file_code']}")
     except Exception as e:
         print(f"⚠️ REGISTRY ERROR: {str(e)}")
 
 if __name__ == "__main__":
-    print(f"🚀 Dynamic Modular Execution Triggered.")
-    print(f"📡 Selected Vector: {TARGET_TOPIC}")
-    print(f"📋 Selected Profile: {TARGET_FORMAT}")
+    meta = build_unified_metadata(TARGET_TOPIC, TARGET_FORMAT)
+
+    print(f"🚀 UNIFIED EXECUTION TRIGGERED")
+    print(f"🆔 File Code:   {meta['file_code']}")
+    print(f"📚 Discipline:  {meta['discipline']}")
+    print(f"📄 File Type:   {meta['file_type']}")
+    print(f"⏰ Timestamp:   {meta['date_ist']} {meta['time_ist']}")
 
     matrix_context = load_vertical_matrix_context(TARGET_TOPIC)
     live_telemetry = fetch_live_macro_news(TARGET_TOPIC)
 
     final_report = compile_custom_inversion_report(live_telemetry, matrix_context, TARGET_TOPIC, TARGET_FORMAT)
-
-    # 🔒 Comprehensive Auto-Sanitization
     final_report = sanitize_latex_in_markdown(final_report)
 
-    time_stamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    clean_topic_name = "".join([c if c.isalnum() else "_" for c in TARGET_TOPIC[:15]])
-    
-    # Define directory paths
     os.makedirs("staged_outputs", exist_ok=True)
     os.makedirs("published", exist_ok=True)
 
-    # Define filenames
-    staged_filename = f"staged_outputs/report_{clean_topic_name}_{time_stamp_str}.md"
-    published_filename = f"published/report_{clean_topic_name}_{time_stamp_str}.md"
-    latest_published_filename = "published/latest_report.md"
+    # Dump into staged_outputs
+    with open(meta["staged_path"], "w", encoding="utf-8") as f:
+        f.write(final_report)
 
-    # 1. Dump scratchpad copy into staged_outputs/
-    with open(staged_filename, "w", encoding="utf-8") as file:
-        file.write(final_report)
+    # Publish master copy
+    with open(meta["published_path"], "w", encoding="utf-8") as f:
+        f.write(final_report)
 
-    # 2. Publish master report copy into published/
-    with open(published_filename, "w", encoding="utf-8") as file:
-        file.write(final_report)
+    # Update latest fallback
+    with open("published/latest_report.md", "w", encoding="utf-8") as f:
+        f.write(final_report)
 
-    # 3. Update published/latest_report.md for reader.html default fallback
-    with open(latest_published_filename, "w", encoding="utf-8") as file:
-        file.write(final_report)
+    print(f"✅ STAGED DUMP: {meta['staged_path']}")
+    print(f"✅ PUBLISHED:   {meta['published_path']}")
 
-    print(f"✅ STAGED OUTPUT: Saved to {staged_filename}")
-    print(f"✅ PUBLISHED OUTPUT: Saved to {published_filename}")
-    print(f"✅ LATEST FALLBACK: Updated {latest_published_filename}")
-
-    # 4. Update registry.json pointing to the published file path
-    auto_update_registry_ledger(published_filename, TARGET_TOPIC, TARGET_FORMAT, time_stamp_str)
+    auto_update_registry_ledger(meta)
