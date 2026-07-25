@@ -119,7 +119,9 @@
   
     /* Dynamic scaling: shrink if too wide */
     .katex-display > .katex {
-      scale: calc(min(1, 100% / 900)); /* auto scale relative to container */
+      width: auto;
+      max-width: 100%;
+      font-size: clamp(0.75rem, 2vw, 1rem); /* scales text universally */
     }
   
     .katex {
