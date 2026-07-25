@@ -53,12 +53,12 @@ def build_unified_metadata(raw_topic, raw_format):
     ist = get_ist_datetime()
     
     # 1. Clean topic name (remove special characters, shorten)
-    topic_clean = raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "Education_SystemicRuin")
+    topic_clean = raw_topic.replace("Systemic Ruin of Education and Commodity Extraction", "SystemicRuin")
     topic_clean = topic_clean.replace("Gross Domestic Product (GDP)", "GDP")
     topic_clean = topic_clean.replace("Economic Inequality and Wealth Distribution", "Inequality")
     topic_clean = topic_clean.replace("Climate Change and Resource Exhaustion", "Climate")
     topic_clean = topic_clean.replace("Artificial General Intelligence (AGI) Allocation", "AGI")
-    topic_clean = topic_clean.replace(" ", "_")  # Replace spaces with underscores
+    topic_clean = topic_clean.replace(" ", "_")
     
     # 2. Clean format name (remove spaces)
     format_clean = file_type.replace(" ", "")
