@@ -116,7 +116,26 @@
       overflow-wrap: break-word;
       word-break: break-word;
     }
+  .content-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
 
+  /* 🧮 Math block overflow handling */
+  .katex-display {
+    max-width: 100%;
+    overflow-x: auto;   /* horizontal scroll if too wide */
+    overflow-y: hidden;
+    padding-bottom: 8px; /* space for scrollbar */
+  }
+
+  .katex-display > .katex {
+    display: inline-block;
+    min-width: max-content; /* keep formula intact */
+  }
 
     h1, h2, h3 { color: var(--accent); }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; display: block; overflow-x: auto; }
