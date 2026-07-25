@@ -96,6 +96,28 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
 
+        /* 🧮 KaTeX line wrapping fix */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      display: block;
+      white-space: normal;
+      word-break: break-word;
+    }
+    
+    .katex {
+      white-space: normal !important;
+      word-break: break-word !important;
+    }
+    
+    .content-card p,
+    .content-card li {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+
     h1, h2, h3 { color: var(--accent); }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; display: block; overflow-x: auto; }
     th, td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
