@@ -1,7 +1,7 @@
 
 # SYSTEM VECTOR DIAGNOSTIC: SYSTEMIC RUIN OF EDUCATION AND COMMODITY EXTRACTION
 
---- SECTION 1: EXECUTIVE SUMMARY & SYSTEMIC DIAGNOSTIC ---
+### SECTION 1: EXECUTIVE SUMMARY & SYSTEMIC DIAGNOSTIC
 
 The structural degradation of educational infrastructure represents an existential entropy hazard to civilizational survival. Education operates not as a commercial service or discretionary administrative sector, but as the foundational anti-entropic information transmission mechanism required to maintain the physical, technological, and social architecture of human society. 
 
@@ -20,7 +20,7 @@ graph TD
     G --> H[Total Sovereignty Collapse: TI = 0.084672]
 ```
 
---- SECTION 2: UNIVERSAL PHYSICS MATRIX & MATHEMATICAL FORMALISM ---
+### SECTION 2: UNIVERSAL PHYSICS MATRIX & MATHEMATICAL FORMALISM
 
 1. Thermodynamic Law of Cognitive Transmission
 Physical systems left unmaintained naturally decay toward maximum entropy ($S \to \infty$). To sustain complex technological and social structures, low-entropy cognitive patterns must be transmitted efficiently from mature nodes to developing nodes. The rate of civilizational entropy decay is inversely proportional to the efficiency of the educational transmission matrix:
@@ -57,7 +57,7 @@ $$\text{TI} = (1.68) \times (0.0504) = 0.084672$$
 
 A Total Index ($\text{TI}$) of $0.084672$ confirms that restricting the cognitive liberation gateway systematically neutralizes political sovereignty by destroying economic self-reliance and social stability.
 
---- SECTION 3: EMPIRICAL MATRIX & LOCAL FAILURE ARCHITECTURE ---
+### SECTION 3: EMPIRICAL MATRIX & LOCAL FAILURE ARCHITECTURE
 
 1. Primary & Secondary Foundational Decay
 * ASER Data: Over 50% of Grade 5 students in rural public schools cannot read a Grade 2 textbook or perform basic 3-digit division.
@@ -92,7 +92,7 @@ A Total Index ($\text{TI}$) of $0.084672$ confirms that restricting the cognitiv
 * Employability Benchmark: Only 3.84% of engineering graduates possess industry-grade software/algorithmic skills; >80% to 85% remain unemployable in the knowledge economy.
 * Structural Outcome: 96.5% of seats function as credential mills. Families liquidate ancestral land or take high-interest loans, only for graduates to be dumped into low-wage gig work, delivery roles, or non-technical call centers.
 
---- SECTION 4: PHYSIOLOGICAL TELEMETRY & YOUTH RESISTANCE ---
+### SECTION 4: PHYSIOLOGICAL TELEMETRY & YOUTH RESISTANCE
 
 1. NCRB Mortality & Health Telemetry
 * Student Suicides: National Crime Records Bureau (NCRB) data documents >13,000 student suicides annually (>35 deaths/day; 1 every 40 minutes).
@@ -104,10 +104,10 @@ A Total Index ($\text{TI}$) of $0.084672$ confirms that restricting the cognitiv
 * State Suppression Response: Heavy barricading, internet suspensions in central Delhi, lathi-charges, and preventive detentions of student leaders.
 * Moral Telemetry Framing: Public placards and street slogans frame the conflict: "Education is Not a Commodity," "Empathy Over Empire," and "Free, Fair & Quality Education is a Right of All."
 
---- SECTION 5: STRATEGIC INVARIANTS & SYSTEMIC SUMMARY ---
+### SECTION 5: STRATEGIC INVARIANTS & SYSTEMIC SUMMARY
 
 * $\text{Invariant 1}$: The conversion of education into an extortionate lottery sabotages the republic's sovereign future, locking the civilizational state into perpetual technological dependency.
 * $\text{Invariant 2}$: Structural liberation requires dismantling the artificial $2\% \text{ to } 5\%$ skill floor bottleneck and eradicating capitation fees and coaching mafias.
 * $\text{Invariant 3}$: Failure to establish a transparent, uncorrupted, and universally accessible cognitive transmission network inevitably converts youth energy from productive learning into mass systemic resistance.
 
-## LEDGER COMPILATION COMPLETE -- ALL SYSTEM VARS VERIFIED -- EXITING ROUTINE
+**LEDGER COMPILATION COMPLETE -- ALL SYSTEM VARS VERIFIED -- EXITING ROUTINE**
