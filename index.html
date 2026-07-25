@@ -233,4 +233,12 @@
             <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
           </p>
           <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
-            📖 Open Master Document
+          📖 Open Master Document →
+          </a>
+        </div>
+      `).join('');
+    }
+    window.onload = fetchRegistryData;
+  </script>
+</body>
+</html>
