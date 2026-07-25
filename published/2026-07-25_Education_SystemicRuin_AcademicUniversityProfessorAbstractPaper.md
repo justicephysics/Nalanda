@@ -112,7 +112,7 @@ graph LR
     A[Uniform Cognitive Distribution] --> B{High Energy Barrier}
     B -- Restricted 2%-5% --> C[Generated Elite / Skill Floor]
     B -- Blocked 95%-98% --> D[Manufactured Underprivileged Base]
-    D --> E[L_Gini = 0.92 | Low Productive Capacity]
+    D --> E[L_Gini = 0.92 -- Low Productive Capacity]
 ```
 
 ### 7.3 Theoretical Revision of Class Generation
