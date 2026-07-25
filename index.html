@@ -233,12 +233,72 @@
             <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
           </p>
           <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
-          📖 Open Master Document →
+            📖 Open Master Document →
+          </a>
+            <script>
+    let currentDiscipline = "Education";
+    let masterRegistry = [];
+
+    async function fetchRegistryData() {
+      try {
+        const response = await fetch('registry.json');
+        const data = await response.json();
+        masterRegistry = data.reports || [];
+        renderActiveReports();
+      } catch (err) {
+        document.getElementById('reportsContainer').innerHTML =
+          '<div class="empty-state">⚠️ Unable to load registry. Please ensure the engine has been run at least once.</div>';
+      }
+    }
+
+    function switchDiscipline(disciplineName, element) {
+      currentDiscipline = disciplineName;
+      document.getElementById('disciplineTitle').innerText = disciplineName;
+      document.querySelectorAll('.discipline-btn').forEach(btn => btn.classList.remove('active'));
+      if (element) element.classList.add('active');
+      renderActiveReports();
+    }
+
+    function renderActiveReports() {
+      const container = document.getElementById('reportsContainer');
+      const filtered = masterRegistry.filter(r => r.discipline === currentDiscipline);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            No reports found for <strong>${currentDiscipline}</strong>.
+          </div>`;
+        return;
+      }
+
+      filtered.sort((a, b) => (a.date_ist || '').localeCompare(b.date_ist || ''));
+
+      container.innerHTML = filtered.map(report => `
+        <div class="report-card">
+          <div class="report-meta">
+            📄 ID: ${report.id || 'N/A'} // 📅 ${report.date || 'Unknown'} ${report.time ? `// ⏰ ${report.time}` : ''}
+          </div>
+          <h3 class="report-title">${report.title || 'Untitled Report'}</h3>
+          <p style="color: var(--text-main); font-size: 14px; margin-bottom: 16px;">
+            <strong>Topic:</strong> ${report.topic || 'N/A'}
+            <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
+          </p>
+          <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
+            📖 Open Master Document →
           </a>
         </div>
       `).join('');
     }
+
+    // 🌗 Theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+    }
+
     window.onload = fetchRegistryData;
   </script>
 </body>
 </html>
+
+
+        
