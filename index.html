@@ -1,241 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justice Physics Nalanda // Systemic Inversion Ledger</title>
-    <style>
-        :root {
-            --bg-color: #0B0C10;
-            --card-bg: #1F2833;
-            --accent: #66FCF1;
-            --accent-dim: #45A29E;
-            --text-main: #C5C6C7;
-            --text-bright: #FFFFFF;
-            --warning: #FF3B30;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 320px;
-            background: #11141a;
-            border-right: 1px solid #2e3c4e;
-            padding: 30px 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar h2 {
-            color: var(--accent);
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 0;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #2e3c4e;
-            padding-bottom: 10px;
-        }
-        .discipline-btn {
-            background: transparent;
-            border: 1px solid #2e3c4e;
-            color: var(--text-main);
-            padding: 12px 15px;
-            text-align: left;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-        .discipline-btn:hover, .discipline-btn.active {
-            background: var(--card-bg);
-            border-color: var(--accent);
-            color: var(--text-bright);
-            box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
-        }
-        .main-content {
-            flex: 1;
-            padding: 40px 50px;
-            box-sizing: border-box;
-            max-width: 1000px;
-        }
-        header {
-            margin-bottom: 40px;
-            border-bottom: 1px solid #2e3c4e;
-            padding-bottom: 20px;
-        }
-        header h1 {
-            color: var(--text-bright);
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            letter-spacing: -0.5px;
-        }
-        .status-badge {
-            display: inline-block;
-            background: #1c232d;
-            border: 1px solid var(--accent-dim);
-            color: var(--accent);
-            padding: 4px 10px;
-            font-family: monospace;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        .report-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        .report-card {
-            background: var(--card-bg);
-            border: 1px solid #2e3c4e;
-            border-radius: 8px;
-            padding: 24px;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-        .report-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-dim);
-        }
-        .report-meta {
-            font-family: monospace;
-            font-size: 12px;
-            color: var(--accent-dim);
-            margin-bottom: 8px;
-        }
-        .report-title {
-            color: var(--text-bright);
-            font-size: 20px;
-            margin: 0 0 12px 0;
-        }
-        .master-link {
-            display: inline-block;
-            color: #0b0c10;
-            background: var(--accent);
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-        .master-link:hover {
-            box-shadow: 0 0 12px var(--accent);
-        }
-        .empty-state {
-            padding: 40px;
-            text-align: center;
-            border: 1px dashed #2e3c4e;
-            border-radius: 8px;
-            color: var(--accent-dim);
-            font-style: italic;
-        }
-        .count-badge {
-            background: #2e3c4e;
-            color: var(--text-bright);
-            border-radius: 12px;
-            padding: 2px 10px;
-            font-size: 12px;
-            margin-left: 8px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Justice Physics Nalanda // Systemic Inversion Ledger</title>
+  <style>
+    :root {
+      --bg-color: #0B0C10;
+      --card-bg: #1F2833;
+      --accent: #66FCF1;
+      --accent-dim: #45A29E;
+      --text-main: #C5C6C7;
+      --text-bright: #FFFFFF;
+      --warning: #FF3B30;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 320px;
+      background: #11141a;
+      border-right: 1px solid #2e3c4e;
+      padding: 30px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar h2 {
+      color: var(--accent);
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 0;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #2e3c4e;
+      padding-bottom: 10px;
+    }
+    .discipline-btn {
+      background: transparent;
+      border: 1px solid #2e3c4e;
+      color: var(--text-main);
+      padding: 12px 15px;
+      text-align: left;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .discipline-btn:hover, .discipline-btn.active {
+      background: var(--card-bg);
+      border-color: var(--accent);
+      color: var(--text-bright);
+      box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
+    }
+    .main-content {
+      flex: 1;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      max-width: 1000px;
+    }
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid #2e3c4e;
+      padding-bottom: 20px;
+    }
+    header h1 {
+      color: var(--text-bright);
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+    }
+    .status-badge {
+      display: inline-block;
+      background: #1c232d;
+      border: 1px solid var(--accent-dim);
+      color: var(--accent);
+      padding: 4px 10px;
+      font-family: monospace;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .report-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .report-card {
+      background: var(--card-bg);
+      border: 1px solid #2e3c4e;
+      border-radius: 8px;
+      padding: 24px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-dim);
+    }
+    .report-meta {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--accent-dim);
+      margin-bottom: 8px;
+    }
+    .report-title {
+      color: var(--text-bright);
+      font-size: 20px;
+      margin: 0 0 12px 0;
+    }
+    .master-link {
+      display: inline-block;
+      color: #0b0c10;
+      background: var(--accent);
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    .master-link:hover {
+      box-shadow: 0 0 12px var(--accent);
+    }
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      border: 1px dashed #2e3c4e;
+      border-radius: 8px;
+      color: var(--accent-dim);
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
+  <div class="sidebar">
+    <h2>📚 Discipline Vectors</h2>
+    <button class="discipline-btn active" onclick="switchDiscipline('Education', this)">1. Education</button>
+    <button class="discipline-btn" onclick="switchDiscipline('Economics', this)">2. Economics</button>
+    <button class="discipline-btn" onclick="switchDiscipline('Ecology', this)">3. Ecology</button>
+    <button class="discipline-btn" onclick="switchDiscipline('AI-AGI', this)">4. AI / AGI</button>
+  </div>
 
-    <div class="sidebar">
-        <h2>📚 Discipline Vectors</h2>
-        <button class="discipline-btn active" onclick="switchDiscipline('Education', this)">1. Education</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Economics', this)">2. Economics</button>
-        <button class="discipline-btn" onclick="switchDiscipline('Ecology', this)">3. Ecology</button>
-        <button class="discipline-btn" onclick="switchDiscipline('AI-AGI', this)">4. AI / AGI</button>
-    </div>
+  <div class="main-content">
+    <header>
+      <h1 id="disciplineTitle">Education</h1>
+      <div class="status-badge">📡 SYSTEM STATUS: ACTIVE // LEDGER READY</div>
+    </header>
+    <div id="reportsContainer" class="report-grid"></div>
+  </div>
 
-    <div class="main-content">
-        <header>
-            <h1 id="disciplineTitle">Education</h1>
-            <div class="status-badge">📡 SYSTEM STATUS: ACTIVE // LEDGER READY</div>
-        </header>
+  <script>
+    let currentDiscipline = "Education";
+    let masterRegistry = [];
 
-        <div id="reportsContainer" class="report-grid"></div>
-    </div>
+    async function fetchRegistryData() {
+      try {
+        const response = await fetch('registry.json');
+        const data = await response.json();
+        masterRegistry = data.reports || [];
+        renderActiveReports();
+      } catch (err) {
+        document.getElementById('reportsContainer').innerHTML =
+          '<div class="empty-state">⚠️ Unable to load registry. Please ensure the engine has been run at least once.</div>';
+      }
+    }
 
-    <script>
-        // Default discipline set to 'Education' to match the engine's output
-        let currentDiscipline = "Education";
-        let masterRegistry = [];
+    function switchDiscipline(disciplineName, element) {
+      currentDiscipline = disciplineName;
+      document.getElementById('disciplineTitle').innerText = disciplineName;
+      document.querySelectorAll('.discipline-btn').forEach(btn => btn.classList.remove('active'));
+      if (element) element.classList.add('active');
+      renderActiveReports();
+    }
 
-        async function fetchRegistryData() {
-            try {
-                const response = await fetch('registry.json');
-                const data = await response.json();
-                masterRegistry = data.reports || [];
-                renderActiveReports();
-            } catch (err) {
-                console.error("Registry fetch error:", err);
-                document.getElementById('reportsContainer').innerHTML = 
-                    '<div class="empty-state">⚠️ Unable to load registry. Please ensure the engine has been run at least once.</div>';
-            }
-        }
+    function renderActiveReports() {
+      const container = document.getElementById('reportsContainer');
+      const filtered = masterRegistry.filter(r => r.discipline === currentDiscipline);
 
-        function switchDiscipline(disciplineName, element) {
-            currentDiscipline = disciplineName;
-            document.getElementById('disciplineTitle').innerText = disciplineName;
-            
-            // Update active button styling
-            document.querySelectorAll('.discipline-btn').forEach(btn => btn.classList.remove('active'));
-            if (element) {
-                element.classList.add('active');
-            }
-            renderActiveReports();
-        }
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            No reports found for <strong>${currentDiscipline}</strong>.
+          </div>`;
+        return;
+      }
 
-        function renderActiveReports() {
-            const container = document.getElementById('reportsContainer');
-            
-            // Filter reports where the discipline matches the selected one
-            const filtered = masterRegistry.filter(r => r.discipline === currentDiscipline);
+      filtered.sort((a, b) => (a.date_ist || '').localeCompare(b.date_ist || ''));
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        No reports found for <strong>${currentDiscipline}</strong>. 
-                        Launch the inversion engine from the dashboard to generate your first report.
-                    </div>
-                `;
-                return;
-            }
+      container.innerHTML = filtered.map(report => `
+        <div class="report-card">
+          <div class="report-meta">
+            📄 ID: ${report.id || 'N/A'} // 📅 ${report.date || 'Unknown'} ${report.time ? `// ⏰ ${report.time}` : ''}
+          </div>
+          <h3 class="report-title">${report.title || 'Untitled Report'}</h3>
+          <p style="color: var(--text-main); font-size: 14px; margin-bottom: 16px;">
+            <strong>Topic:</strong> ${report.topic || 'N/A'}
+            <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
+          </p>
+          <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
+            📖 Open Master Document →
+          </a>
+        </div>
+      `).join('');
+    }
 
-            // Sort reports by date (oldest first) - the newest report will appear last in the sequence
-            filtered.sort((a, b) => (a.date_ist || '').localeCompare(b.date_ist || ''));
-
-            container.innerHTML = filtered.map(report => `
-                <div class="report-card">
-                    <div class="report-meta">
-                        📄 ID: ${report.id || 'N/A'} 
-                        // 📅 ${report.date || 'Unknown'} 
-                        ${report.time ? `// ⏰ ${report.time}` : ''}
-                    </div>
-                    <h3 class="report-title">${report.title || 'Untitled Report'}</h3>
-                    <p style="color: var(--text-main); font-size: 14px; margin-bottom: 16px;">
-                        <strong>Topic:</strong> ${report.topic || 'N/A'} 
-                        <span style="margin-left: 20px;"><strong>Format:</strong> ${report.format || 'N/A'}</span>
-                    </p>
-                    <a href="reader.html?file=${encodeURIComponent(report.file)}" class="master-link">
-                        📖 Open Master Document →
-                    </a>
-                </div>
-            `).join('');
-        }
-
-        // Load the registry when the page loads
-        window.onload = fetchRegistryData;
-    </script>
+    window.onload = fetchRegistryData;
+  </script>
 </body>
 </html>
