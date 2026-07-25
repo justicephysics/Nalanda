@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-25",
+  "last_updated": "2026-07-26",
   "reports": [
     {
       "id": "2026-07-25-EDU-SSP",
@@ -40,6 +40,16 @@
       "format": "Academic University Professor Abstract Paper",
       "title": "Systemic Ruin of Education and Commodity Extraction \u2013 Academic University Professor Abstract Paper (2026-07-25)",
       "file": "published/2026-07-25_Education_SystemicRuin_AcademicUniversityProfessorAbstractPaper.md"
+    },
+    {
+      "id": "2026-07-26-ECO-MSP",
+      "date": "2026-07-26",
+      "time": "00-29 IST",
+      "topic": "Gross Domestic Product (GDP)",
+      "discipline": "Economics",
+      "format": "Medium System Profile",
+      "title": "Gross Domestic Product (GDP) \u2013 Medium System Profile (2026-07-26)",
+      "file": "published/2026-07-26_Economics_GDP_MediumSystemProfile.md"
     }
   ]
 }
