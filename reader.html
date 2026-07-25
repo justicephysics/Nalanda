@@ -101,52 +101,25 @@
       position: relative;
     }
   
-    /* 🧮 Math block overflow handling with fade indicators */
+    /* 🧮 Universal math handling */
     .katex-display {
       max-width: 100%;
-      overflow-x: auto;
+      overflow-x: auto;       /* scroll if too wide */
       overflow-y: hidden;
       padding-bottom: 8px;
       text-align: center;
     }
-    
-    .katex-display > .katex {
-    display: inline-block;
-    min-width: max-content;  /* keep formula intact */
-    }
-    
-    /* 📱 Mobile scaling */
-    @media (max-width: 600px) {
-      .katex-display {
-        font-size: 0.85em;     /* shrink math slightly on small screens */
-        line-height: 1.4;
-      }
-    }
-       
-    .katex-display::before,
-    .katex-display::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 30px;
-      pointer-events: none;
-      z-index: 2;
-    }
-  
-    .katex-display::before {
-      left: 0;
-      background: linear-gradient(to right, var(--card-bg), transparent);
-    }
-  
-    .katex-display::after {
-      right: 0;
-      background: linear-gradient(to left, var(--card-bg), transparent);
-    }
   
     .katex-display > .katex {
       display: inline-block;
-      min-width: max-content;
+      min-width: max-content; /* keep formula intact */
+      max-width: 100%;        /* never exceed container */
+      transform-origin: center;
+    }
+  
+    /* Dynamic scaling: shrink if too wide */
+    .katex-display > .katex {
+      scale: calc(min(1, 100% / 900)); /* auto scale relative to container */
     }
   
     .katex {
@@ -187,7 +160,6 @@
     }
   </style>
 
-  
 </head>
 <body>
 
