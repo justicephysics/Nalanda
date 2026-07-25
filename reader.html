@@ -108,9 +108,21 @@
       overflow-y: hidden;
       padding-bottom: 8px;
       text-align: center;
-      position: relative;
     }
-  
+    
+    .katex-display > .katex {
+    display: inline-block;
+    min-width: max-content;  /* keep formula intact */
+    }
+    
+    /* 📱 Mobile scaling */
+    @media (max-width: 600px) {
+      .katex-display {
+        font-size: 0.85em;     /* shrink math slightly on small screens */
+        line-height: 1.4;
+      }
+    }
+       
     .katex-display::before,
     .katex-display::after {
       content: "";
