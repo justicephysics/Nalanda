@@ -13,16 +13,22 @@
       --text-main: #C5C6C7;
       --text-bright: #FFFFFF;
       --warning: #FF3B30;
+      --border-color: #2e3c4e;
+      --badge-bg: #1c232d;
     }
+
+    /* Light theme overrides */
     body.light-theme {
       --bg-color: #f4f6f9;
       --card-bg: #ffffff;
-      --accent: #0284c7;
-      --accent-dim: #4a5568;
       --text-main: #2d3748;
-      --text-bright: #000000;
-      --warning: #e53e3e;
+      --text-bright: #1a202c;
+      --accent: #0284c7;
+      --accent-dim: #0369a1;
+      --border-color: #e2e8f0;
+      --badge-bg: #edf2f7;
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
@@ -31,16 +37,20 @@
       padding: 0;
       display: flex;
       min-height: 100vh;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.3s, color 0.3s;
     }
     .sidebar {
       width: 320px;
       background: #11141a;
-      border-right: 1px solid #2e3c4e;
+      border-right: 1px solid var(--border-color);
       padding: 30px 20px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    body.light-theme .sidebar {
+      background: #eef2f6;
     }
     .sidebar h2 {
       color: var(--accent);
@@ -49,12 +59,12 @@
       letter-spacing: 2px;
       margin-top: 0;
       margin-bottom: 30px;
-      border-bottom: 1px solid #2e3c4e;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 10px;
     }
     .discipline-btn {
       background: transparent;
-      border: 1px solid #2e3c4e;
+      border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 12px 15px;
       text-align: left;
@@ -71,6 +81,12 @@
       color: var(--text-bright);
       box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
     }
+    body.light-theme .discipline-btn:hover,
+    body.light-theme .discipline-btn.active {
+      background: var(--card-bg);
+      color: var(--text-bright);
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.2);
+    }
     .main-content {
       flex: 1;
       padding: 40px 50px;
@@ -79,21 +95,23 @@
     }
     header {
       margin-bottom: 40px;
-      border-bottom: 1px solid #2e3c4e;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     header h1 {
       color: var(--text-bright);
-      margin: 0 0 10px 0;
+      margin: 0;
       font-size: 28px;
       letter-spacing: -0.5px;
     }
     .status-badge {
       display: inline-block;
-      background: #1c232d;
+      background: var(--badge-bg);
       border: 1px solid var(--accent-dim);
       color: var(--accent);
       padding: 4px 10px;
@@ -101,16 +119,24 @@
       border-radius: 4px;
       font-size: 12px;
     }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .theme-btn {
       background: var(--card-bg);
       color: var(--accent);
       border: 1px solid var(--border-color);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      margin-left: 20px;
+      transition: 0.2s;
+    }
+    .theme-btn:hover {
+      box-shadow: 0 0 8px var(--accent);
     }
     .report-grid {
       display: grid;
@@ -119,10 +145,10 @@
     }
     .report-card {
       background: var(--card-bg);
-      border: 1px solid #2e3c4e;
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 24px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s;
     }
     .report-card:hover {
       transform: translateY(-2px);
@@ -149,6 +175,7 @@
       font-weight: bold;
       font-size: 13px;
       text-transform: uppercase;
+      transition: 0.2s;
     }
     .master-link:hover {
       box-shadow: 0 0 12px var(--accent);
@@ -156,10 +183,13 @@
     .empty-state {
       padding: 40px;
       text-align: center;
-      border: 1px dashed #2e3c4e;
+      border: 1px dashed var(--border-color);
       border-radius: 8px;
       color: var(--accent-dim);
       font-style: italic;
+    }
+    body.light-theme .empty-state {
+      border-color: #cbd5e1;
     }
   </style>
 </head>
@@ -175,16 +205,38 @@
 
   <div class="main-content">
     <header>
-      <h1 id="disciplineTitle">Education</h1>
       <div>
+        <h1 id="disciplineTitle">Education</h1>
         <div class="status-badge">📡 SYSTEM STATUS: ACTIVE // LEDGER READY</div>
-        <button class="theme-btn" onclick="toggleTheme()">🌗 Toggle Theme</button>
+      </div>
+      <div class="header-right">
+        <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()">🌙 Night Mode</button>
       </div>
     </header>
     <div id="reportsContainer" class="report-grid"></div>
   </div>
 
-    <script>
+  <script>
+    // ----- THEME TOGGLE -----
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('nalanda_theme') || 'dark';
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.getElementById('themeToggleBtn').textContent = '☀️ Day Mode';
+      } else {
+        document.body.classList.remove('light-theme');
+        document.getElementById('themeToggleBtn').textContent = '🌙 Night Mode';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('nalanda_theme', isLight ? 'light' : 'dark');
+      const btn = document.getElementById('themeToggleBtn');
+      btn.textContent = isLight ? '☀️ Day Mode' : '🌙 Night Mode';
+    }
+
+    // ----- DISPLAY LOGIC (unchanged) -----
     let currentDiscipline = "Education";
     let masterRegistry = [];
 
@@ -239,18 +291,10 @@
       `).join('');
     }
 
-    // 🌗 Theme toggle
-    function toggleTheme() {
-      document.body.classList.toggle('light-theme');
-    }
-
-    window.onload = fetchRegistryData;
+    window.onload = function() {
+      applySavedTheme();
+      fetchRegistryData();
+    };
   </script>
 </body>
 </html>
-
-
-  
-
-
-        
