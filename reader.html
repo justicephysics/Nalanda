@@ -1,226 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversion Core Reader</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inversion Core Reader</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <!-- Markdown + KaTeX + Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 
-    <style>
-        :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --text-main: #c5c6c7;
-            --accent: #66fcf1;
-            --border-color: #2e3c4e;
-            --code-bg: #0b0c10;
-            --badge-bg: #151c24;
-        }
+  <style>
+    :root {
+      --bg-color: #0b0c10;
+      --card-bg: #1f2833;
+      --text-main: #c5c6c7;
+      --accent: #66fcf1;
+      --border-color: #2e3c4e;
+      --code-bg: #0b0c10;
+      --badge-bg: #151c24;
+    }
 
-        body.light-theme {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-main: #2d3748;
-            --accent: #0284c7;
-            --border-color: #e2e8f0;
-            --code-bg: #f8fafc;
-            --badge-bg: #edf2f7;
-        }
+    body.light-theme {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-main: #2d3748;
+      --accent: #0284c7;
+      --border-color: #e2e8f0;
+      --code-bg: #f8fafc;
+      --badge-bg: #edf2f7;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.7;
-            padding: 20px;
-            max-width: 920px;
-            margin: 0 auto;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+      padding: 20px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
 
-        .nav-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
 
-        .back-btn, .theme-btn {
-            background: var(--card-bg);
-            color: var(--accent);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-        }
+    .back-btn, .theme-btn {
+      background: var(--card-bg);
+      color: var(--accent);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
-        /* 📐 UNIFIED METADATA HEADER CONSOLE */
-        .meta-console {
-            background: var(--badge-bg);
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent);
-            padding: 16px 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            font-size: 13px;
-        }
+    .meta-console {
+      background: var(--badge-bg);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+    }
 
-        .meta-badge {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 4px 10px;
-            border-radius: 6px;
-            color: var(--accent);
-            font-weight: 600;
-            font-family: monospace;
-        }
+    .meta-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: var(--accent);
+      font-weight: 600;
+      font-family: monospace;
+    }
 
-        .content-card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
+    .content-card {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
 
-        h1, h2, h3 { color: var(--accent); }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; display: block; overflow-x: auto; }
-        th, td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
-    </style>
+    h1, h2, h3 { color: var(--accent); }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; display: block; overflow-x: auto; }
+    th, td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
+  </style>
 </head>
 <body>
 
 <div class="nav-bar">
-    <a href="index.html" class="back-btn">← Portal Index</a>
-    <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()">🌙 Night Mode</button>
+  <a href="index.html" class="back-btn">← Portal Index</a>
+  <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()">🌙 Night Mode</button>
 </div>
 
-<!-- 📐 UNIFIED METADATA DISPLAY CONSOLE -->
 <div class="meta-console" id="metaConsole">
-    <span>⏳ Extracting System Metadata...</span>
+  <span>⏳ Extracting System Metadata...</span>
 </div>
 
 <div class="content-card" id="documentRenderArea">
-    <p>⏳ Loading master document...</p>
+  <p>⏳ Loading master document...</p>
 </div>
 
 <script>
-    function applySavedTheme() {
-        const savedTheme = localStorage.getItem('nalanda_theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-            mermaid.initialize({ startOnLoad: false, theme: 'default' });
-        } else {
-            mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-        }
+  function applySavedTheme() {
+    const savedTheme = localStorage.getItem('nalanda_theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    } else {
+      mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
+  }
 
-    function toggleTheme() {
-        const isLight = document.body.classList.toggle('light-theme');
-        localStorage.setItem('nalanda_theme', isLight ? 'light' : 'dark');
-        window.location.reload();
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('nalanda_theme', isLight ? 'light' : 'dark');
+    window.location.reload();
+  }
+
+  function sanitizeLatexForKaTeX(rawText) {
+    if (!rawText) return '';
+    let cleaned = rawText;
+
+    // Normalize tab corruption
+    cleaned = cleaned.replace(/\t/g, '\\');
+    cleaned = cleaned.replace(/\\ttext/g, '\\text');
+    cleaned = cleaned.replace(/\\t\$/g, '$');
+    cleaned = cleaned.replace(/\\t\\text/g, '\\text');
+
+    // Escape percent signs properly
+    cleaned = cleaned.replace(/%/g, '\\%');
+
+    // Fix rupee symbol collisions
+    cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
+    cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
+
+    return cleaned;
+  }
+
+  async function loadAndRenderDocument() {
+    applySavedTheme();
+    const renderArea = document.getElementById('documentRenderArea');
+    const metaConsole = document.getElementById('metaConsole');
+    const urlParams = new URLSearchParams(window.location.search);
+    const filePath = urlParams.get('file') || 'published/latest_report.md';
+
+    try {
+      const response = await fetch(filePath);
+      if (!response.ok) throw new Error("Document not found at path: " + filePath);
+
+      let markdownText = await response.text();
+
+      const pathParts = filePath.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+
+      metaConsole.innerHTML = `
+        <span class="meta-badge">📄 File: ${fileName}</span>
+        <span class="meta-badge">📍 Location: published/</span>
+        <span class="meta-badge">⚡ Status: Verified & Rendered</span>
+      `;
+
+      markdownText = sanitizeLatexForKaTeX(markdownText);
+      renderArea.innerHTML = marked.parse(markdownText);
+
+      // Fix escaped backslashes before KaTeX render
+      renderArea.innerHTML = renderArea.innerHTML
+        .replace(/\\\\text/g, '\\text')
+        .replace(/\\text/g, '\\text')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+
+      // Mermaid rendering
+      const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+      codeBlocks.forEach(block => {
+        const mermaidDiv = document.createElement('div');
+        mermaidDiv.className = 'mermaid';
+        mermaidDiv.textContent = block.textContent;
+        block.parentElement.replaceWith(mermaidDiv);
+      });
+
+      const mermaidNodes = renderArea.querySelectorAll('.mermaid');
+      for (const node of mermaidNodes) {
+        try { await mermaid.run({ nodes: [node] }); } catch (e) {}
+      }
+
+      // KaTeX rendering
+      if (window.renderMathInElement) {
+        renderMathInElement(renderArea, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    } catch (err) {
+      renderArea.innerHTML = `<h3 style="color:#ef9a9a;">❌ Render Failure</h3><p>${err.message}</p>`;
     }
+  }
 
-    function sanitizeLatexForKaTeX(rawText) {
-        if (!rawText) return '';
-        let cleaned = rawText;
-        cleaned = cleaned.replace(/\t/g, ' ');
-        cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
-        cleaned = cleaned.replaceAll('$\\ttext', '\\text');
-        cleaned = cleaned.replaceAll('\\t\\text', '\\text');
-        cleaned = cleaned.replaceAll('\\t$', '');
-        cleaned = cleaned.replace(/\$\s*([\d\.]+)\s*\\?%\s*\$/g, '$1%');
-        cleaned = cleaned.replace(/\\\$\s*(\d+)/g, '$1');
-        cleaned = cleaned.replace(/(\\text\{[^}]+\})\$([_\^}])/g, '$1$2');
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
-        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
-        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
-        cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
-        cleaned = cleaned.replace(/\\%/g, '%');      // keep literal percent
-        cleaned = cleaned.replace(/\\rightarrow/g, '\\to');
-        cleaned = cleaned.replace(/\\Rightarrow/g, '\\implies');
-
-        return cleaned;
-    }
-
-    async function loadAndRenderDocument() {
-        applySavedTheme();
-        const renderArea = document.getElementById('documentRenderArea');
-        const metaConsole = document.getElementById('metaConsole');
-        const urlParams = new URLSearchParams(window.location.search);
-        const filePath = urlParams.get('file') || 'published/latest_report.md';
-
-        try {
-            const response = await fetch(filePath);
-            if (!response.ok) throw new Error("Document not found at path: " + filePath);
-            
-            let markdownText = await response.text();
-
-            // Render Header Metadata Console from Path or Fallback
-            const pathParts = filePath.split('/');
-            const fileName = pathParts[pathParts.length - 1];
-            
-            metaConsole.innerHTML = `
-                <span class="meta-badge">📄 File: ${fileName}</span>
-                <span class="meta-badge">📍 Location: published/</span>
-                <span class="meta-badge">⚡ Status: Verified & Rendered</span>
-            `;
-
-            markdownText = sanitizeLatexForKaTeX(markdownText);
-            renderArea.innerHTML = marked.parse(markdownText);
-
-            // Transform Mermaid Blocks
-            const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-            codeBlocks.forEach((block) => {
-                const mermaidDiv = document.createElement('div');
-                mermaidDiv.className = 'mermaid';
-                mermaidDiv.textContent = block.textContent;
-                block.parentElement.replaceWith(mermaidDiv);
-            });
-
-            const mermaidNodes = renderArea.querySelectorAll('.mermaid');
-            for (const node of mermaidNodes) {
-                try { await mermaid.run({ nodes: [node] }); } catch (e) {}
-            }
-
-            if (window.renderMathInElement) {
-                // Fix escaped backslashes before KaTeX render
-                renderArea.innerHTML = renderArea.innerHTML
-                  .replace(/\\\\text/g, '\\text')
-                  .replace(/\\text/g, '\\text')
-                  .replace(/&lt;/g, '<')
-                  .replace(/&gt;/g, '>')
-                  .replace(/&amp;/g, '&');
-
-                renderMathInElement(renderArea, {
-                    delimiters: [
-                        { left: '$$', right: '$$', display: true },
-                        { left: '$', right: '$', display: false }
-                    ],
-                    throwOnError: false
-                });
-            }
-        } catch (err) {
-            renderArea.innerHTML = `<h3 style="color:#ef9a9a;">❌ Render Failure</h3><p>${err.message}</p>`;
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', loadAndRenderDocument);
+  window.addEventListener('DOMContentLoaded', loadAndRenderDocument);
 </script>
 </body>
 </html>
