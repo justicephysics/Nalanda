@@ -101,48 +101,50 @@
       position: relative;
     }
   
-    /* 🧮 Universal math handling */
-    .katex-display {
-      max-width: 100%;
-      overflow-x: auto;       /* scroll if too wide */
-      overflow-y: hidden;
-      padding-bottom: 8px;
-      text-align: center;
-    }
-  
-    .katex-display > .katex {
-      display: inline-block;
-      min-width: max-content; /* keep formula intact */
-      max-width: 100%;        /* never exceed container */
-      transform-origin: center;
-    }
-  
-    /* Dynamic scaling: shrink if too wide */
-    .katex-display > .katex {
-      width: auto;
-      max-width: 100%;
-      font-size: clamp(0.75rem, 2vw, 1rem); /* scales text universally */
-    }
-  
+    /* 🧮 Universal math + text handling */
+    .katex-display,
     .katex {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: block;
+      text-align: left;
+      line-height: 1.6;
       white-space: normal !important;
       word-break: break-word !important;
     }
   
-    .content-card p,
-    .content-card li {
+    /* Responsive scaling for math blocks */
+    .katex-display > .katex,
+    .katex > .katex {
+      display: inline-block;
+      transform-origin: left center;
+      font-size: clamp(0.8rem, 1.8vw, 1rem);
+    }
+  
+    /* Ensure bullets and math align properly */
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 1em;
+    }
+  
+    li {
+      margin-bottom: 0.6em;
       overflow-wrap: break-word;
       word-break: break-word;
     }
   
     /* 🎚️ Scrollbar styling */
+    .katex::-webkit-scrollbar,
     .katex-display::-webkit-scrollbar {
       height: 6px;
     }
+    .katex::-webkit-scrollbar-thumb,
     .katex-display::-webkit-scrollbar-thumb {
       background-color: var(--scrollbar-thumb);
       border-radius: 4px;
     }
+    .katex::-webkit-scrollbar-track,
     .katex-display::-webkit-scrollbar-track {
       background-color: var(--scrollbar-track);
     }
@@ -159,6 +161,20 @@
       padding: 12px;
       border: 1px solid var(--border-color);
       text-align: left;
+    }
+  
+    /* 🧠 Fix KaTeX inside paragraphs */
+    p .katex {
+      display: inline-block;
+      vertical-align: middle;
+      max-width: 100%;
+    }
+  
+    /* 🧩 Prevent arbitrary line breaks */
+    .content-card p,
+    .content-card li {
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
   </style>
 
