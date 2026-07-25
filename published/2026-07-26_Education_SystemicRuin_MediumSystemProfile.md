@@ -1,8 +1,5 @@
-================================================================================
-SYSTEM VECTOR DIAGNOSTIC: SYSTEMIC RUIN OF EDUCATION AND COMMODITY EXTRACTION
-LEDGER REVISION: 2024.11-MED
-OPERATIONAL LOCATION: INDIA (NATIONAL JURISDICTION) / UNIVERSAL COGNITIVE DOMAIN
-================================================================================
+
+# SYSTEM VECTOR DIAGNOSTIC: SYSTEMIC RUIN OF EDUCATION AND COMMODITY EXTRACTION
 
 --- SECTION 1: EXECUTIVE SUMMARY & SYSTEMIC DIAGNOSTIC ---
 
@@ -113,6 +110,4 @@ A Total Index ($\text{TI}$) of $0.084672$ confirms that restricting the cognitiv
 * $\text{Invariant 2}$: Structural liberation requires dismantling the artificial $2\% \text{ to } 5\%$ skill floor bottleneck and eradicating capitation fees and coaching mafias.
 * $\text{Invariant 3}$: Failure to establish a transparent, uncorrupted, and universally accessible cognitive transmission network inevitably converts youth energy from productive learning into mass systemic resistance.
 
-================================================================================
-LEDGER COMPILATION COMPLETE -- ALL SYSTEM VARS VERIFIED -- EXITING ROUTINE
-================================================================================
+## LEDGER COMPILATION COMPLETE -- ALL SYSTEM VARS VERIFIED -- EXITING ROUTINE
