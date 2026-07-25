@@ -137,20 +137,100 @@
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
+    
+        // ============================================================
+        // STEP 1: 基础清理
+        // ============================================================
         cleaned = cleaned.replace(/\t/g, ' ');
         cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
         cleaned = cleaned.replaceAll('$\\ttext', '\\text');
         cleaned = cleaned.replaceAll('\\t\\text', '\\text');
         cleaned = cleaned.replaceAll('\\t$', '');
-        cleaned = cleaned.replace(/\$\s*([\d\.]+)\s*\\?%\s*\$/g, '$1%');
-        cleaned = cleaned.replace(/\\\$\s*(\d+)/g, '$1');
-        cleaned = cleaned.replace(/(\\text\{[^}]+\})\$([_\^}])/g, '$1$2');
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
+    
+        // ============================================================
+        // STEP 2: 处理 \text{...} 块 - 提取内容并转换内部命令
+        // ============================================================
+        // 匹配: $\text{内容}$ 并提取内容，同时转换内部的 LaTeX 命令
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+            function(match, content, trailing) {
+                // 先转换内容内部的 LaTeX 命令
+                let text = content;
+                // 百分比: 50\% -> 50%
+                text = text.replace(/\\%/g, '%');
+                // 箭头: \rightarrow -> →
+                text = text.replace(/\\rightarrow/g, '→');
+                // 双箭头: \Rightarrow -> ⇒
+                text = text.replace(/\\Rightarrow/g, '⇒');
+                // 右箭头: \to -> →
+                text = text.replace(/\\to/g, '→');
+                // 其他常见符号
+                text = text.replace(/\\&/g, '&');
+                text = text.replace(/\\\$/g, '$');
+                text = text.replace(/\\#/g, '#');
+                text = text.replace(/\\_/g, '_');
+                // 清理多余空格
+                text = text.replace(/\s{2,}/g, ' ');
+                return text + (trailing || '');
+            }
+        );
+    
+        // ============================================================
+        // STEP 3: 处理独立的 \text{...}（没有 $ 包裹）
+        // ============================================================
+        cleaned = cleaned.replace(
+            /\\text\{([^}]*?)\}/g,
+            function(match, content) {
+                let text = content;
+                text = text.replace(/\\%/g, '%');
+                text = text.replace(/\\rightarrow/g, '→');
+                text = text.replace(/\\Rightarrow/g, '⇒');
+                text = text.replace(/\\to/g, '→');
+                text = text.replace(/\\&/g, '&');
+                text = text.replace(/\\\$/g, '$');
+                text = text.replace(/\\#/g, '#');
+                text = text.replace(/\\_/g, '_');
+                text = text.replace(/\s{2,}/g, ' ');
+                return text;
+            }
+        );
+    
+        // ============================================================
+        // STEP 4: 处理剩余的数学符号（不在 \text{} 内部的）
+        // ============================================================
+        cleaned = cleaned.replace(/\\rightarrow/g, '→');
+        cleaned = cleaned.replace(/\\Rightarrow/g, '⇒');
+        cleaned = cleaned.replace(/\\to/g, '→');
+        cleaned = cleaned.replace(/\\propto/g, '∝');
+        cleaned = cleaned.replace(/\\approx/g, '≈');
+        cleaned = cleaned.replace(/\\infty/g, '∞');
+        cleaned = cleaned.replace(/\\leq/g, '≤');
+        cleaned = cleaned.replace(/\\geq/g, '≥');
+        cleaned = cleaned.replace(/\\neq/g, '≠');
+    
+        // ============================================================
+        // STEP 5: 处理 Rupee 符号
+        // ============================================================
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
-        cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
+    
+        // ============================================================
+        // STEP 6: 处理子弹列表格式
+        // ============================================================
+        cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 ');
+    
+        // ============================================================
+        // STEP 7: 清理残留的美元符号和反斜杠
+        // ============================================================
+        cleaned = cleaned.replace(/\$/g, '');
+        cleaned = cleaned.replace(/\\/g, '');
+    
+        // ============================================================
+        // STEP 8: 清理多余空格
+        // ============================================================
+        cleaned = cleaned.replace(/\s{2,}/g, ' ');
+        cleaned = cleaned.trim();
+    
         return cleaned;
     }
 
