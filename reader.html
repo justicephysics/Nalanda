@@ -171,20 +171,57 @@
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
+        
+        // 1. Remove literal tabs and whitespace issues
         cleaned = cleaned.replace(/\t/g, ' ');
+        
+        // 2. Fix common LaTeX corruption patterns
         cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
         cleaned = cleaned.replaceAll('$\\ttext', '\\text');
         cleaned = cleaned.replaceAll('\\t\\text', '\\text');
         cleaned = cleaned.replaceAll('\\t$', '');
-        cleaned = cleaned.replace(/\$\s*([\d\.]+)\s*\\?%\s*\$/g, '$1%');
-        cleaned = cleaned.replace(/\\\$\s*(\d+)/g, '$1');
-        cleaned = cleaned.replace(/(\\text\{[^}]+\})\$([_\^}])/g, '$1$2');
+        
+        // 3. Handle percentages inside \text{} - convert to plain text
+        //    Instead of: $\text{Over 50\% of Grade 5...}$
+        //    Convert to: Over 50% of Grade 5... (remove math mode entirely for bullet points)
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\s*([\d\.]+)\s*\\?\%\s*([^}]*?)\}\s*\$(\s*)/g,
+            '$1$2%$3'
+        );
+        
+        // 4. Handle arrows inside \text{} - keep them as plain text
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\s*\\rightarrow\s*([^}]*?)\}\s*\$(\s*)/g,
+            '$1 → $2'
+        );
+        
+        // 5. Handle double arrows
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\s*\\Rightarrow\s*([^}]*?)\}\s*\$(\s*)/g,
+            '$1 ⇒ $2'
+        );
+        
+        // 6. Convert \text{...} with simple text (no math) to plain text
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+            '$1'
+        );
+        
+        // 7. Fix mismatched dollar signs
         cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
         cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
         cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
+        
+        // 8. Fix Rupee symbols
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
+        
+        // 9. Fix list item bullets with \text - ensure proper formatting
         cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
+        
+        // 10. Final cleanup: remove any remaining stray $ that are not math delimiters
+        cleaned = cleaned.replace(/\$(\s*[A-Za-z])/g, '$1');
+        
         return cleaned;
     }
 
