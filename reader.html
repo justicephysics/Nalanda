@@ -167,161 +167,270 @@
         localStorage.setItem('nalanda_theme', isLight ? 'light' : 'dark');
         window.location.reload();
     }
-
     function sanitizeLatexForKaTeX(rawText) {
-    if (!rawText) return '';
-    let cleaned = rawText;
-    
-    // ============================================================
-    // STEP 1: Basic cleanup
-    // ============================================================
-    cleaned = cleaned.replace(/\t/g, ' ');
-    
-    // ============================================================
-    // STEP 2: Fix corruption patterns (from Gemini)
-    // ============================================================
-    cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
-    cleaned = cleaned.replaceAll('$\\ttext', '\\text');
-    cleaned = cleaned.replaceAll('\\t\\text', '\\text');
-    cleaned = cleaned.replaceAll('\\t$', '');
-    
-    // ============================================================
-    // STEP 3: Convert \text{...} with arrows to plain text
-    // ============================================================
-    // Pattern: $\text{Text } \rightarrow \text{ More Text } \Rightarrow \text{ Final }$
-    // Convert to: Text → More Text ⇒ Final
-    
-    // First, handle the common pattern: \text{A} \rightarrow \text{B} \Rightarrow \text{C}
-    cleaned = cleaned.replace(
-        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\\Rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
-        '$1 → $2 ⇒ $3'
-    );
-    
-    // Handle: \text{A} \rightarrow \text{B} \Rightarrow (with trailing text)
-    cleaned = cleaned.replace(
-        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\\Rightarrow\s*(.*?)\s*\$(\s*)/g,
-        '$1 → $2 ⇒ $3'
-    );
-    
-    // Handle: \text{A} \rightarrow \text{B} (simple case)
-    cleaned = cleaned.replace(
-        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
-        '$1 → $2'
-    );
-    
-    // ============================================================
-    // STEP 4: Convert \text{...} with plain text (no math) to plain text
-    // ============================================================
-    // Pattern: $\text{Some text with % and symbols}$
-    // Convert to: Some text with % and symbols
-    
-    // This handles text with percentages, numbers, commas, etc.
-    cleaned = cleaned.replace(
-        /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
-        function(match, content, trailing) {
-            // Remove escaping from \% (convert to plain %)
-            content = content.replace(/\\%/g, '%');
-            // Remove escaping from \& (convert to plain &)
-            content = content.replace(/\\&/g, '&');
-            // Remove escaping from \$ (convert to plain $)
-            content = content.replace(/\\\$/g, '$');
-            // Remove escaping from \# (convert to plain #)
-            content = content.replace(/\\#/g, '#');
-            // Remove escaping from \_ (convert to plain _)
-            content = content.replace(/\\_/g, '_');
-            return content + (trailing || ' ');
-        }
-    );
-    
-    // ============================================================
-    // STEP 5: Handle special patterns
-    // ============================================================
-    
-    // 5a: Handle standalone \text{...} with percentages in bullet lists
-    cleaned = cleaned.replace(
-        /^(\s*\*\s*)\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/gm,
-        function(match, bullet, content, trailing) {
-            content = content.replace(/\\%/g, '%');
-            content = content.replace(/\\&/g, '&');
-            content = content.replace(/\\\$/g, '$');
-            content = content.replace(/\\#/g, '#');
-            content = content.replace(/\\_/g, '_');
-            // Remove any trailing arrow or symbol from the content
-            content = content.replace(/\s*\\rightarrow\s*$/, '');
-            content = content.replace(/\s*\\Rightarrow\s*$/, '');
-            return bullet + content + (trailing || '');
-        }
-    );
-    
-    // 5b: Handle the "L_{\\text{Gini}}" pattern
-    cleaned = cleaned.replace(
-        /\(L_\{\\text\{([^}]*?)\}\}\)\s*\\approx\s*([\d\.]+)/g,
-        '(L<sub>$1</sub>) ≈ $2'
-    );
-    
-    // 5c: Handle \frac{dS_{Civ.}}{dt} pattern
-    cleaned = cleaned.replace(
-        /\\frac\{dS_\{([^}]*?)\}\}\{dt\}/g,
-        'dS<sub>$1</sub>/dt'
-    );
-    
-    // 5d: Handle \propto
-    cleaned = cleaned.replace(/\\propto/g, '∝');
-    
-    // 5e: Handle \to (arrow to)
-    cleaned = cleaned.replace(/\\to\s*/g, '→ ');
-    
-    // 5f: Handle \rightarrow
-    cleaned = cleaned.replace(/\\rightarrow\s*/g, '→ ');
-    
-    // 5g: Handle \Rightarrow
-    cleaned = cleaned.replace(/\\Rightarrow\s*/g, '⇒ ');
-    
-    // ============================================================
-    // STEP 6: Clean up any remaining math delimiters
-    // ============================================================
-    
-    // 6a: Remove single dollar signs that are not part of math
-    cleaned = cleaned.replace(/\$\s*([A-Za-z])/g, '$1');
-    
-    // 6b: Remove double dollar signs
-    cleaned = cleaned.replace(/\$\$/g, '');
-    
-    // 6c: Remove any stray \text{} that might remain
-    cleaned = cleaned.replace(/\\text\{([^}]*?)\}/g, '$1');
-    
-    // 6d: Clean up extra spaces
-    cleaned = cleaned.replace(/\s{2,}/g, ' ');
-    
-    // ============================================================
-    // STEP 7: Handle bullet list formatting
-    // ============================================================
-    // Ensure bullets are properly formatted with spaces
-    cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
-    
-    // ============================================================
-    // STEP 8: Handle mathematical expressions that should stay
-    // ============================================================
-    // These are NOT converted - they stay as LaTeX for KaTeX
-    
-    // 8a: Keep \frac{...}{...} as math
-    // 8b: Keep \sum, \int, \sqrt, etc. as math
-    // 8c: Keep \approx, \leq, \geq, etc. as math
-    
-    // We'll let KaTeX handle these:
-    // - \frac{dS_{Civ.}}{dt} \propto \frac{1}{\eta_{Edu}}
-    // - (L_{\text{Gini}}) \approx 0.92
-    
-    // ============================================================
-    // STEP 9: Final cleanup of bullet points
-    // ============================================================
-    // Fix any bullets that might have been broken
-    cleaned = cleaned.replace(/•\s*•/g, '•');
-    cleaned = cleaned.replace(/•\s*([a-zA-Z])/g, '• $1');
-    
-    return cleaned;
-}
-
+        if (!rawText) return '';
+        let cleaned = rawText;
+        
+        // ============================================================
+        // STEP 1: Basic cleanup
+        // ============================================================
+        cleaned = cleaned.replace(/\t/g, ' ');
+        cleaned = cleaned.replace(/\r\n/g, '\n');
+        cleaned = cleaned.replace(/\r/g, '\n');
+        
+        // ============================================================
+        // STEP 2: Fix Gemini corruption patterns
+        // ============================================================
+        cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
+        cleaned = cleaned.replaceAll('$\\ttext', '\\text');
+        cleaned = cleaned.replaceAll('\\t\\text', '\\text');
+        cleaned = cleaned.replaceAll('\\t$', '');
+        cleaned = cleaned.replaceAll('\\#\\#', '##'); // Fix broken headers
+        cleaned = cleaned.replaceAll('\\#', '#');      // Fix broken headers
+        
+        // ============================================================
+        // STEP 3: Handle bullet list items (the main problem area)
+        // ============================================================
+        
+        // 3a: Convert * $\text{...}$ pattern to plain text bullet
+        cleaned = cleaned.replace(
+            /^\s*\*\s*\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/gm,
+            function(match, content, trailing) {
+                // Decode the content
+                content = content.replace(/\\%/g, '%');
+                content = content.replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$');
+                content = content.replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                content = content.replace(/\\~/g, '~');
+                content = content.replace(/\\{/g, '{');
+                content = content.replace(/\\}/g, '}');
+                // Remove any trailing arrow artifacts
+                content = content.replace(/\s*\\rightarrow\s*$/, '');
+                content = content.replace(/\s*\\Rightarrow\s*$/, '');
+                // Convert \to to arrow
+                content = content.replace(/\\to\s*/g, '→ ');
+                // Convert \rightarrow to arrow
+                content = content.replace(/\\rightarrow\s*/g, '→ ');
+                // Convert \Rightarrow to double arrow
+                content = content.replace(/\\Rightarrow\s*/g, '⇒ ');
+                // Clean up extra spaces
+                content = content.replace(/\s{2,}/g, ' ');
+                return '• ' + content + (trailing || '');
+            }
+        );
+        
+        // 3b: Convert * $\text{...} \rightarrow \text{...} \Rightarrow \text{...}$ pattern
+        cleaned = cleaned.replace(
+            /^\s*\*\s*\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\\Rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/gm,
+            function(match, part1, part2, part3, trailing) {
+                part1 = part1.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                part2 = part2.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                part3 = part3.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                return '• ' + part1 + ' → ' + part2 + ' ⇒ ' + part3 + (trailing || '');
+            }
+        );
+        
+        // 3c: Convert * $\text{...} \rightarrow \text{...}$ pattern (simple case)
+        cleaned = cleaned.replace(
+            /^\s*\*\s*\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/gm,
+            function(match, part1, part2, trailing) {
+                part1 = part1.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                part2 = part2.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                return '• ' + part1 + ' → ' + part2 + (trailing || '');
+            }
+        );
+        
+        // 3d: Convert standalone * \text{...} (without $)
+        cleaned = cleaned.replace(
+            /^\s*\*\s*\\text\{([^}]*?)\}(\s*)/gm,
+            function(match, content, trailing) {
+                content = content.replace(/\\%/g, '%').replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$').replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                content = content.replace(/\\to\s*/g, '→ ');
+                content = content.replace(/\\rightarrow\s*/g, '→ ');
+                content = content.replace(/\\Rightarrow\s*/g, '⇒ ');
+                return '• ' + content + (trailing || '');
+            }
+        );
+        
+        // 3e: Convert plain * with no LaTeX
+        cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
+        
+        // ============================================================
+        // STEP 4: Handle inline \text{...} that are NOT in bullet lists
+        // ============================================================
+        
+        // 4a: Convert $\text{...}$ to plain text (inline)
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+            function(match, content, trailing) {
+                content = content.replace(/\\%/g, '%');
+                content = content.replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$');
+                content = content.replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                content = content.replace(/\\to\s*/g, '→ ');
+                content = content.replace(/\\rightarrow\s*/g, '→ ');
+                content = content.replace(/\\Rightarrow\s*/g, '⇒ ');
+                return content + (trailing || ' ');
+            }
+        );
+        
+        // 4b: Convert standalone \text{...} (no $)
+        cleaned = cleaned.replace(
+            /\\text\{([^}]*?)\}/g,
+            function(match, content) {
+                content = content.replace(/\\%/g, '%');
+                content = content.replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$');
+                content = content.replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                return content;
+            }
+        );
+        
+        // ============================================================
+        // STEP 5: Handle special mathematical symbols and patterns
+        // ============================================================
+        
+        // 5a: Convert \propto to ∝
+        cleaned = cleaned.replace(/\\propto/g, '∝');
+        
+        // 5b: Convert \to to →
+        cleaned = cleaned.replace(/\\to\s*/g, '→ ');
+        
+        // 5c: Convert \rightarrow to →
+        cleaned = cleaned.replace(/\\rightarrow\s*/g, '→ ');
+        
+        // 5d: Convert \Rightarrow to ⇒
+        cleaned = cleaned.replace(/\\Rightarrow\s*/g, '⇒ ');
+        
+        // 5e: Convert \approx to ≈
+        cleaned = cleaned.replace(/\\approx/g, '≈');
+        
+        // 5f: Convert \leq to ≤
+        cleaned = cleaned.replace(/\\leq/g, '≤');
+        
+        // 5g: Convert \geq to ≥
+        cleaned = cleaned.replace(/\\geq/g, '≥');
+        
+        // 5h: Convert \infty to ∞
+        cleaned = cleaned.replace(/\\infty/g, '∞');
+        
+        // 5i: Convert \neq to ≠
+        cleaned = cleaned.replace(/\\neq/g, '≠');
+        
+        // ============================================================
+        // STEP 6: Handle subscript/superscript patterns
+        // ============================================================
+        
+        // 6a: Convert _{text} to <sub>text</sub>
+        cleaned = cleaned.replace(
+            /_\{([^}]*?)\}/g,
+            function(match, content) {
+                // If content contains math, keep it as LaTeX
+                if (content.includes('\\') || content.includes('^')) {
+                    return match;
+                }
+                return '<sub>' + content + '</sub>';
+            }
+        );
+        
+        // 6b: Convert ^{text} to <sup>text</sup>
+        cleaned = cleaned.replace(
+            /\^\{([^}]*?)\}/g,
+            function(match, content) {
+                // If content contains math, keep it as LaTeX
+                if (content.includes('\\') || content.includes('^')) {
+                    return match;
+                }
+                return '<sup>' + content + '</sup>';
+            }
+        );
+        
+        // ============================================================
+        // STEP 7: Clean up mathematical expressions that should remain as LaTeX
+        // ============================================================
+        
+        // 7a: Keep \frac{...}{...} as math (for KaTeX)
+        // 7b: Keep \sum, \int, \sqrt as math
+        // 7c: Keep \[...\] and $$...$$ as math
+        
+        // These are already preserved by KaTeX's delimiters
+        
+        // ============================================================
+        // STEP 8: Final cleanup of punctuation and spacing
+        // ============================================================
+        
+        // 8a: Fix missing spaces after periods
+        cleaned = cleaned.replace(/\.([A-Z])/g, '. $1');
+        
+        // 8b: Fix missing spaces after commas
+        cleaned = cleaned.replace(/,([A-Za-z])/g, ', $1');
+        
+        // 8c: Fix missing spaces after colons
+        cleaned = cleaned.replace(/:([A-Za-z])/g, ': $1');
+        
+        // 8d: Remove double spaces
+        cleaned = cleaned.replace(/\s{2,}/g, ' ');
+        
+        // 8e: Fix missing spaces between words
+        cleaned = cleaned.replace(/([a-z])([A-Z])/g, '$1 $2');
+        
+        // 8f: Clean up arrow spacing
+        cleaned = cleaned.replace(/→\s*→/g, '→');
+        cleaned = cleaned.replace(/⇒\s*⇒/g, '⇒');
+        
+        // 8g: Fix percentage signs
+        cleaned = cleaned.replace(/(\d+)\s*%/g, '$1%');
+        cleaned = cleaned.replace(/(\d+)%\s*([A-Za-z])/g, '$1% $2');
+        
+        // ============================================================
+        // STEP 9: Handle Rupee currency symbols
+        // ============================================================
+        
+        // 9a: Fix Rupee with spaces
+        cleaned = cleaned.replace(/₹\s*([\d\.\+]+)/g, '₹$1');
+        cleaned = cleaned.replace(/₹([\d\.\+]+)\s*([A-Za-z])/g, '₹$1 $2');
+        
+        // ============================================================
+        // STEP 10: Clean up remaining math delimiters
+        // ============================================================
+        
+        // 10a: Remove single $ that are not part of math
+        // Only remove $ that appear at the start of a line or after a space
+        cleaned = cleaned.replace(/^\s*\$(\s*[A-Za-z])/gm, '$1');
+        cleaned = cleaned.replace(/\s\$(\s*[A-Za-z])/g, ' $1');
+        
+        // 10b: Remove any stray \text{} that might remain
+        cleaned = cleaned.replace(/\\text\{([^}]*?)\}/g, '$1');
+        
+        // ============================================================
+        // STEP 11: Format headers properly
+        // ============================================================
+        
+        // 11a: Ensure headers have proper spacing
+        cleaned = cleaned.replace(/^(##+)\s*/gm, function(match, hashes) {
+            const level = hashes.length;
+            const content = match.replace(hashes, '').trim();
+            return '\n' + hashes + ' ' + content + '\n';
+        });
+        
+        // ============================================================
+        // STEP 12: Final cleanup
+        // ============================================================
+        
+        // 12a: Remove extra blank lines
+        cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+        
+        // 12b: Trim leading/trailing whitespace
+        cleaned = cleaned.trim();
+        
+        return cleaned;
+    }
+ 
     async function loadAndRenderDocument() {
         logDebug("Script execution started.", "info");
 
