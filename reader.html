@@ -169,61 +169,158 @@
     }
 
     function sanitizeLatexForKaTeX(rawText) {
-        if (!rawText) return '';
-        let cleaned = rawText;
-        
-        // 1. Remove literal tabs and whitespace issues
-        cleaned = cleaned.replace(/\t/g, ' ');
-        
-        // 2. Fix common LaTeX corruption patterns
-        cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
-        cleaned = cleaned.replaceAll('$\\ttext', '\\text');
-        cleaned = cleaned.replaceAll('\\t\\text', '\\text');
-        cleaned = cleaned.replaceAll('\\t$', '');
-        
-        // 3. Handle percentages inside \text{} - convert to plain text
-        //    Instead of: $\text{Over 50\% of Grade 5...}$
-        //    Convert to: Over 50% of Grade 5... (remove math mode entirely for bullet points)
-        cleaned = cleaned.replace(
-            /\$\s*\\text\{([^}]*?)\s*([\d\.]+)\s*\\?\%\s*([^}]*?)\}\s*\$(\s*)/g,
-            '$1$2%$3'
-        );
-        
-        // 4. Handle arrows inside \text{} - keep them as plain text
-        cleaned = cleaned.replace(
-            /\$\s*\\text\{([^}]*?)\s*\\rightarrow\s*([^}]*?)\}\s*\$(\s*)/g,
-            '$1 → $2'
-        );
-        
-        // 5. Handle double arrows
-        cleaned = cleaned.replace(
-            /\$\s*\\text\{([^}]*?)\s*\\Rightarrow\s*([^}]*?)\}\s*\$(\s*)/g,
-            '$1 ⇒ $2'
-        );
-        
-        // 6. Convert \text{...} with simple text (no math) to plain text
-        cleaned = cleaned.replace(
-            /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
-            '$1'
-        );
-        
-        // 7. Fix mismatched dollar signs
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/(_|\^)\{\s*\$+\s*(\\text\{[^}]+\})\s*\$+\s*\}/g, '$1{$2}');
-        cleaned = cleaned.replace(/^\$(\s*\\text\{[\s\S]*?)\$\$$/gm, '$$\\1$$');
-        
-        // 8. Fix Rupee symbols
-        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
-        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
-        
-        // 9. Fix list item bullets with \text - ensure proper formatting
-        cleaned = cleaned.replace(/^(\s*\*)\s*\\text\{/gm, '$1 $\\text{');
-        
-        // 10. Final cleanup: remove any remaining stray $ that are not math delimiters
-        cleaned = cleaned.replace(/\$(\s*[A-Za-z])/g, '$1');
-        
-        return cleaned;
-    }
+    if (!rawText) return '';
+    let cleaned = rawText;
+    
+    // ============================================================
+    // STEP 1: Basic cleanup
+    // ============================================================
+    cleaned = cleaned.replace(/\t/g, ' ');
+    
+    // ============================================================
+    // STEP 2: Fix corruption patterns (from Gemini)
+    // ============================================================
+    cleaned = cleaned.replaceAll('\\t$\\ttext', '\\text');
+    cleaned = cleaned.replaceAll('$\\ttext', '\\text');
+    cleaned = cleaned.replaceAll('\\t\\text', '\\text');
+    cleaned = cleaned.replaceAll('\\t$', '');
+    
+    // ============================================================
+    // STEP 3: Convert \text{...} with arrows to plain text
+    // ============================================================
+    // Pattern: $\text{Text } \rightarrow \text{ More Text } \Rightarrow \text{ Final }$
+    // Convert to: Text → More Text ⇒ Final
+    
+    // First, handle the common pattern: \text{A} \rightarrow \text{B} \Rightarrow \text{C}
+    cleaned = cleaned.replace(
+        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\\Rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+        '$1 → $2 ⇒ $3'
+    );
+    
+    // Handle: \text{A} \rightarrow \text{B} \Rightarrow (with trailing text)
+    cleaned = cleaned.replace(
+        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\\Rightarrow\s*(.*?)\s*\$(\s*)/g,
+        '$1 → $2 ⇒ $3'
+    );
+    
+    // Handle: \text{A} \rightarrow \text{B} (simple case)
+    cleaned = cleaned.replace(
+        /\$\s*\\text\{([^}]*?)\}\s*\\rightarrow\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+        '$1 → $2'
+    );
+    
+    // ============================================================
+    // STEP 4: Convert \text{...} with plain text (no math) to plain text
+    // ============================================================
+    // Pattern: $\text{Some text with % and symbols}$
+    // Convert to: Some text with % and symbols
+    
+    // This handles text with percentages, numbers, commas, etc.
+    cleaned = cleaned.replace(
+        /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+        function(match, content, trailing) {
+            // Remove escaping from \% (convert to plain %)
+            content = content.replace(/\\%/g, '%');
+            // Remove escaping from \& (convert to plain &)
+            content = content.replace(/\\&/g, '&');
+            // Remove escaping from \$ (convert to plain $)
+            content = content.replace(/\\\$/g, '$');
+            // Remove escaping from \# (convert to plain #)
+            content = content.replace(/\\#/g, '#');
+            // Remove escaping from \_ (convert to plain _)
+            content = content.replace(/\\_/g, '_');
+            return content + (trailing || ' ');
+        }
+    );
+    
+    // ============================================================
+    // STEP 5: Handle special patterns
+    // ============================================================
+    
+    // 5a: Handle standalone \text{...} with percentages in bullet lists
+    cleaned = cleaned.replace(
+        /^(\s*\*\s*)\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/gm,
+        function(match, bullet, content, trailing) {
+            content = content.replace(/\\%/g, '%');
+            content = content.replace(/\\&/g, '&');
+            content = content.replace(/\\\$/g, '$');
+            content = content.replace(/\\#/g, '#');
+            content = content.replace(/\\_/g, '_');
+            // Remove any trailing arrow or symbol from the content
+            content = content.replace(/\s*\\rightarrow\s*$/, '');
+            content = content.replace(/\s*\\Rightarrow\s*$/, '');
+            return bullet + content + (trailing || '');
+        }
+    );
+    
+    // 5b: Handle the "L_{\\text{Gini}}" pattern
+    cleaned = cleaned.replace(
+        /\(L_\{\\text\{([^}]*?)\}\}\)\s*\\approx\s*([\d\.]+)/g,
+        '(L<sub>$1</sub>) ≈ $2'
+    );
+    
+    // 5c: Handle \frac{dS_{Civ.}}{dt} pattern
+    cleaned = cleaned.replace(
+        /\\frac\{dS_\{([^}]*?)\}\}\{dt\}/g,
+        'dS<sub>$1</sub>/dt'
+    );
+    
+    // 5d: Handle \propto
+    cleaned = cleaned.replace(/\\propto/g, '∝');
+    
+    // 5e: Handle \to (arrow to)
+    cleaned = cleaned.replace(/\\to\s*/g, '→ ');
+    
+    // 5f: Handle \rightarrow
+    cleaned = cleaned.replace(/\\rightarrow\s*/g, '→ ');
+    
+    // 5g: Handle \Rightarrow
+    cleaned = cleaned.replace(/\\Rightarrow\s*/g, '⇒ ');
+    
+    // ============================================================
+    // STEP 6: Clean up any remaining math delimiters
+    // ============================================================
+    
+    // 6a: Remove single dollar signs that are not part of math
+    cleaned = cleaned.replace(/\$\s*([A-Za-z])/g, '$1');
+    
+    // 6b: Remove double dollar signs
+    cleaned = cleaned.replace(/\$\$/g, '');
+    
+    // 6c: Remove any stray \text{} that might remain
+    cleaned = cleaned.replace(/\\text\{([^}]*?)\}/g, '$1');
+    
+    // 6d: Clean up extra spaces
+    cleaned = cleaned.replace(/\s{2,}/g, ' ');
+    
+    // ============================================================
+    // STEP 7: Handle bullet list formatting
+    // ============================================================
+    // Ensure bullets are properly formatted with spaces
+    cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
+    
+    // ============================================================
+    // STEP 8: Handle mathematical expressions that should stay
+    // ============================================================
+    // These are NOT converted - they stay as LaTeX for KaTeX
+    
+    // 8a: Keep \frac{...}{...} as math
+    // 8b: Keep \sum, \int, \sqrt, etc. as math
+    // 8c: Keep \approx, \leq, \geq, etc. as math
+    
+    // We'll let KaTeX handle these:
+    // - \frac{dS_{Civ.}}{dt} \propto \frac{1}{\eta_{Edu}}
+    // - (L_{\text{Gini}}) \approx 0.92
+    
+    // ============================================================
+    // STEP 9: Final cleanup of bullet points
+    // ============================================================
+    // Fix any bullets that might have been broken
+    cleaned = cleaned.replace(/•\s*•/g, '•');
+    cleaned = cleaned.replace(/•\s*([a-zA-Z])/g, '• $1');
+    
+    return cleaned;
+}
 
     async function loadAndRenderDocument() {
         logDebug("Script execution started.", "info");
