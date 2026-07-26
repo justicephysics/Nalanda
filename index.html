@@ -273,11 +273,12 @@
         <button type="button" onclick="loadReport()">📄 Load Report</button>
         <button type="button" onclick="loadReport('published/latest_report.md')">📄 Latest</button>
     </div>
-
+    
+    <script>
     // ============================================================
     // FIX: Intercept accordion links to render instead of navigate
     // ============================================================
-    <script>
+    
     document.querySelectorAll('.panel a').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault(); // Stop the browser from navigating away
