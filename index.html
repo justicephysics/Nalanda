@@ -217,58 +217,119 @@
         }
 
         /* ============================================================
-           FIX 1: Text Color Inheritance
+           FIX 2: Mobile Responsiveness - Force all content to fit
            ============================================================ */
+        
+        /* The main container - force width */
         #renderArea {
             background: var(--surface);
-            color: var(--text);              /* Proper text color */
+            color: var(--text);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2rem;
             margin-top: 2rem;
             min-height: 200px;
-            overflow-x: auto;
-            word-wrap: break-word;
+            overflow-x: auto;              /* Allow horizontal scroll if needed */
+            word-wrap: break-word;         /* Break long words */
             max-width: 100%;
+            box-sizing: border-box;
         }
         
+        /* ALL children must respect the container width */
         #renderArea * {
-            color: var(--text);              /* All children inherit text color */
-        }
-        
-        /* ============================================================
-           FIX 2: Mobile Responsiveness
-           ============================================================ */
-        #renderArea table,
-        #renderArea pre,
-        #renderArea .katex-display,
-        #renderArea .mermaid {
             max-width: 100%;
-            overflow-x: auto;
-            display: block;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
+        /* Tables scroll horizontally */
+        #renderArea table {
+            display: block;
+            overflow-x: auto;
+            max-width: 100%;
+            white-space: nowrap;
+        }
+        
+        /* Code blocks scroll horizontally */
+        #renderArea pre {
+            overflow-x: auto;
+            max-width: 100%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        /* Math blocks scroll horizontally */
+        #renderArea .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            padding: 6px 0;
+        }
+        
+        /* Mermaid diagrams scroll horizontally */
+        #renderArea .mermaid {
+            overflow-x: auto;
+            max-width: 100%;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        /* Images responsive */
         #renderArea img {
             max-width: 100%;
             height: auto;
         }
         
+        /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             body {
                 padding: 0.5rem;
             }
             .container {
                 padding: 1rem 0;
+                max-width: 100%;
             }
             #renderArea {
-                padding: 1rem;
+                padding: 0.8rem;
+                margin-top: 1rem;
+                border-radius: 6px;
+            }
+            #renderArea h1 { font-size: 1.4rem; }
+            #renderArea h2 { font-size: 1.2rem; }
+            #renderArea h3 { font-size: 1rem; }
+            #renderArea p, #renderArea li {
+                font-size: 0.95rem;
             }
             .controls {
-                gap: 0.5rem;
+                gap: 0.4rem;
             }
             .controls a, .controls button {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 padding: 0.3rem 0.6rem;
+            }
+            .discipline-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem 1rem;
+            }
+            .panel a {
+                font-size: 0.85rem;
+                padding: 0.25rem 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #renderArea {
+                padding: 0.5rem;
+            }
+            #renderArea h1 { font-size: 1.2rem; }
+            #renderArea h2 { font-size: 1rem; }
+            #renderArea h3 { font-size: 0.9rem; }
+            #renderArea p, #renderArea li {
+                font-size: 0.85rem;
             }
         }
         
@@ -480,23 +541,56 @@
                 throw new Error('Marked.js not loaded');
             }
 
-            // --- Mermaid ---
-            const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-            mermaidBlocks.forEach((block) => {
-                const mermaidDiv = document.createElement('div');
-                mermaidDiv.className = 'mermaid';
-                let content = block.textContent;
-                
-                // FIX: If graph TD appears without a newline, add one
-                // Example: "graph TD A[Node]" → "graph TD\nA[Node]"
-                content = content.replace(/^(graph\s+(TD|LR|RL|TB|BT))\s*([A-Za-z])/m, '$1\n$3');
-                
-                // Escape % to ％ to avoid Mermaid comment parsing
-                content = content.replace(/%/g, '％');
-                
-                mermaidDiv.textContent = content;
-                block.parentElement.replaceWith(mermaidDiv);
-            });
+
+        // --- Mermaid ---
+        const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+        mermaidBlocks.forEach((block) => {
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            let content = block.textContent;
+            
+            // ============================================================
+            // FIX 3: Auto-fix Mermaid syntax errors
+            // ============================================================
+            
+            // 3a: Fix missing newline after graph TD/LR/etc
+            content = content.replace(/^(graph\s+(TD|LR|RL|TB|BT))\s*([A-Za-z])/m, '$1\n$3');
+            
+            // 3b: Fix edge labels with % and spaces - add quotes
+            // Pattern: -->|Restricted 2% - 5%| C
+            // Fix to: -->|"Restricted 2% - 5%"| C
+            content = content.replace(
+                /\|\s*([^|]*?[%])[^|]*?\s*\|/g,
+                function(match) {
+                    // Extract the label text
+                    let label = match.replace(/\|/g, '').trim();
+                    // If it contains % or spaces, wrap with quotes
+                    if (label.includes('%') || label.includes(' ')) {
+                        return '|"' + label + '"|';
+                    }
+                    return match;
+                }
+            );
+            
+            // 3c: Also fix -->|text| patterns that have spaces
+            content = content.replace(
+                /\|\s*([^|]*?\s[^|]*?)\s*\|/g,
+                function(match) {
+                    let label = match.replace(/\|/g, '').trim();
+                    // Only wrap if not already quoted
+                    if (!label.startsWith('"') && !label.startsWith("'")) {
+                        return '|"' + label + '"|';
+                    }
+                    return match;
+                }
+            );
+            
+            // 3d: Escape remaining % to ％ (fullwidth percent) for safety
+            content = content.replace(/%/g, '％');
+            
+            mermaidDiv.textContent = content;
+            block.parentElement.replaceWith(mermaidDiv);
+        });
 
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
