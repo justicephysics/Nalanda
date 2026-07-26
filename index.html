@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+    <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     
     <!-- KaTeX -->  
@@ -147,9 +147,7 @@
             color: var(--accent);
         }
 
-        /* ============================================================
-           RENDER AREA - FORCED THEME WITH !important
-           ============================================================ */
+        /* RENDER AREA */
         #renderArea {
             background: var(--surface) !important;
             color: var(--text) !important;
@@ -163,7 +161,6 @@
             overflow: hidden;
         }
 
-        /* Content wrapper - THE KEY to prevent scatter */
         #renderArea .content-wrapper {
             max-width: 100%;
             overflow-x: auto;
@@ -175,7 +172,6 @@
             color: var(--text) !important;
         }
 
-        /* Force ALL content to inherit theme */
         #renderArea .content-wrapper,
         #renderArea .content-wrapper * {
             color: var(--text) !important;
@@ -186,7 +182,6 @@
             box-sizing: border-box;
         }
 
-        /* Headers keep accent color */
         #renderArea .content-wrapper h1,
         #renderArea .content-wrapper h2,
         #renderArea .content-wrapper h3,
@@ -196,15 +191,9 @@
             color: var(--accent) !important;
         }
 
-        /* Lists */
-        #renderArea .content-wrapper ul {
-            padding-left: 1.5rem;
-        }
-        #renderArea .content-wrapper li {
-            margin-bottom: 0.3rem;
-        }
+        #renderArea .content-wrapper ul { padding-left: 1.5rem; }
+        #renderArea .content-wrapper li { margin-bottom: 0.3rem; }
 
-        /* Tables - contained with scroll */
         #renderArea .content-wrapper table {
             display: block;
             overflow-x: auto;
@@ -226,7 +215,6 @@
             font-weight: 600;
         }
 
-        /* Code blocks */
         #renderArea .content-wrapper pre {
             overflow-x: auto;
             max-width: 100%;
@@ -244,7 +232,6 @@
             border-radius: 4px;
         }
 
-        /* Math blocks */
         #renderArea .content-wrapper .katex-display {
             overflow-x: auto;
             overflow-y: hidden;
@@ -255,7 +242,6 @@
             font-size: 1.1em !important;
         }
 
-        /* Mermaid diagrams - contained */
         #renderArea .content-wrapper .mermaid {
             overflow-x: auto;
             max-width: 100%;
@@ -267,13 +253,11 @@
             min-height: 100px;
         }
 
-        /* Images */
         #renderArea .content-wrapper img {
             max-width: 100%;
             height: auto;
         }
 
-        /* Blockquotes */
         #renderArea .content-wrapper blockquote {
             border-left: 4px solid var(--accent);
             padding-left: 1rem;
@@ -281,10 +265,7 @@
             color: var(--text-secondary) !important;
         }
 
-        /* Paragraphs */
-        #renderArea .content-wrapper p {
-            margin-bottom: 0.8rem;
-        }
+        #renderArea .content-wrapper p { margin-bottom: 0.8rem; }
 
         .loading {
             color: var(--text-secondary);
@@ -304,67 +285,29 @@
             text-decoration: none;
         }
 
-        /* ============================================================
-           MOBILE RESPONSIVENESS
-           ============================================================ */
         @media (max-width: 768px) {
-            body {
-                padding: 0.5rem;
-            }
-            .container {
-                padding: 1rem 0;
-                max-width: 100%;
-            }
-            #renderArea {
-                padding: 0.8rem !important;
-            }
+            body { padding: 0.5rem; }
+            .container { padding: 1rem 0; max-width: 100%; }
+            #renderArea { padding: 0.8rem !important; }
             #renderArea .content-wrapper h1 { font-size: 1.4rem !important; }
             #renderArea .content-wrapper h2 { font-size: 1.2rem !important; }
             #renderArea .content-wrapper h3 { font-size: 1rem !important; }
-            #renderArea .content-wrapper p,
-            #renderArea .content-wrapper li {
-                font-size: 0.95rem !important;
-            }
-            #renderArea .content-wrapper table {
-                font-size: 0.85rem;
-            }
-            #renderArea .content-wrapper th,
-            #renderArea .content-wrapper td {
-                padding: 4px 8px !important;
-            }
-            .controls {
-                gap: 0.4rem;
-            }
-            .controls a, .controls button {
-                font-size: 0.75rem;
-                padding: 0.3rem 0.6rem;
-            }
-            .discipline-btn {
-                font-size: 0.9rem;
-                padding: 0.7rem 1rem;
-            }
-            .panel a {
-                font-size: 0.85rem;
-                padding: 0.25rem 0;
-            }
+            #renderArea .content-wrapper p, #renderArea .content-wrapper li { font-size: 0.95rem !important; }
+            #renderArea .content-wrapper table { font-size: 0.85rem; }
+            #renderArea .content-wrapper th, #renderArea .content-wrapper td { padding: 4px 8px !important; }
+            .controls { gap: 0.4rem; }
+            .controls a, .controls button { font-size: 0.75rem; padding: 0.3rem 0.6rem; }
+            .discipline-btn { font-size: 0.9rem; padding: 0.7rem 1rem; }
+            .panel a { font-size: 0.85rem; padding: 0.25rem 0; }
         }
 
         @media (max-width: 480px) {
-            #renderArea {
-                padding: 0.5rem !important;
-            }
+            #renderArea { padding: 0.5rem !important; }
             #renderArea .content-wrapper h1 { font-size: 1.2rem !important; }
             #renderArea .content-wrapper h2 { font-size: 1rem !important; }
             #renderArea .content-wrapper h3 { font-size: 0.9rem !important; }
-            #renderArea .content-wrapper p,
-            #renderArea .content-wrapper li {
-                font-size: 0.85rem !important;
-            }
-            #renderArea .content-wrapper th,
-            #renderArea .content-wrapper td {
-                padding: 3px 6px !important;
-                font-size: 0.75rem;
-            }
+            #renderArea .content-wrapper p, #renderArea .content-wrapper li { font-size: 0.85rem !important; }
+            #renderArea .content-wrapper th, #renderArea .content-wrapper td { padding: 3px 6px !important; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -373,7 +316,7 @@
 
     <!-- Header -->
     <h1>🏛️ Justice Physics Nalanda</h1>
-    <p class="subtitle"><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <p class="subtitle"><em>The Virtual Academy for HumanOS 2.0</em></p>
     <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
     
     <!-- Controls -->
@@ -384,10 +327,9 @@
         <button type="button" onclick="loadReport('published/latest_report.md')">📄 Latest</button>
     </div>
 
-    <!-- ==================== ACCORDION ==================== -->
-    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
+    <!-- Accordion -->
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-    <!-- Prototype & Pitch -->
     <div class="discipline">
         <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
         <div class="panel">
@@ -396,15 +338,13 @@
         </div>
     </div>
 
-    <!-- Engineering -->
     <div class="discipline">
-        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
         <div class="panel">
             <a href="simple-engineering-vision">The Simple Engineering Vision</a>
         </div>
     </div>
 
-    <!-- Economics -->
     <div class="discipline">
         <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
         <div class="panel">
@@ -412,7 +352,6 @@
         </div>
     </div>
 
-    <!-- Education -->
     <div class="discipline">
         <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
         <div class="panel">
@@ -420,7 +359,7 @@
         </div>
     </div>
 
-    <!-- ==================== RENDER AREA ==================== -->
+    <!-- Render Area -->
     <div id="renderArea">
         <div class="content-wrapper">
             <p class="loading">📄 Click a link above, or use "Load Report" / "Latest" to view a rendered document.</p>
@@ -433,20 +372,15 @@
     </div>
 </div>
 
-<!-- ==================== SCRIPTS ==================== -->
 <script>
-    // ============================================================
-    // 1. ACCORDION TOGGLE
-    // ============================================================
+    // 1. Accordion Toggle
     document.querySelectorAll('.discipline-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             btn.parentElement.classList.toggle('open');
         });
     });
 
-    // ============================================================
-    // 2. THEME TOGGLE
-    // ============================================================
+    // 2. Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
     function setTheme(mode) {
         if (mode === 'light') {
@@ -456,26 +390,25 @@
             document.body.classList.remove('light-mode');
             themeBtn.textContent = '☀️ Day Mode';
         }
-        // Re-initialize Mermaid with correct theme
         const isLight = document.body.classList.contains('light-mode');
-        mermaid.initialize({ startOnLoad: false, theme: isLight ? 'default' : 'dark' });
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({ startOnLoad: false, theme: isLight ? 'default' : 'dark' });
+        }
     }
+    
     window.toggleTheme = function() {
         const isLight = document.body.classList.contains('light-mode');
         const newMode = isLight ? 'dark' : 'light';
         localStorage.setItem('theme', newMode);
         setTheme(newMode);
-        // Re-render existing Mermaid diagrams
         const mermaidNodes = document.querySelectorAll('#renderArea .content-wrapper .mermaid');
-        if (mermaidNodes.length > 0) {
+        if (mermaidNodes.length > 0 && typeof mermaid !== 'undefined') {
             mermaid.run({ nodes: mermaidNodes });
         }
     };
     setTheme(localStorage.getItem('theme') || 'dark');
 
-    // ============================================================
-    // 3. SANITIZE LATEX FUNCTION
-    // ============================================================
+    // 3. Sanitize LaTeX Function
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
@@ -485,13 +418,11 @@
         cleaned = cleaned.replace(/\\t\$/g, '$');
         cleaned = cleaned.replace(/\\t\\text/g, '\\text');
 
-        // Convert \langle \text{Civilization} \rangle to _Civilization
         cleaned = cleaned.replace(
             /\\langle\s*\\text\{([^}]*?)\}\s*\\rangle/g,
             '_{$1}'
         );
 
-        // Handle \text{...} with internal math
         cleaned = cleaned.replace(
             /\$\s*\\text\{([^}]*?)\s*\}\s*(.*?)\s*\$(\s*)/g,
             function(match, textPart, mathPart, trailing) {
@@ -502,7 +433,6 @@
             }
         );
 
-        // Handle simple \text{...} with no math
         cleaned = cleaned.replace(
             /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
             function(match, content, trailing) {
@@ -517,7 +447,6 @@
             }
         );
 
-        // Handle standalone \text{...}
         cleaned = cleaned.replace(
             /\\text\{([^}]*?)\}/g,
             function(match, content) {
@@ -530,25 +459,19 @@
             }
         );
 
-        // Fix rupee
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
 
-        // Fix bullets
         cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
         cleaned = cleaned.replace(/^\s*-\s*/gm, '• ');
 
-        // Fix percentages
         cleaned = cleaned.replace(/(\d+)\s*%/g, '$1%');
 
-        // Remove remaining backslashes and dollar signs
         cleaned = cleaned.replace(/\\/g, '');
         cleaned = cleaned.replace(/\$/g, '');
 
-        // Fix double spaces
         cleaned = cleaned.replace(/\s{2,}/g, ' ');
 
-        // Fix headers
         cleaned = cleaned.replace(/^(##+)\s*/gm, function(match, hashes) {
             const content = match.replace(hashes, '').trim();
             return '\n' + hashes + ' ' + content + '\n';
@@ -557,9 +480,7 @@
         return cleaned.trim();
     }
 
-    // ============================================================
-    // 4. LOAD AND RENDER REPORT
-    // ============================================================
+    // 4. Load and Render Report (Handles Mermaid + LaTeX Safely)
     async function loadReport(filePath) {
         const renderArea = document.getElementById('renderArea');
         
@@ -567,38 +488,38 @@
             filePath = prompt('Enter the report file path (e.g., published/test_1):');
             if (!filePath) return;
         }
-    
+
         renderArea.innerHTML = `
             <div class="content-wrapper">
                 <p class="loading">⏳ Loading document...</p>
             </div>
         `;
-    
+
         try {
             const response = await fetch(filePath);
             if (!response.ok) throw new Error('Document not found: ' + filePath);
-    
+
             let markdownText = await response.text();
-    
-            // 1. Convert non-breaking spaces (\u00A0) to standard spaces globally
+
+            // STEP 1: Replace non-breaking spaces (\u00A0) globally
             markdownText = markdownText.replace(/\u00A0/g, ' ');
-    
-            // 2. Protect Mermaid code blocks before passing to LaTeX sanitizer
+
+            // STEP 2: Extract & protect Mermaid code blocks from LaTeX cleaning
             const mermaidCodeBlocks = [];
             markdownText = markdownText.replace(/```mermaid[\s\S]*?```/g, (match) => {
                 mermaidCodeBlocks.push(match);
-                return `__MERMAID_PLACEHOLDER_${mermaidCodeBlocks.length - 1}__`;
+                return `\n__MERMAID_BLOCK_${mermaidCodeBlocks.length - 1}__\n`;
             });
-    
-            // 3. Run KaTeX/LaTeX Sanitizer on prose text only
+
+            // STEP 3: Sanitize LaTeX on non-Mermaid parts of text
             markdownText = sanitizeLatexForKaTeX(markdownText);
-    
-            // 4. Restore preserved Mermaid blocks
-            markdownText = markdownText.replace(/__MERMAID_PLACEHOLDER_(\d+)__/g, (_, index) => {
+
+            // STEP 4: Restore untouched Mermaid blocks back to Markdown
+            markdownText = markdownText.replace(/__MERMAID_BLOCK_(\d+)__/g, (_, index) => {
                 return mermaidCodeBlocks[index];
             });
-    
-            // Parse Markdown
+
+            // STEP 5: Parse Markdown using Marked.js
             let htmlContent;
             if (typeof marked !== 'undefined') {
                 htmlContent = marked.parse(markdownText);
@@ -606,23 +527,29 @@
                 htmlContent = '<pre>' + markdownText + '</pre>';
                 throw new Error('Marked.js not loaded');
             }
-    
+
             renderArea.innerHTML = `<div class="content-wrapper">${htmlContent}</div>`;
-    
-            // Process Mermaid Blocks
+
+            // STEP 6: Preprocess & Convert Mermaid Blocks to standard elements
             const contentWrapper = renderArea.querySelector('.content-wrapper');
             const mermaidBlocks = contentWrapper.querySelectorAll('pre code.language-mermaid');
             
             mermaidBlocks.forEach(block => {
                 let content = block.textContent.trim();
                 
+                // Fix orientation line syntax if smashed on single line
+                content = content.replace(
+                    /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|DU|UD)\s+([A-Za-z])/im,
+                    '$1 $2\n$3'
+                );
+                
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
                 mermaidDiv.textContent = content;
                 block.parentElement.replaceWith(mermaidDiv);
             });
-    
-            // Initialize and Run Mermaid
+
+            // STEP 7: Render Mermaid Diagrams
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
@@ -639,35 +566,8 @@
                     }
                 }
             }
-    
-            // Render KaTeX Math
-            if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(contentWrapper, {
-                    delimiters: [
-                        { left: '$$', right: '$$', display: true },
-                        { left: '$', right: '$', display: false }
-                    ],
-                    throwOnError: false,
-                    errorColor: '#f87171'
-                });
-            }
-    
-        } catch (err) {
-            renderArea.innerHTML = `
-                <div class="content-wrapper">
-                    <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
-                        <h3>❌ Render Failure</h3>
-                        <p><b>Error:</b> ${err.message}</p>
-                        <p><b>Path attempted:</b> <code>${filePath}</code></p>
-                    </div>
-                </div>
-            `;
-        }
-    }
 
-            // ============================================================
-            // KATEX - RENDER MATH
-            // ============================================================
+            // STEP 8: Render KaTeX Math
             if (typeof renderMathInElement !== 'undefined') {
                 try {
                     renderMathInElement(contentWrapper, {
@@ -696,9 +596,7 @@
         }
     }
 
-    // ============================================================
-    // 5. INTERCEPT ACCORDION LINKS
-    // ============================================================
+    // Intercept Accordion links
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.panel a').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -711,9 +609,6 @@
         });
     });
 
-    // ============================================================
-    // 6. MAKE LOADREPORT GLOBAL
-    // ============================================================
     window.loadReport = loadReport;
 </script>
 </body>
