@@ -16,7 +16,7 @@
                 ],
                 displayMath: [
                     ['$$', '$$'],
-                    ['\\[', '\]']
+                    ['\\[', '\\]']
                 ]
             },
             svg: { fontCache: 'global' },
@@ -33,22 +33,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             const isLight = document.body.classList.contains('light-mode');
             mermaid.initialize({
-                startOnLoad: false, // we'll call mermaid.run manually
+                startOnLoad: false,
                 theme: isLight ? 'default' : 'dark',
                 securityLevel: 'loose'
             });
         });
 
-        /**
-         * Re‑render all math and Mermaid diagrams in the current page.
-         * Call this after injecting new dynamic content.
-         */
         function renderMathAndFlowcharts() {
             if (window.MathJax && MathJax.typesetPromise) {
                 MathJax.typesetPromise().catch(e => console.warn('MathJax error:', e));
             }
             if (window.mermaid) {
-                // Reset all mermaid containers to raw code before re‑running
                 document.querySelectorAll('.mermaid').forEach(el => {
                     el.innerHTML = el.textContent;
                 });
@@ -60,7 +55,7 @@
     </script>
 
     <style>
-        /* ---------- CSS (same as before, with minor additions) ---------- */
+        /* ---------- CSS (unchanged) ---------- */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -327,7 +322,6 @@
 
         <!-- ==================== CONTENT DISPLAY ==================== -->
         <div id="content-display" class="hidden">
-            <!-- Back link will be injected here -->
             <a href="#" class="back-link" id="back-to-hub">← Back to Hub</a>
             <div id="page-content">
                 <p class="loading">Loading…</p>
@@ -342,13 +336,83 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script>
-        // ---- Elements ----
+        // ---- Embedded content (add new pages here) ----
+        const PAGE_CONTENT = {
+            'test_2': `
+                <h1>SYSTEM PROFILE: SYSTEMIC RUIN OF EDUCATION &amp; COMMODITY EXTRACTION</h1>
+
+                <h2>1. VECTOR TELEMETRY &amp; SYSTEM METRICS</h2>
+                <ul>
+                    <li>$\\text{Vector Identity: Systemic Ruin of Education and Commodity Extraction}$</li>
+                    <li>$\\text{Thermodynamic Transmission Rate: } \\frac{dS_{\\text{Civilization}}}{dt} \\propto \\frac{1}{\\eta_{\\text{Edu}}}$</li>
+                    <li>$\\text{Political Independence (PI): } \\text{PI} = 0.90$</li>
+                    <li>$\\text{Economic Independence (EI): } \\text{EI} = 0.08$</li>
+                    <li>$\\text{Social Independence (SI): } \\text{SI} = 0.70$</li>
+                    <li>$\\text{Total Sovereignty Index (TI): } \\text{TI} = (\\text{PI} + \\text{EI} + \\text{SI}) \\times (\\text{PI} \\times \\text{EI} \\times \\text{SI}) = 0.084672$</li>
+                </ul>
+
+                <h2>2. LOCAL EMPIRICAL DECAY &amp; ELIMINATION MATRIX</h2>
+                <ul>
+                    <li>$\\text{Foundational Learning Deficit: Over 50\\% of Grade 5 students in rural public schools cannot read Grade 2 text.}$</li>
+                    <li>$\\text{Multigrade Classroom Contraction: 66\\% of Grade I and II public primary classrooms run on multigrade setups; >10 Lakh vacancies.}$</li>
+                    <li>$\\text{UPSC CSE Elimination: 13.0 Lakh Applicants } \\rightarrow \\text{ 1,000 Seats } \\Rightarrow \\text{ Rejection Rate: 99.92\\%}$</li>
+                    <li>$\\text{IIT-JEE Adv Elimination: 14.5 Lakh Applicants } \\rightarrow \\text{ 17,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.80\\%}$</li>
+                    <li>$\\text{NEET-UG Elimination: 24.0 Lakh Applicants } \\rightarrow \\text{ 55,000 Govt Seats } \\Rightarrow \\text{ Rejection Rate: 97.71\\%}$</li>
+                    <li>$\\text{CAT Management Elimination: 3.3 Lakh Applicants } \\rightarrow \\text{ 5,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.34\\%}$</li>
+                    <li>$\\text{Test-Prep Extortion Axis: Coaching mafia extracts ₹1.0 Lakh Crore to ₹3.5 Lakh Crore annually from households.}$</li>
+                    <li>$\\text{Private Capitation Fee Axis: Private MBBS seats cost ₹50 Lakh to ₹1.5+ Crore; Engineering costs ₹10 Lakh to ₹25 Lakh.}$</li>
+                    <li>$\\text{NCRB Mortality Telemetry: >13,000 student suicides annually (>35 deaths/day); 12,598 exam failure deaths in 5 years.}$</li>
+                    <li>$\\text{Paper Leak Scam Network: Over 70+ major exam leaks across 15+ states affecting >1.5 Crore to 2.0 Crore aspirants.}$</li>
+                    <li>$\\text{Employability Paradox: Only 3.84\\% engineering graduates possess software skills; >80\\% to 85\\% remain unemployable.}$</li>
+                </ul>
+
+                <div class="mermaid">
+                    graph TD
+                        A[Systemic Ruin of Education] --> B[Commodity Extraction]
+                        B --> C[Coaching Mafia]
+                        B --> D[Capitation Fees]
+                        C --> E[₹1-3.5 Lakh Crore/year]
+                        D --> F[₹50 Lakh – ₹1.5+ Crore per MBBS seat]
+                        A --> G[Student Suicides]
+                        G --> H[>13,000/year]
+                        A --> I[Paper Leaks]
+                        I --> J[70+ major leaks, 1.5-2.0 Crore affected]
+                </div>
+            `,
+            'simple-engineering-vision': `
+                <h1>The Simple Engineering Vision</h1>
+                <p>This is a placeholder for the Engineering vision content. Replace with your own HTML, including LaTeX and Mermaid diagrams.</p>
+                <p>Example equation: $E = mc^2$</p>
+                <div class="mermaid">
+                    graph LR
+                        A[Hardware] --> B[HumanOS 2.0]
+                        B --> C[Abundance]
+                </div>
+            `,
+            'secondary-vs-permanent-cure': `
+                <h1>Secondary Solutions vs. The Permanent Cure</h1>
+                <p>Placeholder for Economics content.</p>
+                <p>Example: $\\text{Supply} = \\text{Demand}$</p>
+            `,
+            'engineer-hurricane': `
+                <h1>The Engineer Hurricane</h1>
+                <p>Placeholder for Education content.</p>
+                <p>Flowchart:</p>
+                <div class="mermaid">
+                    graph TD
+                        A[Engineers] --> B[Innovation]
+                        B --> C[New Civilisation]
+                </div>
+            `
+        };
+
+        // ---- DOM refs ----
         const hub = document.getElementById('hub');
         const contentDisplay = document.getElementById('content-display');
         const pageContent = document.getElementById('page-content');
         const backLink = document.getElementById('back-to-hub');
 
-        // ---- Theme toggle (unchanged) ----
+        // ---- Theme toggle ----
         const themeBtn = document.getElementById('theme-toggle');
 
         function setTheme(mode) {
@@ -381,52 +445,37 @@
         setTheme(saved);
 
         // ---- Routing ----
-        const contentBase = './pages/'; // folder containing content HTML files
-
-        /**
-         * Load a page by slug (e.g., 'test_2')
-         * Fetches the corresponding HTML file, inserts it into #page-content,
-         * updates the URL, and renders math & diagrams.
-         */
         function loadPage(slug) {
             // Show content area, hide hub
             hub.classList.add('hidden');
             contentDisplay.classList.remove('hidden');
-            pageContent.innerHTML = '<p class="loading">Loading…</p>';
+
+            // Get content from embedded object
+            const html = PAGE_CONTENT[slug];
+            if (html) {
+                pageContent.innerHTML = html;
+                // Update page title
+                document.title = slug.replace(/-/g, ' ') + ' — Justice Physics Nalanda';
+                // Render math and diagrams
+                renderMathAndFlowcharts();
+            } else {
+                pageContent.innerHTML = `<p style="color: red;">Error: Content for "${slug}" not found. Please add it to the PAGE_CONTENT object.</p>`;
+            }
 
             // Update URL (without reload)
-            const newUrl = window.location.origin + window.location.pathname.replace(/\/$/, '') + '/' + slug;
+            const basePath = window.location.pathname.replace(/\/[^/]*$/, '') + '/';
+            const newUrl = window.location.origin + basePath + slug;
             if (window.history && window.history.pushState) {
                 window.history.pushState({ slug: slug }, '', newUrl);
             }
-
-            // Fetch the content
-            fetch(contentBase + slug + '.html')
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    return response.text();
-                })
-                .then(html => {
-                    pageContent.innerHTML = html;
-                    // Render math and flowcharts
-                    renderMathAndFlowcharts();
-                    // Update page title
-                    document.title = slug + ' — Justice Physics Nalanda';
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    pageContent.innerHTML = `<p style="color: red;">Error loading content: ${error.message}. Please ensure the file <code>${contentBase}${slug}.html</code> exists.</p>`;
-                });
         }
 
-        /**
-         * Show the hub (index) view.
-         */
         function showHub() {
             hub.classList.remove('hidden');
             contentDisplay.classList.add('hidden');
             // Reset URL to base
-            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/';
+            const basePath = window.location.pathname.replace(/\/[^/]*$/, '') + '/';
+            const baseUrl = window.location.origin + basePath;
             if (window.history && window.history.pushState) {
                 window.history.pushState({ slug: null }, '', baseUrl);
             }
@@ -463,13 +512,16 @@
         // ---- On initial load, check the URL ----
         (function init() {
             const path = window.location.pathname;
-            // Extract slug: e.g., /Nalanda/test_2/ -> 'test_2'
-            const segments = path.split('/').filter(s => s.length > 0);
-            // If last segment is not empty and not 'index.html', treat as slug
+            // Remove trailing slash if present
+            const cleanPath = path.replace(/\/$/, '');
+            // Get the last segment
+            const segments = cleanPath.split('/').filter(s => s.length > 0);
+            // If the last segment is not 'index.html' and not empty, treat as slug
             if (segments.length > 0) {
                 const last = segments[segments.length - 1];
-                if (last !== 'index.html' && last !== '') {
-                    // We have a slug
+                // Also check if it's not the repository name (e.g., 'Nalanda')
+                // We'll allow any slug that exists in PAGE_CONTENT
+                if (last !== 'index.html' && PAGE_CONTENT[last]) {
                     loadPage(last);
                     return;
                 }
@@ -478,12 +530,8 @@
             showHub();
         })();
 
-        // ---- Re-render when theme changes (already handled in setTheme) ----
-        // Additionally, if content is loaded, we can re-render after theme toggle
-        // The setTheme already calls mermaid.run() which re-renders all diagrams.
-        // We'll also re-run MathJax after theme toggle? MathJax doesn't need re-run,
-        // but we can call renderMathAndFlowcharts() to be safe.
-        // Override setTheme to also re-render math if content is visible.
+        // ---- Re-render when theme changes ----
+        // Override setTheme to also re-render math if content is visible
         const originalSetTheme = setTheme;
         setTheme = function(mode) {
             originalSetTheme(mode);
@@ -493,7 +541,6 @@
         };
         // Re-apply to ensure the override is used
         window.setTheme = setTheme;
-        // Also re-run theme initialization with override
         setTheme(saved);
     </script>
 </body>
