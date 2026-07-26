@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+
+    <!-- ========== ADDED: KaTeX CSS ========== -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
     <style>
         :root {
             --bg: #0B1A2F;
@@ -40,7 +44,6 @@
             padding: 2rem 0;
         }
 
-        /* Header */
         h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
@@ -62,7 +65,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Controls bar */
         .controls {
             display: flex;
             justify-content: center;
@@ -88,7 +90,6 @@
             color: var(--bg);
         }
 
-        /* Accordion */
         .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -143,7 +144,6 @@
             color: var(--accent);
         }
 
-        /* Narrative sections */
         .narrative {
             margin-top: 2.5rem;
         }
@@ -169,6 +169,17 @@
             margin-bottom: 0.3rem;
         }
 
+        /* ========== ADDED: Render Area for Math ========== */
+        #renderArea {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            min-height: 120px;
+            overflow-x: auto;
+        }
+
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -184,31 +195,26 @@
 <body>
 <div class="container">
 
-    <!-- Header -->
     <h1>🏛️ Justice Physics Nalanda</h1>
     <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
     <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
     
-    <!-- Controls -->
     <div class="controls">
         <a href="languages.html">🌐 Languages</a>
         <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
+        <!-- ========== ADDED: Load Math File Button ========== -->
+        <button type="button" onclick="loadMathFile()">📄 Load Math</button>
     </div>
 
-    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
     <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-<!-- Prototype & Pitch -->
-<div class="discipline">
-    <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-    <div class="panel">
-        <!-- 1. JPE Master Plan -->
-        <a href="published/test_2">test_2</a>
-        
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="#" onclick="loadMathFile('published/test_2'); return false;">test_2</a>
+        </div>
     </div>
-</div>
 
-    <!-- Engineering -->
     <div class="discipline">
         <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
         <div class="panel">
@@ -216,7 +222,6 @@
         </div>
     </div>
 
-    <!-- Economics -->
     <div class="discipline">
         <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
         <div class="panel">
@@ -224,7 +229,6 @@
         </div>
     </div>
 
-    <!-- Education -->
     <div class="discipline">
         <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
         <div class="panel">
@@ -232,15 +236,23 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- ========== ADDED: Render Area ========== -->
+    <div id="renderArea">
+        <p style="color: var(--text-secondary);">📐 Click "Load Math" or a file link to render LaTeX.</p>
+    </div>
+
     <div class="footer">
         <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
     </div>
 </div>
 
-<!-- ==================== SCRIPTS ==================== -->
+<!-- ========== ADDED: KaTeX JS (deferred) ========== -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<!-- ========== ADDED: Math Rendering Logic ========== -->
 <script>
-    // Accordion
+    // Accordion (unchanged)
     document.querySelectorAll('.discipline-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const parent = btn.parentElement;
@@ -248,7 +260,7 @@
         });
     });
 
-    // Theme toggle
+    // Theme (unchanged)
     const themeBtn = document.getElementById('theme-toggle');
     function setTheme(mode) {
         if (mode === 'light') {
@@ -257,7 +269,6 @@
         } else {
             document.body.classList.remove('light-mode');
             themeBtn.textContent = '☀️ Day Mode';
-
         }
     }
     window.toggleTheme = function() {
@@ -266,10 +277,50 @@
         localStorage.setItem('theme', newMode);
         setTheme(newMode);
     };
+    setTheme(localStorage.getItem('theme') || 'dark');
 
-    // Load saved theme
-    const saved = localStorage.getItem('theme') || 'dark';
-    setTheme(saved);
+    // ========== ADDED: Load and render math file ==========
+    async function loadMathFile(filePath) {
+        const renderArea = document.getElementById('renderArea');
+        
+        if (!filePath) {
+            filePath = prompt('Enter file path (e.g., published/test_2):');
+            if (!filePath) return;
+        }
+
+        renderArea.innerHTML = '<p style="color: var(--text-secondary);">⏳ Loading...</p>';
+
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error('File not found: ' + filePath);
+            
+            const text = await response.text();
+            
+            // Simple: display the raw text (later we can add Markdown + LaTeX)
+            // For now, just show as preformatted text with LaTeX.
+            // KaTeX auto-render will parse any $...$ or $$...$$ in the content.
+            renderArea.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word; background: var(--bg); padding: 1rem; border-radius: 6px;">${text}</pre>`;
+
+            // Trigger KaTeX auto-render on the new content
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(renderArea, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false }
+                    ],
+                    throwOnError: false
+                });
+            } else {
+                // Fallback: KaTeX not loaded yet
+                console.warn('KaTeX auto-render not available');
+            }
+        } catch (err) {
+            renderArea.innerHTML = `<p style="color: #f87171;">❌ Error: ${err.message}</p>`;
+        }
+    }
+
+    // Expose function globally
+    window.loadMathFile = loadMathFile;
 </script>
 </body>
 </html>
