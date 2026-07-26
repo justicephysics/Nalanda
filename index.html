@@ -33,7 +33,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const isLight = document.body.classList.contains('light-mode');
             mermaid.initialize({
-                startOnLoad: false, // we'll call mermaid.run() manually after content loads
+                startOnLoad: true,
                 theme: isLight ? 'default' : 'dark',
                 securityLevel: 'loose'
             });
@@ -41,7 +41,7 @@
 
         /**
          * Re‑render all math and Mermaid diagrams in the current page.
-         * Call this after injecting new dynamic content.
+         * Useful if content is injected dynamically.
          */
         function renderMathAndFlowcharts() {
             if (window.MathJax && MathJax.typesetPromise) {
@@ -51,7 +51,6 @@
             }
             if (window.mermaid) {
                 // Mermaid might have already rendered some nodes; we need to re-run
-                // Remove previous SVG to avoid duplication (optional)
                 document.querySelectorAll('.mermaid').forEach(el => {
                     // Clear any existing rendered SVG
                     el.innerHTML = el.textContent; // revert to raw code
@@ -204,13 +203,12 @@
             padding: 0.35rem 0;
             border-bottom: 1px solid rgba(127, 219, 255, 0.1);
             font-size: 0.95rem;
-            cursor: pointer;
         }
         .panel a:hover {
             color: var(--accent);
         }
 
-        /* Content display area */
+        /* Content display area - only used on index page */
         #content-display {
             margin-top: 2rem;
             background: var(--surface);
@@ -267,6 +265,11 @@
             color: var(--accent);
             text-decoration: none;
         }
+
+        /* Hide content display on sub-pages (we'll use a class) */
+        .hide-content #content-display {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -290,8 +293,8 @@
         <div class="discipline">
             <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
             <div class="panel">
-                <a href="published/test_2">test_2</a>
-                <a href="published/test_1">test_1</a>
+                <!-- Link to a dedicated page for test_2 -->
+                <a href="test_2/">test_2</a>
             </div>
         </div>
 
@@ -299,7 +302,7 @@
         <div class="discipline">
             <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
             <div class="panel">
-                <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+                <a href="simple-engineering-vision/">The Simple Engineering Vision</a>
             </div>
         </div>
 
@@ -307,7 +310,7 @@
         <div class="discipline">
             <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
             <div class="panel">
-                <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+                <a href="secondary-vs-permanent-cure/">Secondary Solutions vs. The Permanent Cure</a>
             </div>
         </div>
 
@@ -315,11 +318,11 @@
         <div class="discipline">
             <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
             <div class="panel">
-                <a href="engineer-hurricane">The Engineer Hurricane</a>
+                <a href="engineer-hurricane/">The Engineer Hurricane</a>
             </div>
         </div>
 
-        <!-- ==================== CONTENT DISPLAY AREA ==================== -->
+        <!-- ==================== CONTENT DISPLAY AREA (only shown on index) ==================== -->
         <div id="content-display">
             <p class="loading">Select a topic from the accordion above to view its content.</p>
         </div>
@@ -340,45 +343,6 @@
             });
         });
 
-        // ---- Dynamic content loading ----
-        const contentDisplay = document.getElementById('content-display');
-
-        // Intercept clicks on all links inside panels
-        document.querySelectorAll('.panel a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // prevent navigation
-                const url = this.getAttribute('href');
-                if (!url) return;
-
-                // Show loading indicator
-                contentDisplay.innerHTML = `<p class="loading">Loading ${this.textContent}…</p>`;
-
-                // Fetch the content
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        return response.text();
-                    })
-                    .then(html => {
-                        // Insert the fetched HTML into the display area
-                        contentDisplay.innerHTML = html;
-
-                        // Now render any math and diagrams within the new content
-                        renderMathAndFlowcharts();
-
-                        // Optionally auto-open the parent discipline to show the panel
-                        const parentDiscipline = this.closest('.discipline');
-                        if (parentDiscipline) {
-                            parentDiscipline.classList.add('open');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                        contentDisplay.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
-                    });
-            });
-        });
-
         // ---- Theme toggle ----
         const themeBtn = document.getElementById('theme-toggle');
 
@@ -389,19 +353,14 @@
                 // Update Mermaid theme to 'default' for light mode
                 if (window.mermaid) {
                     mermaid.initialize({ theme: 'default', startOnLoad: false });
-                    // If content is already loaded, re-render mermaid diagrams
-                    if (contentDisplay.querySelector('.mermaid')) {
-                        mermaid.run({ nodes: contentDisplay.querySelectorAll('.mermaid') });
-                    }
+                    mermaid.run();
                 }
             } else {
                 document.body.classList.remove('light-mode');
                 themeBtn.textContent = '☀️ Day Mode';
                 if (window.mermaid) {
                     mermaid.initialize({ theme: 'dark', startOnLoad: false });
-                    if (contentDisplay.querySelector('.mermaid')) {
-                        mermaid.run({ nodes: contentDisplay.querySelectorAll('.mermaid') });
-                    }
+                    mermaid.run();
                 }
             }
         }
@@ -417,29 +376,26 @@
         const saved = localStorage.getItem('theme') || 'dark';
         setTheme(saved);
 
-        // ---- Additional: re-render when theme changes and content is present ----
-        // (The setTheme already handles re-render of mermaid, but we also need MathJax to adapt?)
-        // MathJax doesn't change with theme, but we might want to re-render if equations are in display.
-        // We can trigger a re-render after theme change if content is loaded.
-        // We'll add a global function to re-render everything after theme change.
-        const originalSetTheme = setTheme;
-        setTheme = function(mode) {
-            originalSetTheme(mode);
-            // Re-run MathJax and Mermaid after theme change
-            if (contentDisplay.innerHTML && !contentDisplay.querySelector('.loading')) {
-                renderMathAndFlowcharts();
-            }
-        };
-        // Override toggleTheme to use new setTheme
-        window.toggleTheme = function() {
-            const isLight = document.body.classList.contains('light-mode');
-            const newMode = isLight ? 'dark' : 'light';
-            localStorage.setItem('theme', newMode);
-            setTheme(newMode);
-        };
-
-        // Ensure initial render if content already loaded (e.g., after refresh)
-        // Since we don't load automatically, no action needed.
+        // ---- Dynamic content loading (only for index page) ----
+        // If we are on the index page (no path after /Nalanda/), we keep the dynamic loader.
+        // We detect if we are on a sub-page by checking if the URL path has more than one segment.
+        const pathSegments = window.location.pathname.split('/').filter(seg => seg.length > 0);
+        if (pathSegments.length === 0 || (pathSegments.length === 1 && pathSegments[0] === 'index.html')) {
+            // We are on the index page. Set up dynamic loading for links that point to sub-pages.
+            // But we want to navigate to the sub-page instead of loading dynamically.
+            // So we change the behavior: links will now navigate to the sub-page.
+            // However, we want to keep the index page as a hub. So we'll let the links work as normal navigation.
+            // We can also add a listener to prevent default and use fetch, but the user wants separate URLs.
+            // So we do nothing: the links will navigate to the sub-page.
+            // We can optionally remove the dynamic loader.
+            console.log('Index page: links will navigate to sub-pages.');
+        } else {
+            // We are on a sub-page. Hide the content display (it's not needed) and show the content directly.
+            document.body.classList.add('hide-content');
+            // The content is already rendered by the server (since we have separate HTML files).
+            // But we might want to re-render MathJax and Mermaid just in case.
+            renderMathAndFlowcharts();
+        }
     </script>
 </body>
 </html>
