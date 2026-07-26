@@ -1,55 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google" content="notranslate" />
-    <title>test_2 · Math Render Engine · Justice Physics Nalanda</title>
-
-    <!-- ==========================================================
-    MATHJAX CONFIG — one‑step, robust, ready for heavy content
-    ========================================================== -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [
-                    ['$', '$'],
-                    ['\\(', '\\)']
-                ],
-                displayMath: [
-                    ['$$', '$$'],
-                    ['\\[', '\\]']
-                ],
-                processEscapes: true,
-                processEnvironments: true
-            },
-            svg: {
-                fontCache: 'global',
-                scale: 1.0,
-                minScale: 0.8
-            },
-            options: {
-                enableMenu: true,
-                skipHtmlTypes: 'script',
-                ignoreHtmlClass: 'no-mathjax',
-                processHtmlClass: 'mathjax'
-            },
-            // Load everything on page load in one pass
-            startup: {
-                pageReady: function() {
-                    // After initial render, we re-render on demand
-                    console.log('MathJax ready — one‑step render complete.');
-                }
-            }
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async>
-    </script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
     <style>
-        /* ==========================================================
-           CSS VARIABLES & RESET
-           ========================================================== */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -58,8 +14,7 @@
             --accent: #7FDBFF;
             --border: #1a3a5c;
             --radius: 10px;
-            --max-width: 960px;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --max-width: 900px;
         }
         .light-mode {
             --bg: #f5f7fa;
@@ -68,13 +23,8 @@
             --text-secondary: #444444;
             --accent: #0077b6;
             --border: #d0d7de;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: var(--bg);
             color: var(--text);
@@ -90,39 +40,29 @@
             padding: 2rem 0;
         }
 
-        /* ==========================================================
-           HEADER
-           ========================================================== */
-        .app-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .app-header h1 {
+        /* Header */
+        h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
+            text-align: center;
+            margin-bottom: 0.25rem;
             line-height: 1.3;
-            margin-bottom: 0.2rem;
         }
-        .app-header .sub {
-            color: var(--text-secondary);
+        .subtitle {
+            text-align: center;
             font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
             font-size: clamp(0.95rem, 3vw, 1.15rem);
         }
-        .app-header .badge {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--bg);
-            font-weight: 700;
-            font-size: 0.7rem;
-            padding: 0.15rem 0.7rem;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            margin-top: 0.3rem;
+        .translation-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 1.5rem;
         }
 
-        /* ==========================================================
-           CONTROLS
-           ========================================================== */
+        /* Controls bar */
         .controls {
             display: flex;
             justify-content: center;
@@ -130,136 +70,108 @@
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-        .controls button,
-        .controls label {
+        .controls a, .controls button {
             color: var(--accent);
+            text-decoration: none;
             font-weight: 600;
             font-size: 0.95rem;
-            padding: 0.45rem 1.2rem;
+            padding: 0.45rem 1rem;
             border: 1px solid var(--accent);
             border-radius: var(--radius);
             background: transparent;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s, transform 0.1s;
+            transition: background 0.2s, color 0.2s;
             font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
         }
-        .controls button:hover,
-        .controls label:hover {
+        .controls a:hover, .controls button:hover {
             background: var(--accent);
             color: var(--bg);
-            transform: scale(1.02);
-        }
-        .controls input[type="file"] {
-            display: none;
         }
 
-        /* ==========================================================
-           TOAST / STATUS
-           ========================================================== */
-        #toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--surface);
-            border: 1px solid var(--accent);
-            border-radius: var(--radius);
-            padding: 0.7rem 1.8rem;
-            color: var(--text);
-            font-size: 0.95rem;
-            box-shadow: var(--shadow);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.4s ease, transform 0.3s ease;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-        #toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* ==========================================================
-           CONTENT AREA — where rendered math lives
-           ========================================================== */
-        #content-area {
+        /* Accordion */
+        .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 2rem 2rem 1.5rem;
-            min-height: 360px;
-            box-shadow: var(--shadow);
-            transition: background 0.3s, border-color 0.3s;
-            margin-top: 1.5rem;
-            position: relative;
+            margin-bottom: 0.85rem;
+            overflow: hidden;
         }
-        #content-area .placeholder {
-            color: var(--text-secondary);
-            text-align: center;
-            font-style: italic;
-            padding: 3rem 1rem;
-            opacity: 0.6;
+        .discipline-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--accent);
             font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
         }
-        #content-area .placeholder .icon {
-            font-size: 2.4rem;
+        .discipline-btn:hover {
+            background: rgba(127, 219, 255, 0.05);
+        }
+        .arrow {
+            transition: transform 0.25s;
+            font-size: 1.2rem;
+        }
+        .discipline.open .arrow {
+            transform: rotate(180deg);
+        }
+        .panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 1.2rem;
+        }
+        .discipline.open .panel {
+            max-height: 3000px;
+            padding: 0 1.2rem 1rem;
+        }
+        .panel a {
             display: block;
-            margin-bottom: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid rgba(127, 219, 255, 0.1);
+            font-size: 0.95rem;
+        }
+        .panel a:hover {
+            color: var(--accent);
         }
 
-        /* ---- math lines inside content ---- */
-        #content-area .math-line {
-            background: rgba(127, 219, 255, 0.04);
-            border-left: 3px solid var(--accent);
-            padding: 0.6rem 1.2rem;
-            border-radius: 0 var(--radius) var(--radius) 0;
-            margin: 0.6rem 0 1rem;
-            font-size: 1.05rem;
-            overflow-x: auto;
-            transition: background 0.2s;
+        /* Narrative sections */
+        .narrative {
+            margin-top: 2.5rem;
         }
-        #content-area .math-line .label {
-            display: inline-block;
-            font-weight: 600;
-            color: var(--accent);
-            margin-right: 0.6rem;
-            font-size: 0.9rem;
-            letter-spacing: 0.3px;
-        }
-        #content-area h2 {
+        .narrative h2 {
             color: var(--accent);
             font-size: 1.5rem;
             margin: 1.8rem 0 0.8rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.3rem;
         }
-        #content-area h3 {
+        .narrative h3 {
             color: var(--accent);
-            font-size: 1.2rem;
             margin: 1.2rem 0 0.5rem;
         }
-        #content-area p,
-        #content-area ul {
+        .narrative p, .narrative ul {
             color: var(--text-secondary);
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
-        #content-area ul {
+        .narrative ul {
             padding-left: 1.5rem;
         }
-        #content-area li {
+        .narrative li {
             margin-bottom: 0.3rem;
         }
 
-        /* ==========================================================
-           FOOTER
-           ========================================================== */
         .footer {
             text-align: center;
-            margin-top: 2.5rem;
+            margin-top: 3rem;
             font-size: 0.9rem;
             color: #888;
         }
@@ -267,370 +179,97 @@
             color: var(--accent);
             text-decoration: none;
         }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ==========================================================
-           RESPONSIVE
-           ========================================================== */
-        @media (max-width: 600px) {
-            #content-area {
-                padding: 1.2rem 1rem;
-            }
-            .controls button,
-            .controls label {
-                font-size: 0.85rem;
-                padding: 0.35rem 0.9rem;
-            }
-        }
-
-        /* ==========================================================
-           SCROLLBAR (optional)
-           ========================================================== */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 10px;
-        }
     </style>
 </head>
-
 <body>
-    <div class="container">
+<div class="container">
 
-        <!-- ==========================================================
-        HEADER
-        ========================================================== -->
-        <div class="app-header">
-            <h1>🧪 test_2 · Math Render Engine</h1>
-            <p class="sub">Justice Physics Nalanda — HumanOS 2.0</p>
-            <span class="badge">⚡ one‑step render · robust · file‑ready</span>
-        </div>
-
-        <!-- ==========================================================
-        CONTROLS
-        ========================================================== -->
-        <div class="controls">
-            <button id="btn-load-example" title="Load the System Profile example">
-                📂 Load Example
-            </button>
-            <label for="file-upload" title="Upload a .txt or .md file with math">
-                📤 Upload File
-                <input type="file" id="file-upload" accept=".txt,.md,.html,.htm" />
-            </label>
-            <button id="btn-render" title="Re‑render all math in the content area">
-                🔄 Re‑render Math
-            </button>
-            <button id="theme-toggle">🌓 Day / Night</button>
-        </div>
-
-        <!-- ==========================================================
-        CONTENT AREA
-        ========================================================== -->
-        <div id="content-area" class="mathjax">
-            <div class="placeholder">
-                <span class="icon">📄</span>
-                No content loaded yet.<br />
-                Click <strong>“Load Example”</strong> or upload a file.
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        FOOTER
-        ========================================================== -->
-        <div class="footer">
-            <p>
-                ✨ Open‑source · Free for all curious minds ·
-                <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>
-            </p>
-        </div>
-
-        <!-- ==========================================================
-        TOAST NOTIFICATION
-        ========================================================== -->
-        <div id="toast"></div>
-
+    <!-- Header -->
+    <h1>🏛️ Justice Physics Nalanda</h1>
+    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
+    
+    <!-- Controls -->
+    <div class="controls">
+        <a href="languages.html">🌐 Languages</a>
+        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
     </div>
 
-    <!-- ==========================================================
-    JAVASCRIPT — ENGINE
-    ========================================================== -->
-    <script>
-        (function() {
-            'use strict';
+    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-            // ---- DOM refs ----
-            const contentArea = document.getElementById('content-area');
-            const toast = document.getElementById('toast');
-            const themeBtn = document.getElementById('theme-toggle');
-            const btnLoadExample = document.getElementById('btn-load-example');
-            const btnRender = document.getElementById('btn-render');
-            const fileInput = document.getElementById('file-upload');
+<!-- Prototype & Pitch -->
+<div class="discipline">
+    <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+    <div class="panel">
+        <!-- 1. JPE Master Plan -->
+        <a href="published/test_2">test_2</a>
+        
+    </div>
+</div>
 
-            // ---- Toast helper ----
-            let toastTimer = null;
+    <!-- Engineering -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+        </div>
+    </div>
 
-            function showToast(msg, duration) {
-                duration = duration || 2500;
-                toast.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(function() {
-                    toast.classList.remove('show');
-                }, duration);
-            }
+    <!-- Economics -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+        </div>
+    </div>
 
-            // ---- Theme ----
-            function setTheme(mode) {
-                if (mode === 'light') {
-                    document.body.classList.add('light-mode');
-                    themeBtn.textContent = '🌙 Night Mode';
-                } else {
-                    document.body.classList.remove('light-mode');
-                    themeBtn.textContent = '☀️ Day Mode';
-                }
-                localStorage.setItem('theme', mode);
-            }
+    <!-- Education -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="engineer-hurricane">The Engineer Hurricane</a>
+        </div>
+    </div>
 
-            function toggleTheme() {
-                const isLight = document.body.classList.contains('light-mode');
-                setTheme(isLight ? 'dark' : 'light');
-            }
+    <!-- Footer -->
+    <div class="footer">
+        <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
+    </div>
+</div>
 
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            setTheme(savedTheme);
-            themeBtn.addEventListener('click', toggleTheme);
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+    // Accordion
+    document.querySelectorAll('.discipline-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parent = btn.parentElement;
+            parent.classList.toggle('open');
+        });
+    });
 
-            // ---- MathJax render trigger ----
-            function renderMath() {
-                if (window.MathJax && MathJax.typesetPromise) {
-                    MathJax.typesetPromise()
-                        .then(function() {
-                            showToast('✅ Math re‑rendered successfully.', 1500);
-                        })
-                        .catch(function(err) {
-                            console.warn('MathJax re‑render error:', err);
-                            showToast('⚠️ Math re‑render completed with warnings.', 2000);
-                        });
-                } else {
-                    // Fallback: try to load MathJax again
-                    showToast('⏳ MathJax is loading… please wait.', 1500);
-                    // If MathJax isn't ready, wait and try again
-                    let attempts = 0;
-                    const waitForMathJax = setInterval(function() {
-                        attempts++;
-                        if (window.MathJax && MathJax.typesetPromise) {
-                            clearInterval(waitForMathJax);
-                            MathJax.typesetPromise()
-                                .then(function() {
-                                    showToast('✅ Math rendered.', 1500);
-                                })
-                                .catch(function() {
-                                    showToast('⚠️ Math render completed.', 1500);
-                                });
-                        } else if (attempts > 30) {
-                            clearInterval(waitForMathJax);
-                            showToast('❌ MathJax failed to load. Please refresh.', 3000);
-                        }
-                    }, 300);
-                }
-            }
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    function setTheme(mode) {
+        if (mode === 'light') {
+            document.body.classList.add('light-mode');
+            themeBtn.textContent = '🌙 Night Mode';
+        } else {
+            document.body.classList.remove('light-mode');
+            themeBtn.textContent = '☀️ Day Mode';
 
-            // ---- Set content and render ----
-            function setContent(html) {
-                contentArea.innerHTML = html;
-                // Trigger MathJax on the new content
-                renderMath();
-            }
+        }
+    }
+    window.toggleTheme = function() {
+        const isLight = document.body.classList.contains('light-mode');
+        const newMode = isLight ? 'dark' : 'light';
+        localStorage.setItem('theme', newMode);
+        setTheme(newMode);
+    };
 
-            // ==========================================================
-            // EXAMPLE CONTENT — the System Profile (matching preview)
-            // ==========================================================
-            const EXAMPLE_CONTENT = `
-            <h2>📊 SYSTEM PROFILE: SYSTEMIC RUIN OF EDUCATION &amp; COMMODITY EXTRACTION</h2>
-
-            <h3>1. VECTOR TELEMETRY &amp; SYSTEM METRICS</h3>
-
-            <div class="math-line">
-                <span class="label">Vector Identity:</span>
-                $ \\text{Vector Identity: Systemic Ruin of Education and Commodity Extraction} $
-            </div>
-
-            <div class="math-line">
-                <span class="label">Thermodynamic Transmission Rate:</span>
-                $ \\text{Thermodynamic Transmission Rate: } \\frac{dS_{\\text{Civilization}}}{dt} \\propto \\frac{1}{\\eta_{\\text{Edu}}} $
-            </div>
-
-            <div class="math-line">
-                <span class="label">Political Independence (PI):</span>
-                $ \\text{Political Independence (PI): } \\text{PI} = 0.90 $
-            </div>
-
-            <div class="math-line">
-                <span class="label">Economic Independence (EI):</span>
-                $ \\text{Economic Independence (EI): } \\text{EI} = 0.08 $
-            </div>
-
-            <div class="math-line">
-                <span class="label">Social Independence (SI):</span>
-                $ \\text{Social Independence (SI): } \\text{SI} = 0.70 $
-            </div>
-
-            <div class="math-line">
-                <span class="label">Total Sovereignty Index (TI):</span>
-                $ \\text{Total Sovereignty Index (TI): } \\text{TI} = (\\text{PI} + \\text{EI} + \\text{SI}) \\times (\\text{PI} \\times \\text{EI} \\times \\text{SI}) = 0.084672 $
-            </div>
-
-            <h3>2. LOCAL EMPIRICAL DECAY &amp; ELIMINATION MATRIX</h3>
-
-            <div class="math-line">
-                $ \\text{Foundational Learning Deficit: Over 50\\% of Grade 5 students in rural public schools cannot read Grade 2 text.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{Multigrade Classroom Contraction: 66\\% of Grade I and II public primary classrooms run on multigrade setups; >10 Lakh vacancies.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{UPSC CSE Elimination: 13.0 Lakh Applicants } \\rightarrow \\text{ 1,000 Seats } \\Rightarrow \\text{ Rejection Rate: 99.92\\%} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{IIT-JEE Adv Elimination: 14.5 Lakh Applicants } \\rightarrow \\text{ 17,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.80\\%} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{NEET-UG Elimination: 24.0 Lakh Applicants } \\rightarrow \\text{ 55,000 Govt Seats } \\Rightarrow \\text{ Rejection Rate: 97.71\\%} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{CAT Management Elimination: 3.3 Lakh Applicants } \\rightarrow \\text{ 5,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.34\\%} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{Test-Prep Extortion Axis: Coaching mafia extracts ₹1.0 Lakh Crore to ₹3.5 Lakh Crore annually from households.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{Private Capitation Fee Axis: Private MBBS seats cost ₹50 Lakh to ₹1.5+ Crore; Engineering costs ₹10 Lakh to ₹25 Lakh.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{NCRB Mortality Telemetry: >13,000 student suicides annually (>35 deaths/day); 12,598 exam failure deaths in 5 years.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{Paper Leak Scam Network: Over 70+ major exam leaks across 15+ states affecting >1.5 Crore to 2.0 Crore aspirants.} $
-            </div>
-
-            <div class="math-line">
-                $ \\text{Employability Paradox: Only 3.84\\% engineering graduates possess software skills; >80\\% to 85\\% remain unemployable.} $
-            </div>
-
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:1.5rem; text-align:center; border-top:1px solid var(--border); padding-top:1rem;">
-                ⚡ <em>All math rendered in one step via MathJax v3 · Ready for file uploads</em>
-            </p>
-            `;
-
-            // ---- Load example ----
-            btnLoadExample.addEventListener('click', function() {
-                setContent(EXAMPLE_CONTENT);
-                showToast('📂 Example loaded — rendering math…', 1800);
-            });
-
-            // ---- Re‑render button ----
-            btnRender.addEventListener('click', function() {
-                renderMath();
-            });
-
-            // ---- File upload ----
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    const text = ev.target.result;
-                    // Wrap plain text in a pre or just insert as HTML
-                    // We'll treat it as text and wrap each line in a math-line div
-                    const lines = text.split('\n').filter(line => line.trim() !== '');
-                    let html = `<div style="padding:0.2rem 0;">`;
-                    let hasMath = false;
-                    lines.forEach(function(line) {
-                        const trimmed = line.trim();
-                        // If line looks like it has math ($ or \), wrap it
-                        if (trimmed.includes('$') || trimmed.includes('\\') || trimmed.includes('^') ||
-                            trimmed.includes('_') || trimmed.includes('\\frac') || trimmed.includes('\\text')) {
-                            html += `<div class="math-line">${trimmed}</div>`;
-                            hasMath = true;
-                        } else if (trimmed.startsWith('#')) {
-                            // heading
-                            const level = trimmed.match(/^#+/)[0].length;
-                            const textContent = trimmed.replace(/^#+\s*/, '');
-                            if (level === 1) {
-                                html += `<h2>${textContent}</h2>`;
-                            } else {
-                                html += `<h3>${textContent}</h3>`;
-                            }
-                        } else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
-                            html += `<ul><li>${trimmed.replace(/^[-*]\s*/, '')}</li></ul>`;
-                        } else {
-                            html += `<p>${trimmed}</p>`;
-                        }
-                    });
-                    html += `</div>`;
-
-                    // If no math detected, still show the content
-                    setContent(html);
-                    showToast(`📤 Loaded "${file.name}" — rendered ${lines.length} lines.`, 2200);
-                };
-                reader.onerror = function() {
-                    showToast('❌ Failed to read file.', 2000);
-                };
-                reader.readAsText(file);
-
-                // Reset input so the same file can be re-uploaded
-                fileInput.value = '';
-            });
-
-            // ==========================================================
-            // Auto-load example on first visit (if no content)
-            // ==========================================================
-            // Check if content area is empty or has placeholder
-            const initialContent = contentArea.innerHTML.trim();
-            if (initialContent.includes('placeholder')) {
-                // Auto-load example after a short delay
-                setTimeout(function() {
-                    setContent(EXAMPLE_CONTENT);
-                    showToast('📂 Example loaded automatically.', 1800);
-                }, 600);
-            }
-
-            // ---- Expose render function globally for debugging ----
-            window.renderMath = renderMath;
-
-            // ---- Keyboard shortcut: Ctrl+Enter to re-render ----
-            document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    e.preventDefault();
-                    renderMath();
-                }
-            });
-
-            console.log('🧪 test_2 · Math Render Engine ready.');
-            console.log('📖 Controls: Load Example, Upload File, Re‑render Math.');
-            console.log('⌨️  Shortcut: Ctrl+Enter to re‑render.');
-
-        })();
-    </script>
-
+    // Load saved theme
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
+</script>
 </body>
 </html>
