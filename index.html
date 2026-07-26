@@ -179,7 +179,31 @@
             color: var(--accent);
             text-decoration: none;
         }
+
+     .math, .katex-display {
+      display: block;
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      white-space: normal;
+      word-break: break-word;
+      padding-bottom: 6px;
+    }
+
     </style>
+
+        <!-- Mermaid and KaTeX support -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    
+    <!-- KaTeX auto-render -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body);"></script>
+
 </head>
 <body>
 <div class="container">
