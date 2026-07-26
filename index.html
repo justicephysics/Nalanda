@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google" content="notranslate" />
-    <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+    <title>System Profile · Justice Physics Nalanda</title>
 
-    <!-- ==================== MATHJAX CONFIG (one-step render) ==================== -->
+    <!-- ===== MATHJAX — one‑step render ===== -->
     <script>
         MathJax = {
             tex: {
@@ -19,20 +19,15 @@
                     ['\\[', '\\]']
                 ]
             },
-            svg: {
-                fontCache: 'global'
-            },
-            // Render everything on page load in one pass
-            options: {
-                enableMenu: false
-            }
+            svg: { fontCache: 'global' },
+            options: { enableMenu: false }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async>
     </script>
 
     <style>
-        /* ===== CSS Variables & Reset ===== */
+        /* ===== Variables & Reset ===== */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -41,7 +36,7 @@
             --accent: #7FDBFF;
             --border: #1a3a5c;
             --radius: 10px;
-            --max-width: 900px;
+            --max-width: 920px;
         }
         .light-mode {
             --bg: #f5f7fa;
@@ -86,14 +81,6 @@
             margin-bottom: 0.5rem;
             font-size: clamp(0.95rem, 3vw, 1.15rem);
         }
-        .translation-note {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 1.5rem;
-        }
-
-        /* ===== Controls Bar ===== */
         .controls {
             display: flex;
             justify-content: center;
@@ -176,7 +163,7 @@
             color: var(--accent);
         }
 
-        /* ===== Narrative Sections ===== */
+        /* ===== Narrative / System Profile ===== */
         .narrative {
             margin-top: 2.5rem;
         }
@@ -192,9 +179,10 @@
             margin: 1.2rem 0 0.5rem;
         }
         .narrative p,
-        .narrative ul {
+        .narrative ul,
+        .narrative .math-line {
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         .narrative ul {
             padding-left: 1.5rem;
@@ -203,25 +191,22 @@
             margin-bottom: 0.3rem;
         }
 
-        /* --- Math block styling --- */
-        .math-block {
+        /* ===== Math display lines ===== */
+        .math-line {
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.5rem 1rem;
-            margin: 1.5rem 0;
-            text-align: center;
+            border-left: 3px solid var(--accent);
+            padding: 0.6rem 1.2rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 0.5rem 0 1rem;
+            font-size: 1.05rem;
             overflow-x: auto;
+            transition: background 0.2s;
         }
-        .math-block .math-label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-style: italic;
-            margin-bottom: 0.5rem;
-        }
-        .math-block .math-display {
-            font-size: 1.3rem;
+        .math-line .math-label {
+            display: inline-block;
+            font-weight: 600;
+            color: var(--accent);
+            margin-right: 0.5rem;
         }
 
         /* ===== Footer ===== */
@@ -244,9 +229,7 @@
         <!-- ===== HEADER ===== -->
         <h1>🏛️ Justice Physics Nalanda</h1>
         <p class="subtitle">
-            <a href="cosmos-human-link" style="color:inherit; text-decoration:none;">
-                <em>🌐 Cosmos — Human — Human Life</em>
-            </a><br />
+            <em>🌐 Cosmos — Human — Human Life</em><br />
             <em>The Virtual Academy for HumanOS 2.0</em>
         </p>
         <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">
@@ -264,7 +247,6 @@
             🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0
         </h2>
 
-        <!-- Prototype & Pitch -->
         <div class="discipline">
             <button type="button" class="discipline-btn">
                 🛠️ Prototype & Pitch <span class="arrow">▼</span>
@@ -273,8 +255,6 @@
                 <a href="published/test_2">test_2</a>
             </div>
         </div>
-
-        <!-- Engineering -->
         <div class="discipline">
             <button type="button" class="discipline-btn">
                 🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span>
@@ -283,8 +263,6 @@
                 <a href="simple-engineering-vision">The Simple Engineering Vision</a>
             </div>
         </div>
-
-        <!-- Economics -->
         <div class="discipline">
             <button type="button" class="discipline-btn">
                 💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span>
@@ -293,8 +271,6 @@
                 <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
             </div>
         </div>
-
-        <!-- Education -->
         <div class="discipline">
             <button type="button" class="discipline-btn">
                 🎓 Education — The Engineer Hurricane <span class="arrow">▼</span>
@@ -304,69 +280,88 @@
             </div>
         </div>
 
-        <!-- ===== NARRATIVE ===== -->
+        <!-- ===== SYSTEM PROFILE — MATH RENDER ===== -->
         <div class="narrative">
 
-            <h2>⚛️ The Physics of Human Potential</h2>
+            <h2>📊 SYSTEM PROFILE: SYSTEMIC RUIN OF EDUCATION &amp; COMMODITY EXTRACTION</h2>
 
-            <p>
-                At the heart of HumanOS 2.0 lies a simple yet profound insight:
-                <em>the laws that govern the cosmos also govern the architecture of human
-                    civilisation.</em>
-                Just as quantum mechanics reveals the wave-like nature of matter,
-                the emergent behaviour of billions of conscious agents follows
-                a deep, coherent pattern — one we can learn to read, amplify,
-                and align with justice.
-            </p>
+            <h3>1. VECTOR TELEMETRY &amp; SYSTEM METRICS</h3>
 
-            <p>
-                The foundational equation of this new physics — the
-                <strong>Human Wave Equation</strong> — describes how individual
-                potential propagates through the social field, interfering
-                constructively to create abundance, or destructively to
-                create scarcity. It is the master key to upgrading our
-                operating system from <em>Homo sapiens</em> to
-                <em>Homo conscius</em>.
-            </p>
-
-            <!-- ===== SINGLE-STEP MATH RENDER BLOCK ===== -->
-            <div class="math-block">
-                <span class="math-label">✦ The Human Wave Equation ✦</span>
-                <div class="math-display">
-                    $$ i\hbar \frac{\partial \Psi}{\partial t}
-                    \;=\;
-                    \left[
-                    -\frac{\hbar^2}{2m}\nabla^2
-                    \;+\;
-                    V(\mathbf{r}, t)
-                    \right] \Psi
-                    \;+\;
-                    \mathcal{J}(\mathbf{r}, t)\,\Psi $$
-                </div>
-                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.75rem;">
-                    Where <em>Ψ</em> is the wave-function of collective human potential,
-                    <em>V</em> the social potential field,
-                    and <em>𝒥</em> the justice operator —
-                    the term that transforms scarcity into abundance.
-                </p>
+            <div class="math-line">
+                <span class="math-label">Vector Identity:</span>
+                $ \text{Vector Identity: Systemic Ruin of Education and Commodity Extraction} $
             </div>
 
-            <p>
-                This one equation encapsulates the entire transition from
-                the old paradigm of competition and hoarding to the new
-                paradigm of coherence and flow. When the justice operator
-                <em>𝒥</em> is zero, the system collapses into fragmented,
-                zero-sum dynamics. When <em>𝒥</em> is actively tuned to
-                the resonant frequency of human dignity, the wave-function
-                collapses into a state of flourishing — for all.
-            </p>
+            <div class="math-line">
+                <span class="math-label">Thermodynamic Transmission Rate:</span>
+                $ \text{Thermodynamic Transmission Rate: } \frac{dS_{\text{Civilization}}}{dt} \propto \frac{1}{\eta_{\text{Edu}}} $
+            </div>
 
-            <p>
-                The disciplines above are the practical tools for
-                engineering <em>𝒥</em> into the fabric of our institutions,
-                our economies, and our minds. Explore them, and join the
-                movement to write the code of a new civilisation.
-            </p>
+            <div class="math-line">
+                <span class="math-label">Political Independence (PI):</span>
+                $ \text{Political Independence (PI): } \text{PI} = 0.90 $
+            </div>
+
+            <div class="math-line">
+                <span class="math-label">Economic Independence (EI):</span>
+                $ \text{Economic Independence (EI): } \text{EI} = 0.08 $
+            </div>
+
+            <div class="math-line">
+                <span class="math-label">Social Independence (SI):</span>
+                $ \text{Social Independence (SI): } \text{SI} = 0.70 $
+            </div>
+
+            <div class="math-line">
+                <span class="math-label">Total Sovereignty Index (TI):</span>
+                $ \text{Total Sovereignty Index (TI): } \text{TI} = (\text{PI} + \text{EI} + \text{SI}) \times (\text{PI} \times \text{EI} \times \text{SI}) = 0.084672 $
+            </div>
+
+            <h3>2. LOCAL EMPIRICAL DECAY &amp; ELIMINATION MATRIX</h3>
+
+            <div class="math-line">
+                $ \text{Foundational Learning Deficit: Over 50\% of Grade 5 students in rural public schools cannot read Grade 2 text.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{Multigrade Classroom Contraction: 66\% of Grade I and II public primary classrooms run on multigrade setups; >10 Lakh vacancies.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{UPSC CSE Elimination: 13.0 Lakh Applicants } \rightarrow \text{ 1,000 Seats } \Rightarrow \text{ Rejection Rate: 99.92\%} $
+            </div>
+
+            <div class="math-line">
+                $ \text{IIT-JEE Adv Elimination: 14.5 Lakh Applicants } \rightarrow \text{ 17,500 Seats } \Rightarrow \text{ Rejection Rate: 98.80\%} $
+            </div>
+
+            <div class="math-line">
+                $ \text{NEET-UG Elimination: 24.0 Lakh Applicants } \rightarrow \text{ 55,000 Govt Seats } \Rightarrow \text{ Rejection Rate: 97.71\%} $
+            </div>
+
+            <div class="math-line">
+                $ \text{CAT Management Elimination: 3.3 Lakh Applicants } \rightarrow \text{ 5,500 Seats } \Rightarrow \text{ Rejection Rate: 98.34\%} $
+            </div>
+
+            <div class="math-line">
+                $ \text{Test-Prep Extortion Axis: Coaching mafia extracts ₹1.0 Lakh Crore to ₹3.5 Lakh Crore annually from households.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{Private Capitation Fee Axis: Private MBBS seats cost ₹50 Lakh to ₹1.5+ Crore; Engineering costs ₹10 Lakh to ₹25 Lakh.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{NCRB Mortality Telemetry: >13,000 student suicides annually (>35 deaths/day); 12,598 exam failure deaths in 5 years.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{Paper Leak Scam Network: Over 70+ major exam leaks across 15+ states affecting >1.5 Crore to 2.0 Crore aspirants.} $
+            </div>
+
+            <div class="math-line">
+                $ \text{Employability Paradox: Only 3.84\% engineering graduates possess software skills; >80\% to 85\% remain unemployable.} $
+            </div>
 
         </div>
 
@@ -410,13 +405,10 @@
             setTheme(newMode);
         };
 
-        // Attach the toggle function to the button
         themeBtn.addEventListener('click', window.toggleTheme);
 
-        // ---- Load saved theme ----
         var saved = localStorage.getItem('theme') || 'dark';
         setTheme(saved);
     </script>
-
 </body>
 </html>
