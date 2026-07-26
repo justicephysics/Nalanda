@@ -38,7 +38,7 @@ graph TD
     D --> E[Extortion Axis: Coaching Mafia ₹1.0L Cr - ₹3.5L Cr]
     D --> F[Degree Mills & Capitation Extraction ₹50L - ₹1.5 Cr]
     E --> G[Cognitive Paralysis & NCRB Suicides >13k/yr]
-    F --> H[Unemployable Base >80% & Low-Wage Gig Work]
+    F --> H[Unemployable Base >80 & Low-Wage Gig Work]
     G --> I[Systemic Inversion & Youth Street Resistance]
     H --> I
 ```
