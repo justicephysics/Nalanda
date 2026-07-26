@@ -45,15 +45,3 @@ graph TD
     H --> I
 ```
 
-
-graph TD
-    A[Raw Cognitive Matrix 100%] --> B{Artificial Scarcity Bottleneck}
-    B -->|Restricted 2% - 5%| C[Elite Class Generator & High-Wage Slots]
-    B -->|Blocked 95% - 98%| D[Manufactured Underprivileged Majority]
-    D --> E["Extortion Axis: Coaching Mafia ₹1.0L Cr - ₹3.5L Cr"]
-    D --> F["Degree Mills & Capitation Extraction ₹50L - ₹1.5 Cr"]
-    E --> G["Cognitive Paralysis & NCRB Suicides >13k/yr"]
-    H --> I[Systemic Inversion & Youth Street Resistance]
-    F --> H["Unemployable Base >80% & Low-Wage Gig Work"]
-    G --> I
-
