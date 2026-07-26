@@ -52,7 +52,6 @@
             padding: 2rem 0;
         }
 
-        /* Header */
         h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
@@ -67,14 +66,7 @@
             margin-bottom: 0.5rem;
             font-size: clamp(0.95rem, 3vw, 1.15rem);
         }
-        .translation-note {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 1.5rem;
-        }
 
-        /* Controls bar */
         .controls {
             display: flex;
             justify-content: center;
@@ -100,7 +92,6 @@
             color: var(--bg);
         }
 
-        /* Accordion */
         .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -150,40 +141,13 @@
             padding: 0.35rem 0;
             border-bottom: 1px solid rgba(127, 219, 255, 0.1);
             font-size: 0.95rem;
+            cursor: pointer;
         }
         .panel a:hover {
             color: var(--accent);
         }
 
-        /* Narrative sections */
-        .narrative {
-            margin-top: 2.5rem;
-        }
-        .narrative h2 {
-            color: var(--accent);
-            font-size: 1.5rem;
-            margin: 1.8rem 0 0.8rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.3rem;
-        }
-        .narrative h3 {
-            color: var(--accent);
-            margin: 1.2rem 0 0.5rem;
-        }
-        .narrative p, .narrative ul {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-        .narrative ul {
-            padding-left: 1.5rem;
-        }
-        .narrative li {
-            margin-bottom: 0.3rem;
-        }
-
-        /* ============================================================
-           ADDED: Render Area Styles
-           ============================================================ */
+        /* Render Area */
         #renderArea {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -212,8 +176,6 @@
         #renderArea .katex {
             font-size: 1.1em !important;
         }
-
-        /* Mermaid container */
         #renderArea .mermaid {
             background: var(--bg);
             padding: 1rem;
@@ -247,7 +209,6 @@
             padding-bottom: 6px;
         }
 
-        /* Loading state */
         .loading {
             color: var(--text-secondary);
             text-align: center;
@@ -262,35 +223,18 @@
 
     <!-- Header -->
     <h1>🏛️ Justice Physics Nalanda</h1>
-    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <p class="subtitle"><em>The Virtual Academy for HumanOS 2.0</em></p>
     <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
     
     <!-- Controls -->
     <div class="controls">
         <a href="languages.html">🌐 Languages</a>
         <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
-        <!-- ADDED: Load Report Button -->
         <button type="button" onclick="loadReport()">📄 Load Report</button>
         <button type="button" onclick="loadReport('published/latest_report.md')">📄 Latest</button>
     </div>
-    
-    <script>
-    // ============================================================
-    // FIX: Intercept accordion links to render instead of navigate
-    // ============================================================
-    
-    document.querySelectorAll('.panel a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault(); // Stop the browser from navigating away
-            const filePath = this.getAttribute('href');
-            if (filePath) {
-                loadReport(filePath);
-            }
-        });
-    });
-    </script>
-    
-    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
+
+    <!-- ==================== ACCORDION ==================== -->
     <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
     <!-- Prototype & Pitch -->
@@ -326,11 +270,9 @@
         </div>
     </div>
 
-    <!-- ============================================================
-         ADDED: RENDER AREA
-         ============================================================ -->
+    <!-- ==================== RENDER AREA ==================== -->
     <div id="renderArea">
-        <p class="loading">📄 Click "Load Report" or "Latest" to view a rendered document.</p>
+        <p class="loading">📄 Click a link above, or use "Load Report" / "Latest" to view a rendered document.</p>
     </div>
 
     <!-- Footer -->
@@ -342,17 +284,16 @@
 <!-- ==================== SCRIPTS ==================== -->
 <script>
     // ============================================================
-    // ACCORDION (YOUR EXISTING CODE)
+    // 1. ACCORDION TOGGLE
     // ============================================================
     document.querySelectorAll('.discipline-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const parent = btn.parentElement;
-            parent.classList.toggle('open');
+            btn.parentElement.classList.toggle('open');
         });
     });
 
     // ============================================================
-    // THEME TOGGLE (YOUR EXISTING CODE)
+    // 2. THEME TOGGLE
     // ============================================================
     const themeBtn = document.getElementById('theme-toggle');
     function setTheme(mode) {
@@ -370,19 +311,15 @@
         localStorage.setItem('theme', newMode);
         setTheme(newMode);
     };
-
-    // Load saved theme
-    const saved = localStorage.getItem('theme') || 'dark';
-    setTheme(saved);
+    setTheme(localStorage.getItem('theme') || 'dark');
 
     // ============================================================
-    // ADDED: SANITIZE LATEX FUNCTION
+    // 3. SANITIZE LATEX FUNCTION
     // ============================================================
     function sanitizeLatexForKaTeX(rawText) {
         if (!rawText) return '';
         let cleaned = rawText;
 
-        // Normalize tab corruption
         cleaned = cleaned.replace(/\t/g, ' ');
         cleaned = cleaned.replace(/\\ttext/g, '\\text');
         cleaned = cleaned.replace(/\\t\$/g, '$');
@@ -394,7 +331,7 @@
             '_{$1}'
         );
 
-        // Handle \text{...} with internal math: $\text{Text: } \frac{...}{...} \propto ...$
+        // Handle \text{...} with internal math
         cleaned = cleaned.replace(
             /\$\s*\\text\{([^}]*?)\s*\}\s*(.*?)\s*\$(\s*)/g,
             function(match, textPart, mathPart, trailing) {
@@ -420,7 +357,7 @@
             }
         );
 
-        // Handle standalone \text{...} (no $)
+        // Handle standalone \text{...}
         cleaned = cleaned.replace(
             /\\text\{([^}]*?)\}/g,
             function(match, content) {
@@ -433,15 +370,15 @@
             }
         );
 
-        // Fix rupee symbol collisions
+        // Fix rupee
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
         cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
 
-        // Fix bullet lists
+        // Fix bullets
         cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
         cleaned = cleaned.replace(/^\s*-\s*/gm, '• ');
 
-        // Fix percentage signs
+        // Fix percentages
         cleaned = cleaned.replace(/(\d+)\s*%/g, '$1%');
 
         // Remove remaining backslashes and dollar signs
@@ -461,14 +398,13 @@
     }
 
     // ============================================================
-    // ADDED: LOAD AND RENDER REPORT
+    // 4. LOAD AND RENDER REPORT
     // ============================================================
     async function loadReport(filePath) {
         const renderArea = document.getElementById('renderArea');
         
-        // If no filePath provided, prompt the user
         if (!filePath) {
-            filePath = prompt('Enter the report file path (e.g., published/2026-07-25_Education_SystemicRuin_LongSystemProfiler.md):');
+            filePath = prompt('Enter the report file path (e.g., published/test_1):');
             if (!filePath) return;
         }
 
@@ -479,11 +415,8 @@
             if (!response.ok) throw new Error('Document not found: ' + filePath);
 
             let markdownText = await response.text();
-
-            // --- Sanitize LaTeX ---
             markdownText = sanitizeLatexForKaTeX(markdownText);
 
-            // --- Parse Markdown with marked.js ---
             if (typeof marked !== 'undefined') {
                 renderArea.innerHTML = marked.parse(markdownText);
             } else {
@@ -491,35 +424,32 @@
                 throw new Error('Marked.js not loaded');
             }
 
-            // --- Render Mermaid Diagrams ---
+            // --- Mermaid ---
             const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
             mermaidBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
-                // Escape % to ％ to avoid Mermaid comment parsing
                 let content = block.textContent;
                 content = content.replace(/%/g, '％');
                 mermaidDiv.textContent = content;
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            // Initialize and render Mermaid with proper theme
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
-
                 const mermaidNodes = renderArea.querySelectorAll('.mermaid');
                 for (const node of mermaidNodes) {
                     try {
                         await mermaid.run({ nodes: [node] });
                     } catch (err) {
-                        console.warn('Mermaid render error:', err);
+                        console.warn('Mermaid error:', err);
                         node.innerHTML = `<pre style="color: #f87171;">⚠️ Diagram error: ${err.message}</pre>`;
                     }
                 }
             }
 
-            // --- Render KaTeX ---
+            // --- KaTeX ---
             if (typeof renderMathInElement !== 'undefined') {
                 try {
                     renderMathInElement(renderArea, {
@@ -531,7 +461,7 @@
                         errorColor: '#f87171'
                     });
                 } catch (err) {
-                    console.warn('KaTeX render error:', err);
+                    console.warn('KaTeX error:', err);
                 }
             }
 
@@ -547,15 +477,34 @@
     }
 
     // ============================================================
-    // ADDED: Expose loadReport globally
+    // 5. FIX: INTERCEPT ACCORDION LINKS
+    // ============================================================
+    // This runs after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.panel a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const filePath = this.getAttribute('href');
+                if (filePath && typeof loadReport === 'function') {
+                    loadReport(filePath);
+                } else {
+                    console.warn('loadReport not available or filePath missing');
+                }
+            });
+        });
+    });
+
+    // ============================================================
+    // 6. MAKE LOADREPORT GLOBAL
     // ============================================================
     window.loadReport = loadReport;
 
     // ============================================================
-    // ADDED: Auto-load latest report on page load (optional)
+    // 7. OPTIONAL: Auto-load on page load (uncomment to enable)
     // ============================================================
-    // Uncomment the line below to auto-load the latest report:
-    // window.addEventListener('DOMContentLoaded', () => loadReport('published/latest_report.md'));
+    // window.addEventListener('DOMContentLoaded', () => {
+    //     loadReport('published/latest_report.md');
+    // });
 </script>
 </body>
 </html>
