@@ -1,449 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google" content="notranslate">
-  <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <!-- KaTeX -->  
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body);"></script>
+    
+    <!-- Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+    
+    <style>
+        :root {
+            --bg: #0B1A2F;
+            --surface: #112240;
+            --text: #ffffff;
+            --text-secondary: #cccccc;
+            --accent: #7FDBFF;
+            --border: #1a3a5c;
+            --radius: 10px;
+            --max-width: 900px;
+        }
+        .light-mode {
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-secondary: #444444;
+            --accent: #0077b6;
+            --border: #d0d7de;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-size: clamp(1rem, 2.2vw, 1.15rem);
+            line-height: 1.7;
+            padding: 1rem;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
 
-  <!-- KaTeX -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        /* Header */
+        h1 {
+            color: var(--accent);
+            font-size: clamp(1.7rem, 5vw, 2.4rem);
+            text-align: center;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: clamp(0.95rem, 3vw, 1.15rem);
+        }
+        .translation-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 1.5rem;
+        }
 
-  <!-- Mermaid -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+        /* Controls bar */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .controls a, .controls button {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.45rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            background: transparent;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-family: inherit;
+        }
+        .controls a:hover, .controls button:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
 
-  <style>
-    :root {
-      --bg: #0B1A2F;
-      --surface: #112240;
-      --text: #ffffff;
-      --text-secondary: #cccccc;
-      --accent: #7FDBFF;
-      --border: #1a3a5c;
-      --radius: 10px;
-      --max-width: 900px;
-    }
-    .light-mode {
-      --bg: #f5f7fa;
-      --surface: #ffffff;
-      --text: #1a1a2e;
-      --text-secondary: #444444;
-      --accent: #0077b6;
-      --border: #d0d7de;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
-      line-height: 1.7;
-      padding: 1rem;
-      transition: background 0.3s, color 0.3s;
-    }
-    .container {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 2rem 0;
-    }
+        /* Accordion */
+        .discipline {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 0.85rem;
+            overflow: hidden;
+        }
+        .discipline-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+        }
+        .discipline-btn:hover {
+            background: rgba(127, 219, 255, 0.05);
+        }
+        .arrow {
+            transition: transform 0.25s;
+            font-size: 1.2rem;
+        }
+        .discipline.open .arrow {
+            transform: rotate(180deg);
+        }
+        .panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 1.2rem;
+        }
+        .discipline.open .panel {
+            max-height: 3000px;
+            padding: 0 1.2rem 1rem;
+        }
+        .panel a {
+            display: block;
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid rgba(127, 219, 255, 0.1);
+            font-size: 0.95rem;
+        }
+        .panel a:hover {
+            color: var(--accent);
+        }
 
-    h1 {
-      color: var(--accent);
-      font-size: clamp(1.7rem, 5vw, 2.4rem);
-      text-align: center;
-      margin-bottom: 0.25rem;
-      line-height: 1.3;
-    }
-    .subtitle {
-      text-align: center;
-      font-style: italic;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-      font-size: clamp(0.95rem, 3vw, 1.15rem);
-    }
+        /* Narrative sections */
+        .narrative {
+            margin-top: 2.5rem;
+        }
+        .narrative h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin: 1.8rem 0 0.8rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3rem;
+        }
+        .narrative h3 {
+            color: var(--accent);
+            margin: 1.2rem 0 0.5rem;
+        }
+        .narrative p, .narrative ul {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .narrative ul {
+            padding-left: 1.5rem;
+        }
+        .narrative li {
+            margin-bottom: 0.3rem;
+        }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-    .controls a, .controls button {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 0.45rem 1rem;
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      background: transparent;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      font-family: inherit;
-    }
-    .controls a:hover, .controls button:hover {
-      background: var(--accent);
-      color: var(--bg);
-    }
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    /* Accordion */
-    .discipline {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-bottom: 0.85rem;
-      overflow: hidden;
-    }
-    .discipline-btn {
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 1rem 1.2rem;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: inherit;
-    }
-    .discipline-btn:hover {
-      background: rgba(127, 219, 255, 0.05);
-    }
-    .arrow {
-      transition: transform 0.25s;
-      font-size: 1.2rem;
-    }
-    .discipline.open .arrow {
-      transform: rotate(180deg);
-    }
-    .panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
-      padding: 0 1.2rem;
-    }
-    .discipline.open .panel {
-      max-height: 3000px;
-      padding: 0 1.2rem 1rem;
-    }
-    .panel a {
+     .math, .katex-display {
       display: block;
-      color: var(--text);
-      text-decoration: none;
-      padding: 0.35rem 0;
-      border-bottom: 1px solid rgba(127, 219, 255, 0.1);
-      font-size: 0.95rem;
-    }
-    .panel a:hover {
-      color: var(--accent);
-    }
-
-    /* Content area where the report is rendered */
-    #documentRenderArea {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      margin-top: 1.5rem;
-    }
-    #documentRenderArea h1,
-    #documentRenderArea h2,
-    #documentRenderArea h3 {
-      color: var(--accent);
-    }
-    #documentRenderArea ul {
-      padding-left: 1.5rem;
-    }
-    #documentRenderArea li {
-      margin-bottom: 0.3rem;
-    }
-
-    /* Fix for KaTeX display */
-    .katex-display {
       overflow-x: auto;
       overflow-y: hidden;
       max-width: 100%;
-      padding: 6px 0;
-    }
-    .katex {
-      font-size: 1.1em !important;
-    }
-
-    /* Fix for Mermaid */
-    .mermaid {
-      background: #0B1A2F;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem 0;
-      text-align: center;
-      overflow-x: auto;
-    }
-    .light-mode .mermaid {
-      background: #ffffff;
+      white-space: normal;
+      word-break: break-word;
+      padding-bottom: 6px;
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      color: #888;
-    }
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-  </style>
+    </style>
+
 </head>
 <body>
-
 <div class="container">
 
-  <h1>🏛️ Justice Physics Nalanda</h1>
-  <p class="subtitle"><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <!-- Header -->
+    <h1>🏛️ Justice Physics Nalanda</h1>
+    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
+    
+    <!-- Controls -->
+    <div class="controls">
+        <a href="languages.html">🌐 Languages</a>
+        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
+    </div>
 
-  <!-- Controls -->
-  <div class="controls">
-    <a href="index.html">📚 Ledger Index</a>
-    <button id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
-  </div>
+    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-  <!-- Document Render Area -->
-  <div id="documentRenderArea">
-    <p>⏳ Loading document...</p>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <p>✨ Open‑source and free for all curious minds.</p>
-  </div>
+<!-- Prototype & Pitch -->
+<div class="discipline">
+    <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+    <div class="panel">
+        <!-- 1. JPE Master Plan -->
+        <a href="published/test_1">🗺️ test_1</a>
+        
+    </div>
 </div>
 
-<script>
-  // ============================================================
-  // THEME TOGGLE
-  // ============================================================
-  function applySavedTheme() {
-    const saved = localStorage.getItem('nalanda_theme') || 'dark';
-    if (saved === 'light') {
-      document.body.classList.add('light-mode');
-      document.getElementById('theme-toggle').textContent = '🌙 Night Mode';
-    } else {
-      document.body.classList.remove('light-mode');
-      document.getElementById('theme-toggle').textContent = '☀️ Day Mode';
-    }
-  }
-
-  function toggleTheme() {
-    const isLight = document.body.classList.toggle('light-mode');
-    localStorage.setItem('nalanda_theme', isLight ? 'light' : 'dark');
-    const btn = document.getElementById('theme-toggle');
-    btn.textContent = isLight ? '🌙 Night Mode' : '☀️ Day Mode';
-  }
-
-  // ============================================================
-  // LAATEX SANITIZER – THE COMPLETE VERSION
-  // ============================================================
-  function sanitizeLatexForKaTeX(rawText) {
-    if (!rawText) return '';
-    let cleaned = rawText;
-
-    // --- 1: Fix Gemini corruption patterns ---
-    cleaned = cleaned.replace(/\\t/g, ' ');
-    cleaned = cleaned.replace(/\\ttext/g, '\\text');
-    cleaned = cleaned.replace(/\\t\$/g, '$');
-    cleaned = cleaned.replace(/\\t\\text/g, '\\text');
-
-    // --- 2: Fix broken subscript patterns ---
-    // Gemini sometimes outputs: \langle \text{Civilization} \rangle
-    // Convert to: _{Civilization}
-    cleaned = cleaned.replace(
-      /\\langle\s*\\text\{([^}]*?)\}\s*\\rangle/g,
-      '_{$1}'
-    );
-
-    // --- 3: Fix \propto and arrow issues ---
-    cleaned = cleaned.replace(/\\propto/g, '\\propto ');
-    cleaned = cleaned.replace(/\\rightarrow/g, '\\rightarrow ');
-    cleaned = cleaned.replace(/\\Rightarrow/g, '\\Rightarrow ');
-    cleaned = cleaned.replace(/\\to/g, '\\to ');
-
-    // --- 4: Handle \text{...} with internal math ---
-    // Pattern: $\text{Text: } \frac{...}{...} \propto ...$
-    // We need to keep the math but remove the \text wrapper
-    cleaned = cleaned.replace(
-      /\$\s*\\text\{([^}]*?)\s*\}\s*(.*?)\s*\$(\s*)/g,
-      function(match, textPart, mathPart, trailing) {
-        // If there's math after the \text{}, we want to render it
-        if (mathPart.trim().length > 0) {
-          return '$' + textPart + ' ' + mathPart + '$' + (trailing || '');
-        }
-        // Otherwise, just return the text without math delimiters
-        return textPart + (trailing || '');
-      }
-    );
-
-    // --- 5: Handle simple \text{...} with no math ---
-    cleaned = cleaned.replace(
-      /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
-      function(match, content, trailing) {
-        // Convert \% to %, etc.
-        content = content.replace(/\\%/g, '%');
-        content = content.replace(/\\&/g, '&');
-        content = content.replace(/\\\$/g, '$');
-        content = content.replace(/\\#/g, '#');
-        content = content.replace(/\\_/g, '_');
-        // Remove trailing arrows
-        content = content.replace(/\s*\\rightarrow\s*$/, '');
-        content = content.replace(/\s*\\Rightarrow\s*$/, '');
-        return content + (trailing || '');
-      }
-    );
-
-    // --- 6: Remove standalone \text{...} (no $) ---
-    cleaned = cleaned.replace(
-      /\\text\{([^}]*?)\}/g,
-      function(match, content) {
-        content = content.replace(/\\%/g, '%');
-        content = content.replace(/\\&/g, '&');
-        content = content.replace(/\\\$/g, '$');
-        content = content.replace(/\\#/g, '#');
-        content = content.replace(/\\_/g, '_');
-        return content;
-      }
-    );
-
-    // --- 7: Handle bullet lists ---
-    cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
-    cleaned = cleaned.replace(/^\s*-\s*/gm, '• ');
-
-    // --- 8: Fix Rupee symbol ---
-    cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
-
-    // --- 9: Fix percentage signs ---
-    cleaned = cleaned.replace(/(\d+)\s*%/g, '$1%');
-
-    // --- 10: Clean up remaining artifacts ---
-    cleaned = cleaned.replace(/\\/g, '');
-    cleaned = cleaned.replace(/\$/g, '');
-
-    // --- 11: Fix double spaces ---
-    cleaned = cleaned.replace(/\s{2,}/g, ' ');
-
-    // --- 12: Fix headers ---
-    cleaned = cleaned.replace(/^(##+)\s*/gm, function(match, hashes) {
-      const content = match.replace(hashes, '').trim();
-      return '\n' + hashes + ' ' + content + '\n';
-    });
-
-    return cleaned.trim();
-  }
-
-  // ============================================================
-  // LOAD AND RENDER DOCUMENT
-  // ============================================================
-  async function loadAndRenderDocument() {
-    const renderArea = document.getElementById('documentRenderArea');
-    const urlParams = new URLSearchParams(window.location.search);
-    const filePath = urlParams.get('file') || 'published/latest_report.md';
-
-    try {
-      const response = await fetch(filePath);
-      if (!response.ok) throw new Error("Document not found: " + filePath);
-
-      let markdownText = await response.text();
-
-      // --- Sanitize LaTeX ---
-      markdownText = sanitizeLatexForKaTeX(markdownText);
-
-      // --- Parse Markdown with marked.js ---
-      if (typeof marked !== 'undefined') {
-        renderArea.innerHTML = marked.parse(markdownText);
-      } else {
-        renderArea.innerText = markdownText;
-        throw new Error('Marked.js not loaded');
-      }
-
-      // --- Render Mermaid Diagrams ---
-      // Find all <pre><code class="language-mermaid"> blocks
-      const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-      mermaidBlocks.forEach((block) => {
-        const mermaidDiv = document.createElement('div');
-        mermaidDiv.className = 'mermaid';
-        // Clean the content – remove trailing whitespace
-        let content = block.textContent;
-        // Replace any % that might break Mermaid
-        content = content.replace(/%/g, '％');
-        mermaidDiv.textContent = content;
-        block.parentElement.replaceWith(mermaidDiv);
-      });
-
-      // Initialize and render Mermaid
-      if (typeof mermaid !== 'undefined') {
-        // Re-initialize with proper theme
-        const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
-        mermaid.initialize({ startOnLoad: false, theme: theme });
-
-        const mermaidNodes = renderArea.querySelectorAll('.mermaid');
-        for (const node of mermaidNodes) {
-          try {
-            await mermaid.run({ nodes: [node] });
-          } catch (err) {
-            console.warn('Mermaid render error:', err);
-            // Show a fallback message
-            node.innerHTML = `<pre style="color: #f87171;">⚠️ Diagram render error: ${err.message}</pre>`;
-          }
-        }
-      }
-
-      // --- Render KaTeX ---
-      if (typeof renderMathInElement !== 'undefined') {
-        try {
-          renderMathInElement(renderArea, {
-            delimiters: [
-              { left: '$$', right: '$$', display: true },
-              { left: '$', right: '$', display: false }
-            ],
-            throwOnError: false,
-            errorColor: '#f87171'
-          });
-        } catch (err) {
-          console.warn('KaTeX render error:', err);
-        }
-      }
-
-    } catch (err) {
-      renderArea.innerHTML = `
-        <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
-          <h3>❌ Render Failure</h3>
-          <p><b>Error:</b> ${err.message}</p>
-          <p><b>Path attempted:</b> <code>${filePath}</code></p>
+    <!-- Engineering -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="simple-engineering-vision">The Simple Engineering Vision</a>
         </div>
-      `;
-    }
-  }
+    </div>
 
-  // ============================================================
-  // ACCORDION
-  // ============================================================
-  document.querySelectorAll('.discipline-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.parentElement.classList.toggle('open');
+    <!-- Economics -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+        </div>
+    </div>
+
+    <!-- Education -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="engineer-hurricane">The Engineer Hurricane</a>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
+    </div>
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+    // Accordion
+    document.querySelectorAll('.discipline-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parent = btn.parentElement;
+            parent.classList.toggle('open');
+        });
     });
-  });
 
-  // ============================================================
-  // INIT
-  // ============================================================
-  window.addEventListener('DOMContentLoaded', () => {
-    applySavedTheme();
-    loadAndRenderDocument();
-  });
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    function setTheme(mode) {
+        if (mode === 'light') {
+            document.body.classList.add('light-mode');
+            themeBtn.textContent = '🌙 Night Mode';
+        } else {
+            document.body.classList.remove('light-mode');
+            themeBtn.textContent = '☀️ Day Mode';
+
+        }
+    }
+    window.toggleTheme = function() {
+        const isLight = document.body.classList.contains('light-mode');
+        const newMode = isLight ? 'dark' : 'light';
+        localStorage.setItem('theme', newMode);
+        setTheme(newMode);
+    };
+
+    // Load saved theme
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
 </script>
 </body>
 </html>
