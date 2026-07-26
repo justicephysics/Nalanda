@@ -147,26 +147,91 @@
             color: var(--accent);
         }
 
-        /* Render Area */
+        /* ============================================================
+           RENDER AREA - COMPLETE STYLING
+           ============================================================ */
         #renderArea {
             background: var(--surface);
+            color: var(--text);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2rem;
             margin-top: 2rem;
             min-height: 200px;
+            overflow-x: auto;
+            word-wrap: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
         }
+
+        /* All children inherit text color */
+        #renderArea * {
+            color: var(--text);
+            max-width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Headers keep accent color */
         #renderArea h1,
         #renderArea h2,
-        #renderArea h3 {
+        #renderArea h3,
+        #renderArea h4,
+        #renderArea h5,
+        #renderArea h6 {
             color: var(--accent);
         }
+
+        /* Lists */
         #renderArea ul {
             padding-left: 1.5rem;
         }
         #renderArea li {
             margin-bottom: 0.3rem;
         }
+
+        /* Tables - FIX 3: Proper text color and borders */
+        #renderArea table {
+            display: block;
+            overflow-x: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+        #renderArea th,
+        #renderArea td {
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+            background: transparent;
+        }
+        #renderArea th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+
+        /* Code blocks */
+        #renderArea pre {
+            overflow-x: auto;
+            max-width: 100%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        #renderArea code {
+            font-family: monospace;
+            background: var(--bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* Math blocks */
         #renderArea .katex-display {
             overflow-x: auto;
             overflow-y: hidden;
@@ -176,16 +241,37 @@
         #renderArea .katex {
             font-size: 1.1em !important;
         }
+
+        /* Mermaid diagrams */
         #renderArea .mermaid {
+            overflow-x: auto;
+            max-width: 100%;
             background: var(--bg);
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
             text-align: center;
-            overflow-x: auto;
         }
-        .light-mode #renderArea .mermaid {
-            background: #ffffff;
+
+        /* Images */
+        #renderArea img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Blockquotes */
+        #renderArea blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
         }
 
         .footer {
@@ -209,93 +295,9 @@
             padding-bottom: 6px;
         }
 
-        .loading {
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 2rem;
-            font-style: italic;
-        }
-
         /* ============================================================
-           FIX: Table text color
+           MOBILE RESPONSIVENESS
            ============================================================ */
-        #renderArea table,
-        #renderArea th,
-        #renderArea td {
-            color: var(--text);
-            border-color: var(--border);
-            background: transparent;
-        }
-
-        /* ============================================================
-           FIX 2: Mobile Responsiveness - Force all content to fit
-           ============================================================ */
-        
-        /* The main container - force width */
-        #renderArea {
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin-top: 2rem;
-            min-height: 200px;
-            overflow-x: auto;              /* Allow horizontal scroll if needed */
-            word-wrap: break-word;         /* Break long words */
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-        
-        /* ALL children must respect the container width */
-        #renderArea * {
-            max-width: 100%;
-            box-sizing: border-box;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        /* Tables scroll horizontally */
-        #renderArea table {
-            display: block;
-            overflow-x: auto;
-            max-width: 100%;
-            white-space: nowrap;
-        }
-        
-        /* Code blocks scroll horizontally */
-        #renderArea pre {
-            overflow-x: auto;
-            max-width: 100%;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        /* Math blocks scroll horizontally */
-        #renderArea .katex-display {
-            overflow-x: auto;
-            overflow-y: hidden;
-            max-width: 100%;
-            padding: 6px 0;
-        }
-        
-        /* Mermaid diagrams scroll horizontally */
-        #renderArea .mermaid {
-            overflow-x: auto;
-            max-width: 100%;
-            background: var(--bg);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-        }
-        
-        /* Images responsive */
-        #renderArea img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             body {
                 padding: 0.5rem;
@@ -315,6 +317,13 @@
             #renderArea p, #renderArea li {
                 font-size: 0.95rem;
             }
+            #renderArea table {
+                font-size: 0.85rem;
+            }
+            #renderArea th,
+            #renderArea td {
+                padding: 4px 8px;
+            }
             .controls {
                 gap: 0.4rem;
             }
@@ -331,7 +340,7 @@
                 padding: 0.25rem 0;
             }
         }
-        
+
         @media (max-width: 480px) {
             #renderArea {
                 padding: 0.5rem;
@@ -342,8 +351,12 @@
             #renderArea p, #renderArea li {
                 font-size: 0.85rem;
             }
+            #renderArea th,
+            #renderArea td {
+                padding: 3px 6px;
+                font-size: 0.75rem;
+            }
         }
-        
     </style>
 </head>
 <body>
@@ -552,58 +565,62 @@
                 throw new Error('Marked.js not loaded');
             }
 
-    // --- Mermaid ---
-    const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-    mermaidBlocks.forEach((block) => {
-        const mermaidDiv = document.createElement('div');
-        mermaidDiv.className = 'mermaid';
-        let content = block.textContent;
-        
-        // ============================================================
-        // FIX 4: Fix missing newline after graph/flowchart declaration
-        // ============================================================
-        content = content.replace(
-            /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|RL|DU|UD)\s+([A-Za-z])/im,
-            '$1 $2\n$3'
-        );
-        
-        // ============================================================
-        // FIX 3: Auto-quote edge labels with % and spaces
-        // ============================================================
-        content = content.replace(
-            /\|\s*([^|]*?[%])[^|]*?\s*\|/g,
-            function(match) {
-                let label = match.replace(/\|/g, '').trim();
-                if (label.includes('%') || label.includes(' ')) {
-                    return '|"' + label + '"|';
-                }
-                return match;
-            }
-        );
-        
-        content = content.replace(
-            /\|\s*([^|]*?\s[^|]*?)\s*\|/g,
-            function(match) {
-                let label = match.replace(/\|/g, '').trim();
-                if (!label.startsWith('"') && !label.startsWith("'")) {
-                    return '|"' + label + '"|';
-                }
-                return match;
-            }
-        );
-        
-        // ============================================================
-        // FIX: Escape remaining % to ％ (fullwidth) for safety
-        // ============================================================
-        content = content.replace(/%/g, '％');
-        
-        mermaidDiv.textContent = content;
-        block.parentElement.replaceWith(mermaidDiv);
-    });    
+            // ============================================================
+            // FIX 4: ENHANCED MERMAID RENDERING
+            // ============================================================
+            const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+            mermaidBlocks.forEach((block) => {
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                let content = block.textContent;
+                
+                // --- STEP 1: Fix missing newline after graph/flowchart declaration ---
+                // Catches: graph TD, graph LR, flowchart TD, flowchart LR, etc.
+                content = content.replace(
+                    /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|RL|DU|UD)\s+([A-Za-z])/im,
+                    '$1 $2\n$3'
+                );
+                
+                // --- STEP 2: Auto-quote ALL edge labels that contain % or spaces ---
+                // Pattern: -->|Some text with %| or -->|Some text with spaces|
+                content = content.replace(
+                    /\|\s*([^|]*?[%\s][^|]*?)\s*\|/g,
+                    function(match, label) {
+                        label = label.trim();
+                        // If already quoted, leave it
+                        if (label.startsWith('"') || label.startsWith("'")) {
+                            return '|' + label + '|';
+                        }
+                        return '|"' + label + '"|';
+                    }
+                );
+                
+                // --- STEP 3: Also handle node labels with % (like A[Matrix 100%]) ---
+                // Pattern: A[Some text with %] → A["Some text with %"]
+                content = content.replace(
+                    /\[([^\]]*?[%\s][^\]]*?)\]/g,
+                    function(match, label) {
+                        label = label.trim();
+                        if (label.startsWith('"') || label.startsWith("'")) {
+                            return '[' + label + ']';
+                        }
+                        return '["' + label + '"]';
+                    }
+                );
+                
+                // --- STEP 4: Escape remaining % to ％ (fullwidth) for safety ---
+                // This catches any % that slipped through
+                content = content.replace(/%/g, '％');
+                
+                mermaidDiv.textContent = content;
+                block.parentElement.replaceWith(mermaidDiv);
+            });
 
+            // Initialize and render Mermaid with proper theme
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
+                
                 const mermaidNodes = renderArea.querySelectorAll('.mermaid');
                 for (const node of mermaidNodes) {
                     try {
@@ -645,7 +662,6 @@
     // ============================================================
     // 5. FIX: INTERCEPT ACCORDION LINKS
     // ============================================================
-    // This runs after the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.panel a').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -664,13 +680,6 @@
     // 6. MAKE LOADREPORT GLOBAL
     // ============================================================
     window.loadReport = loadReport;
-
-    // ============================================================
-    // 7. OPTIONAL: Auto-load on page load (uncomment to enable)
-    // ============================================================
-    // window.addEventListener('DOMContentLoaded', () => {
-    //     loadReport('published/latest_report.md');
-    // });
 </script>
 </body>
 </html>
