@@ -9,14 +9,13 @@
     
     <!-- KaTeX -->  
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-            onload="renderMathInElement(document.body);"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <!-- Mermaid -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
-    </script>
+    
+    <!-- Marked (for Markdown parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
         :root {
@@ -182,6 +181,51 @@
             margin-bottom: 0.3rem;
         }
 
+        /* ============================================================
+           ADDED: Render Area Styles
+           ============================================================ */
+        #renderArea {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            min-height: 200px;
+        }
+        #renderArea h1,
+        #renderArea h2,
+        #renderArea h3 {
+            color: var(--accent);
+        }
+        #renderArea ul {
+            padding-left: 1.5rem;
+        }
+        #renderArea li {
+            margin-bottom: 0.3rem;
+        }
+        #renderArea .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            padding: 6px 0;
+        }
+        #renderArea .katex {
+            font-size: 1.1em !important;
+        }
+
+        /* Mermaid container */
+        #renderArea .mermaid {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+        .light-mode #renderArea .mermaid {
+            background: #ffffff;
+        }
+
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -193,16 +237,23 @@
             text-decoration: none;
         }
 
-     .math, .katex-display {
-      display: block;
-      overflow-x: auto;
-      overflow-y: hidden;
-      max-width: 100%;
-      white-space: normal;
-      word-break: break-word;
-      padding-bottom: 6px;
-    }
+        .math, .katex-display {
+            display: block;
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            white-space: normal;
+            word-break: break-word;
+            padding-bottom: 6px;
+        }
 
+        /* Loading state */
+        .loading {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
     </style>
 
 </head>
@@ -218,20 +269,21 @@
     <div class="controls">
         <a href="languages.html">🌐 Languages</a>
         <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
+        <!-- ADDED: Load Report Button -->
+        <button type="button" onclick="loadReport()">📄 Load Report</button>
+        <button type="button" onclick="loadReport('published/latest_report.md')">📄 Latest</button>
     </div>
 
     <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
     <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-<!-- Prototype & Pitch -->
-<div class="discipline">
-    <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-    <div class="panel">
-        <!-- 1. JPE Master Plan -->
-        <a href="published/test_1">🗺️ test_1</a>
-        
+    <!-- Prototype & Pitch -->
+    <div class="discipline">
+        <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="published/test_1">🗺️ test_1</a>
+        </div>
     </div>
-</div>
 
     <!-- Engineering -->
     <div class="discipline">
@@ -256,6 +308,14 @@
             <a href="engineer-hurricane">The Engineer Hurricane</a>
         </div>
     </div>
+
+    <!-- ============================================================
+         ADDED: RENDER AREA
+         ============================================================ -->
+    <div id="renderArea">
+        <p class="loading">📄 Click "Load Report" or "Latest" to view a rendered document.</p>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
@@ -264,7 +324,9 @@
 
 <!-- ==================== SCRIPTS ==================== -->
 <script>
-    // Accordion
+    // ============================================================
+    // ACCORDION (YOUR EXISTING CODE)
+    // ============================================================
     document.querySelectorAll('.discipline-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const parent = btn.parentElement;
@@ -272,7 +334,9 @@
         });
     });
 
-    // Theme toggle
+    // ============================================================
+    // THEME TOGGLE (YOUR EXISTING CODE)
+    // ============================================================
     const themeBtn = document.getElementById('theme-toggle');
     function setTheme(mode) {
         if (mode === 'light') {
@@ -281,7 +345,6 @@
         } else {
             document.body.classList.remove('light-mode');
             themeBtn.textContent = '☀️ Day Mode';
-
         }
     }
     window.toggleTheme = function() {
@@ -294,6 +357,188 @@
     // Load saved theme
     const saved = localStorage.getItem('theme') || 'dark';
     setTheme(saved);
+
+    // ============================================================
+    // ADDED: SANITIZE LATEX FUNCTION
+    // ============================================================
+    function sanitizeLatexForKaTeX(rawText) {
+        if (!rawText) return '';
+        let cleaned = rawText;
+
+        // Normalize tab corruption
+        cleaned = cleaned.replace(/\t/g, ' ');
+        cleaned = cleaned.replace(/\\ttext/g, '\\text');
+        cleaned = cleaned.replace(/\\t\$/g, '$');
+        cleaned = cleaned.replace(/\\t\\text/g, '\\text');
+
+        // Convert \langle \text{Civilization} \rangle to _Civilization
+        cleaned = cleaned.replace(
+            /\\langle\s*\\text\{([^}]*?)\}\s*\\rangle/g,
+            '_{$1}'
+        );
+
+        // Handle \text{...} with internal math: $\text{Text: } \frac{...}{...} \propto ...$
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\s*\}\s*(.*?)\s*\$(\s*)/g,
+            function(match, textPart, mathPart, trailing) {
+                if (mathPart.trim().length > 0) {
+                    return '$' + textPart + ' ' + mathPart + '$' + (trailing || '');
+                }
+                return textPart + (trailing || '');
+            }
+        );
+
+        // Handle simple \text{...} with no math
+        cleaned = cleaned.replace(
+            /\$\s*\\text\{([^}]*?)\}\s*\$(\s*)/g,
+            function(match, content, trailing) {
+                content = content.replace(/\\%/g, '%');
+                content = content.replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$');
+                content = content.replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                content = content.replace(/\s*\\rightarrow\s*$/, '');
+                content = content.replace(/\s*\\Rightarrow\s*$/, '');
+                return content + (trailing || '');
+            }
+        );
+
+        // Handle standalone \text{...} (no $)
+        cleaned = cleaned.replace(
+            /\\text\{([^}]*?)\}/g,
+            function(match, content) {
+                content = content.replace(/\\%/g, '%');
+                content = content.replace(/\\&/g, '&');
+                content = content.replace(/\\\$/g, '$');
+                content = content.replace(/\\#/g, '#');
+                content = content.replace(/\\_/g, '_');
+                return content;
+            }
+        );
+
+        // Fix rupee symbol collisions
+        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)\s*\\text\{([^}]+)\}/g, '₹$1 $2');
+        cleaned = cleaned.replace(/₹\$\s*([\d\.\+]+)/g, '₹$1');
+
+        // Fix bullet lists
+        cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
+        cleaned = cleaned.replace(/^\s*-\s*/gm, '• ');
+
+        // Fix percentage signs
+        cleaned = cleaned.replace(/(\d+)\s*%/g, '$1%');
+
+        // Remove remaining backslashes and dollar signs
+        cleaned = cleaned.replace(/\\/g, '');
+        cleaned = cleaned.replace(/\$/g, '');
+
+        // Fix double spaces
+        cleaned = cleaned.replace(/\s{2,}/g, ' ');
+
+        // Fix headers
+        cleaned = cleaned.replace(/^(##+)\s*/gm, function(match, hashes) {
+            const content = match.replace(hashes, '').trim();
+            return '\n' + hashes + ' ' + content + '\n';
+        });
+
+        return cleaned.trim();
+    }
+
+    // ============================================================
+    // ADDED: LOAD AND RENDER REPORT
+    // ============================================================
+    async function loadReport(filePath) {
+        const renderArea = document.getElementById('renderArea');
+        
+        // If no filePath provided, prompt the user
+        if (!filePath) {
+            filePath = prompt('Enter the report file path (e.g., published/2026-07-25_Education_SystemicRuin_LongSystemProfiler.md):');
+            if (!filePath) return;
+        }
+
+        renderArea.innerHTML = '<p class="loading">⏳ Loading document...</p>';
+
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error('Document not found: ' + filePath);
+
+            let markdownText = await response.text();
+
+            // --- Sanitize LaTeX ---
+            markdownText = sanitizeLatexForKaTeX(markdownText);
+
+            // --- Parse Markdown with marked.js ---
+            if (typeof marked !== 'undefined') {
+                renderArea.innerHTML = marked.parse(markdownText);
+            } else {
+                renderArea.innerText = markdownText;
+                throw new Error('Marked.js not loaded');
+            }
+
+            // --- Render Mermaid Diagrams ---
+            const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+            mermaidBlocks.forEach((block) => {
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                // Escape % to ％ to avoid Mermaid comment parsing
+                let content = block.textContent;
+                content = content.replace(/%/g, '％');
+                mermaidDiv.textContent = content;
+                block.parentElement.replaceWith(mermaidDiv);
+            });
+
+            // Initialize and render Mermaid with proper theme
+            if (typeof mermaid !== 'undefined') {
+                const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
+                mermaid.initialize({ startOnLoad: false, theme: theme });
+
+                const mermaidNodes = renderArea.querySelectorAll('.mermaid');
+                for (const node of mermaidNodes) {
+                    try {
+                        await mermaid.run({ nodes: [node] });
+                    } catch (err) {
+                        console.warn('Mermaid render error:', err);
+                        node.innerHTML = `<pre style="color: #f87171;">⚠️ Diagram error: ${err.message}</pre>`;
+                    }
+                }
+            }
+
+            // --- Render KaTeX ---
+            if (typeof renderMathInElement !== 'undefined') {
+                try {
+                    renderMathInElement(renderArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false,
+                        errorColor: '#f87171'
+                    });
+                } catch (err) {
+                    console.warn('KaTeX render error:', err);
+                }
+            }
+
+        } catch (err) {
+            renderArea.innerHTML = `
+                <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
+                    <h3>❌ Render Failure</h3>
+                    <p><b>Error:</b> ${err.message}</p>
+                    <p><b>Path attempted:</b> <code>${filePath}</code></p>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================================
+    // ADDED: Expose loadReport globally
+    // ============================================================
+    window.loadReport = loadReport;
+
+    // ============================================================
+    // ADDED: Auto-load latest report on page load (optional)
+    // ============================================================
+    // Uncomment the line below to auto-load the latest report:
+    // window.addEventListener('DOMContentLoaded', () => loadReport('published/latest_report.md'));
 </script>
 </body>
 </html>
