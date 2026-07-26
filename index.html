@@ -541,56 +541,55 @@
                 throw new Error('Marked.js not loaded');
             }
 
-
         // --- Mermaid ---
-        const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-        mermaidBlocks.forEach((block) => {
-            const mermaidDiv = document.createElement('div');
-            mermaidDiv.className = 'mermaid';
-            let content = block.textContent;
-            
-            // ============================================================
-            // FIX 3: Auto-fix Mermaid syntax errors
-            // ============================================================
-            
-            // 3a: Fix missing newline after graph TD/LR/etc
-            content = content.replace(/^(graph\s+(TD|LR|RL|TB|BT))\s*([A-Za-z])/m, '$1\n$3');
-            
-            // 3b: Fix edge labels with % and spaces - add quotes
-            // Pattern: -->|Restricted 2% - 5%| C
-            // Fix to: -->|"Restricted 2% - 5%"| C
-            content = content.replace(
-                /\|\s*([^|]*?[%])[^|]*?\s*\|/g,
-                function(match) {
-                    // Extract the label text
-                    let label = match.replace(/\|/g, '').trim();
-                    // If it contains % or spaces, wrap with quotes
-                    if (label.includes('%') || label.includes(' ')) {
-                        return '|"' + label + '"|';
-                    }
-                    return match;
+    const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+    mermaidBlocks.forEach((block) => {
+        const mermaidDiv = document.createElement('div');
+        mermaidDiv.className = 'mermaid';
+        let content = block.textContent;
+        
+        // ============================================================
+        // FIX 3: Auto-fix Mermaid syntax errors
+        // ============================================================
+        
+        // 3a: Fix missing newline after graph TD/LR/etc
+        content = content.replace(/^(graph\s+(TD|LR|RL|TB|BT))\s*([A-Za-z])/m, '$1\n$3');
+        
+        // 3b: Fix edge labels with % and spaces - add quotes
+        // Pattern: -->|Restricted 2% - 5%| C
+        // Fix to: -->|"Restricted 2% - 5%"| C
+        content = content.replace(
+            /\|\s*([^|]*?[%])[^|]*?\s*\|/g,
+            function(match) {
+                // Extract the label text
+                let label = match.replace(/\|/g, '').trim();
+                // If it contains % or spaces, wrap with quotes
+                if (label.includes('%') || label.includes(' ')) {
+                    return '|"' + label + '"|';
                 }
-            );
-            
-            // 3c: Also fix -->|text| patterns that have spaces
-            content = content.replace(
-                /\|\s*([^|]*?\s[^|]*?)\s*\|/g,
-                function(match) {
-                    let label = match.replace(/\|/g, '').trim();
-                    // Only wrap if not already quoted
-                    if (!label.startsWith('"') && !label.startsWith("'")) {
-                        return '|"' + label + '"|';
-                    }
-                    return match;
+                return match;
+            }
+        );
+        
+        // 3c: Also fix -->|text| patterns that have spaces
+        content = content.replace(
+            /\|\s*([^|]*?\s[^|]*?)\s*\|/g,
+            function(match) {
+                let label = match.replace(/\|/g, '').trim();
+                // Only wrap if not already quoted
+                if (!label.startsWith('"') && !label.startsWith("'")) {
+                    return '|"' + label + '"|';
                 }
-            );
-            
-            // 3d: Escape remaining % to ％ (fullwidth percent) for safety
-            content = content.replace(/%/g, '％');
-            
-            mermaidDiv.textContent = content;
-            block.parentElement.replaceWith(mermaidDiv);
-        });
+                return match;
+            }
+        );
+        
+        // 3d: Escape remaining % to ％ (fullwidth percent) for safety
+        content = content.replace(/%/g, '％');
+        
+        mermaidDiv.textContent = content;
+        block.parentElement.replaceWith(mermaidDiv);
+    });
 
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
