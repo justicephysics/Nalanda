@@ -12,7 +12,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <!-- Mermaid -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     
     <!-- Marked (for Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -148,7 +148,7 @@
         }
 
         /* ============================================================
-           RENDER AREA - COMPLETE STYLING
+           RENDER AREA - COMPLETE STYLING (with !important for tables)
            ============================================================ */
         #renderArea {
             background: var(--surface);
@@ -191,25 +191,28 @@
             margin-bottom: 0.3rem;
         }
 
-        /* Tables - FIX 3: Proper text color and borders */
+        /* ============================================================
+           TABLES - FIX WITH !important
+           ============================================================ */
+        #renderArea table,
+        #renderArea th,
+        #renderArea td {
+            color: var(--text) !important;
+            border-color: var(--border) !important;
+            background: transparent !important;
+            padding: 8px 12px !important;
+            text-align: left !important;
+        }
         #renderArea table {
             display: block;
             overflow-x: auto;
             max-width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
-            border: 1px solid var(--border);
-        }
-        #renderArea th,
-        #renderArea td {
-            color: var(--text) !important;
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            text-align: left;
-            background: transparent;
+            border: 1px solid var(--border) !important;
         }
         #renderArea th {
-            background: var(--bg);
+            background: var(--bg) !important;
             font-weight: 600;
         }
 
@@ -322,7 +325,7 @@
             }
             #renderArea th,
             #renderArea td {
-                padding: 4px 8px;
+                padding: 4px 8px !important;
             }
             .controls {
                 gap: 0.4rem;
@@ -353,7 +356,7 @@
             }
             #renderArea th,
             #renderArea td {
-                padding: 3px 6px;
+                padding: 3px 6px !important;
                 font-size: 0.75rem;
             }
         }
@@ -566,51 +569,55 @@
             }
 
             // ============================================================
-            // FIX 4: ENHANCED MERMAID RENDERING
+            // FIX 4: BULLETPROOF MERMAID RENDERING
             // ============================================================
-            const mermaidBlocks = renderArea.querySelectorAll('pre code[class*="language-mermaid"]');
+            const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
             mermaidBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
                 let content = block.textContent;
                 
                 // --- STEP 1: Fix missing newline after graph/flowchart declaration ---
-                // Catches: graph TD, graph LR, flowchart TD, flowchart LR, etc.
                 content = content.replace(
                     /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|RL|DU|UD)\s+([A-Za-z])/im,
                     '$1 $2\n$3'
                 );
                 
-                // --- STEP 2: Auto-quote ALL edge labels that contain % or spaces ---
-                // Pattern: -->|Some text with %| or -->|Some text with spaces|
+                // --- STEP 2: ESCAPE ALL % to ％ (fullwidth) - SAFEST ---
+                // This prevents Mermaid from interpreting % as comment start
+                content = content.replace(/%/g, '％');
+                
+                // --- STEP 3: Auto-quote ALL labels that contain spaces or special characters ---
+                // Edge labels: -->|text with space| or -->|text with %| (already escaped)
                 content = content.replace(
-                    /\|\s*([^|]*?[%\s][^|]*?)\s*\|/g,
-                    function(match, label) {
-                        label = label.trim();
-                        // If already quoted, leave it
-                        if (label.startsWith('"') || label.startsWith("'")) {
-                            return '|' + label + '|';
-                        }
+                    /\|\s*([^|]*?[^A-Za-z0-9_\-])[^|]*?\s*\|/g,
+                    function(match) {
+                        let label = match.replace(/\|/g, '').trim();
+                        // If label already quoted, skip
+                        if (label.startsWith('"') || label.startsWith("'")) return match;
                         return '|"' + label + '"|';
                     }
                 );
                 
-                // --- STEP 3: Also handle node labels with % (like A[Matrix 100%]) ---
-                // Pattern: A[Some text with %] → A["Some text with %"]
+                // Node labels: [text with space] or [text with %] (already escaped)
                 content = content.replace(
-                    /\[([^\]]*?[%\s][^\]]*?)\]/g,
+                    /\[([^\]]*?[^A-Za-z0-9_\-][^\]]*?)\]/g,
                     function(match, label) {
                         label = label.trim();
-                        if (label.startsWith('"') || label.startsWith("'")) {
-                            return '[' + label + ']';
-                        }
+                        if (label.startsWith('"') || label.startsWith("'")) return match;
                         return '["' + label + '"]';
                     }
                 );
                 
-                // --- STEP 4: Escape remaining % to ％ (fullwidth) for safety ---
-                // This catches any % that slipped through
-                content = content.replace(/%/g, '％');
+                // --- STEP 4: Also handle curly braces labels {text with space} ---
+                content = content.replace(
+                    /\{([^}]*?[^A-Za-z0-9_\-][^}]*?)\}/g,
+                    function(match, label) {
+                        label = label.trim();
+                        if (label.startsWith('"') || label.startsWith("'")) return match;
+                        return '{"' + label + '"}';
+                    }
+                );
                 
                 mermaidDiv.textContent = content;
                 block.parentElement.replaceWith(mermaidDiv);
