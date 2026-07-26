@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
     <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
+
+    <!-- ==================== MATHJAX (for equations) ==================== -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ]
+            },
+            svg: { fontCache: 'global' },
+            options: { skipHtmlTypes: 'script' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async>
+    </script>
+
+    <!-- ==================== MERMAID (for flowcharts) ==================== -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLight = document.body.classList.contains('light-mode');
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: isLight ? 'default' : 'dark',
+                securityLevel: 'loose'
+            });
+        });
+
+        /**
+         * Utility: call this after dynamically loading new content
+         * to re‑render any math or Mermaid diagrams.
+         */
+        function renderMathAndFlowcharts() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise().catch(function(e) { console.warn('MathJax re-render error:', e); });
+            }
+            if (window.mermaid) {
+                mermaid.run().catch(function(e) { console.warn('Mermaid re-render error:', e); });
+            }
+        }
+    </script>
+
     <style>
         :root {
             --bg: #0B1A2F;
@@ -24,7 +72,11 @@
             --accent: #0077b6;
             --border: #d0d7de;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             background: var(--bg);
             color: var(--text);
@@ -70,7 +122,8 @@
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-        .controls a, .controls button {
+        .controls a,
+        .controls button {
             color: var(--accent);
             text-decoration: none;
             font-weight: 600;
@@ -83,7 +136,8 @@
             transition: background 0.2s, color 0.2s;
             font-family: inherit;
         }
-        .controls a:hover, .controls button:hover {
+        .controls a:hover,
+        .controls button:hover {
             background: var(--accent);
             color: var(--bg);
         }
@@ -158,7 +212,8 @@
             color: var(--accent);
             margin: 1.2rem 0 0.5rem;
         }
-        .narrative p, .narrative ul {
+        .narrative p,
+        .narrative ul {
             color: var(--text-secondary);
             margin-bottom: 1rem;
         }
@@ -179,97 +234,118 @@
             color: var(--accent);
             text-decoration: none;
         }
+
+        /* ---- Mermaid diagrams respect the container width ---- */
+        .mermaid {
+            max-width: 100%;
+            overflow: auto;
+            margin: 1rem 0;
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
     </style>
 </head>
 <body>
-<div class="container">
+    <div class="container">
 
-    <!-- Header -->
-    <h1>🏛️ Justice Physics Nalanda</h1>
-    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
-    <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
-    
-    <!-- Controls -->
-    <div class="controls">
-        <a href="languages.html">🌐 Languages</a>
-        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
-    </div>
+        <!-- Header -->
+        <h1>🏛️ Justice Physics Nalanda</h1>
+        <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br /><em>The Virtual Academy for HumanOS 2.0</em></p>
+        <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
 
-    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
-    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
+        <!-- Controls -->
+        <div class="controls">
+            <a href="languages.html">🌐 Languages</a>
+            <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
+        </div>
 
-<!-- Prototype & Pitch -->
-<div class="discipline">
-    <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-    <div class="panel">
-        <!-- 1. JPE Master Plan -->
-        <a href="published/test_2">test_2</a>
-        
-    </div>
-</div>
+        <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
+        <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-    <!-- Engineering -->
-    <div class="discipline">
-        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+        <!-- Prototype & Pitch -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+            <div class="panel">
+                <a href="published/test_2">test_2</a>
+            </div>
+        </div>
+
+        <!-- Engineering -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+            <div class="panel">
+                <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+            </div>
+        </div>
+
+        <!-- Economics -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
+            <div class="panel">
+                <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
+            <div class="panel">
+                <a href="engineer-hurricane">The Engineer Hurricane</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
         </div>
     </div>
 
-    <!-- Economics -->
-    <div class="discipline">
-        <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
-        </div>
-    </div>
-
-    <!-- Education -->
-    <div class="discipline">
-        <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="engineer-hurricane">The Engineer Hurricane</a>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
-    </div>
-</div>
-
-<!-- ==================== SCRIPTS ==================== -->
-<script>
-    // Accordion
-    document.querySelectorAll('.discipline-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parent = btn.parentElement;
-            parent.classList.toggle('open');
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // Accordion
+        document.querySelectorAll('.discipline-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parent = btn.parentElement;
+                parent.classList.toggle('open');
+            });
         });
-    });
 
-    // Theme toggle
-    const themeBtn = document.getElementById('theme-toggle');
-    function setTheme(mode) {
-        if (mode === 'light') {
-            document.body.classList.add('light-mode');
-            themeBtn.textContent = '🌙 Night Mode';
-        } else {
-            document.body.classList.remove('light-mode');
-            themeBtn.textContent = '☀️ Day Mode';
+        // Theme toggle
+        const themeBtn = document.getElementById('theme-toggle');
 
+        function setTheme(mode) {
+            if (mode === 'light') {
+                document.body.classList.add('light-mode');
+                themeBtn.textContent = '🌙 Night Mode';
+                // Update Mermaid theme to 'default' for light mode
+                if (window.mermaid) {
+                    mermaid.initialize({ theme: 'default', startOnLoad: false });
+                    mermaid.run();
+                }
+            } else {
+                document.body.classList.remove('light-mode');
+                themeBtn.textContent = '☀️ Day Mode';
+                // Update Mermaid theme to 'dark' for dark mode
+                if (window.mermaid) {
+                    mermaid.initialize({ theme: 'dark', startOnLoad: false });
+                    mermaid.run();
+                }
+            }
         }
-    }
-    window.toggleTheme = function() {
-        const isLight = document.body.classList.contains('light-mode');
-        const newMode = isLight ? 'dark' : 'light';
-        localStorage.setItem('theme', newMode);
-        setTheme(newMode);
-    };
 
-    // Load saved theme
-    const saved = localStorage.getItem('theme') || 'dark';
-    setTheme(saved);
-</script>
+        window.toggleTheme = function() {
+            const isLight = document.body.classList.contains('light-mode');
+            const newMode = isLight ? 'dark' : 'light';
+            localStorage.setItem('theme', newMode);
+            setTheme(newMode);
+        };
+
+        // Load saved theme
+        const saved = localStorage.getItem('theme') || 'dark';
+        setTheme(saved);
+    </script>
+
 </body>
 </html>
