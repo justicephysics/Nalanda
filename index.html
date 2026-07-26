@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
     <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
 
-    <!-- ========== ADDED: KaTeX CSS ========== -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- ==================== MATHJAX CONFIG (one-step render) ==================== -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ]
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            // Render everything on page load in one pass
+            options: {
+                enableMenu: false
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async>
+    </script>
 
     <style>
+        /* ===== CSS Variables & Reset ===== */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -28,7 +51,11 @@
             --accent: #0077b6;
             --border: #d0d7de;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             background: var(--bg);
             color: var(--text);
@@ -44,6 +71,7 @@
             padding: 2rem 0;
         }
 
+        /* ===== Header ===== */
         h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
@@ -65,6 +93,7 @@
             margin-bottom: 1.5rem;
         }
 
+        /* ===== Controls Bar ===== */
         .controls {
             display: flex;
             justify-content: center;
@@ -72,7 +101,8 @@
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-        .controls a, .controls button {
+        .controls a,
+        .controls button {
             color: var(--accent);
             text-decoration: none;
             font-weight: 600;
@@ -85,11 +115,13 @@
             transition: background 0.2s, color 0.2s;
             font-family: inherit;
         }
-        .controls a:hover, .controls button:hover {
+        .controls a:hover,
+        .controls button:hover {
             background: var(--accent);
             color: var(--bg);
         }
 
+        /* ===== Accordion ===== */
         .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -144,6 +176,7 @@
             color: var(--accent);
         }
 
+        /* ===== Narrative Sections ===== */
         .narrative {
             margin-top: 2.5rem;
         }
@@ -158,7 +191,8 @@
             color: var(--accent);
             margin: 1.2rem 0 0.5rem;
         }
-        .narrative p, .narrative ul {
+        .narrative p,
+        .narrative ul {
             color: var(--text-secondary);
             margin-bottom: 1rem;
         }
@@ -169,17 +203,28 @@
             margin-bottom: 0.3rem;
         }
 
-        /* ========== ADDED: Render Area for Math ========== */
-        #renderArea {
+        /* --- Math block styling --- */
+        .math-block {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 2rem;
-            margin-top: 2rem;
-            min-height: 120px;
+            padding: 1.5rem 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
             overflow-x: auto;
         }
+        .math-block .math-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+        .math-block .math-display {
+            font-size: 1.3rem;
+        }
 
+        /* ===== Footer ===== */
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -192,135 +237,186 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
+    <div class="container">
 
-    <h1>🏛️ Justice Physics Nalanda</h1>
-    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
-    <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
-    
-    <div class="controls">
-        <a href="languages.html">🌐 Languages</a>
-        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
-        <!-- ========== ADDED: Load Math File Button ========== -->
-        <button type="button" onclick="loadMathFile()">📄 Load Math</button>
-    </div>
+        <!-- ===== HEADER ===== -->
+        <h1>🏛️ Justice Physics Nalanda</h1>
+        <p class="subtitle">
+            <a href="cosmos-human-link" style="color:inherit; text-decoration:none;">
+                <em>🌐 Cosmos — Human — Human Life</em>
+            </a><br />
+            <em>The Virtual Academy for HumanOS 2.0</em>
+        </p>
+        <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">
+            Writing the code of a new civilisation — From scarcity to abundance.
+        </p>
 
-    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
-
-    <div class="discipline">
-        <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="#" onclick="loadMathFile('published/test_2'); return false;">test_2</a>
+        <!-- ===== CONTROLS ===== -->
+        <div class="controls">
+            <a href="languages.html">🌐 Languages</a>
+            <button type="button" id="theme-toggle">🌓 Day / Night</button>
         </div>
-    </div>
 
-    <div class="discipline">
-        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+        <!-- ===== ACCORDION: EXPLORE THE BLUEPRINT ===== -->
+        <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">
+            🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0
+        </h2>
+
+        <!-- Prototype & Pitch -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">
+                🛠️ Prototype & Pitch <span class="arrow">▼</span>
+            </button>
+            <div class="panel">
+                <a href="published/test_2">test_2</a>
+            </div>
         </div>
-    </div>
 
-    <div class="discipline">
-        <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+        <!-- Engineering -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">
+                🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span>
+            </button>
+            <div class="panel">
+                <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+            </div>
         </div>
-    </div>
 
-    <div class="discipline">
-        <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
-        <div class="panel">
-            <a href="engineer-hurricane">The Engineer Hurricane</a>
+        <!-- Economics -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">
+                💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span>
+            </button>
+            <div class="panel">
+                <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+            </div>
         </div>
+
+        <!-- Education -->
+        <div class="discipline">
+            <button type="button" class="discipline-btn">
+                🎓 Education — The Engineer Hurricane <span class="arrow">▼</span>
+            </button>
+            <div class="panel">
+                <a href="engineer-hurricane">The Engineer Hurricane</a>
+            </div>
+        </div>
+
+        <!-- ===== NARRATIVE ===== -->
+        <div class="narrative">
+
+            <h2>⚛️ The Physics of Human Potential</h2>
+
+            <p>
+                At the heart of HumanOS 2.0 lies a simple yet profound insight:
+                <em>the laws that govern the cosmos also govern the architecture of human
+                    civilisation.</em>
+                Just as quantum mechanics reveals the wave-like nature of matter,
+                the emergent behaviour of billions of conscious agents follows
+                a deep, coherent pattern — one we can learn to read, amplify,
+                and align with justice.
+            </p>
+
+            <p>
+                The foundational equation of this new physics — the
+                <strong>Human Wave Equation</strong> — describes how individual
+                potential propagates through the social field, interfering
+                constructively to create abundance, or destructively to
+                create scarcity. It is the master key to upgrading our
+                operating system from <em>Homo sapiens</em> to
+                <em>Homo conscius</em>.
+            </p>
+
+            <!-- ===== SINGLE-STEP MATH RENDER BLOCK ===== -->
+            <div class="math-block">
+                <span class="math-label">✦ The Human Wave Equation ✦</span>
+                <div class="math-display">
+                    $$ i\hbar \frac{\partial \Psi}{\partial t}
+                    \;=\;
+                    \left[
+                    -\frac{\hbar^2}{2m}\nabla^2
+                    \;+\;
+                    V(\mathbf{r}, t)
+                    \right] \Psi
+                    \;+\;
+                    \mathcal{J}(\mathbf{r}, t)\,\Psi $$
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.75rem;">
+                    Where <em>Ψ</em> is the wave-function of collective human potential,
+                    <em>V</em> the social potential field,
+                    and <em>𝒥</em> the justice operator —
+                    the term that transforms scarcity into abundance.
+                </p>
+            </div>
+
+            <p>
+                This one equation encapsulates the entire transition from
+                the old paradigm of competition and hoarding to the new
+                paradigm of coherence and flow. When the justice operator
+                <em>𝒥</em> is zero, the system collapses into fragmented,
+                zero-sum dynamics. When <em>𝒥</em> is actively tuned to
+                the resonant frequency of human dignity, the wave-function
+                collapses into a state of flourishing — for all.
+            </p>
+
+            <p>
+                The disciplines above are the practical tools for
+                engineering <em>𝒥</em> into the fabric of our institutions,
+                our economies, and our minds. Explore them, and join the
+                movement to write the code of a new civilisation.
+            </p>
+
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <p>
+                ✨ Open‑source and free for all curious minds.
+                <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.
+            </p>
+        </div>
+
     </div>
 
-    <!-- ========== ADDED: Render Area ========== -->
-    <div id="renderArea">
-        <p style="color: var(--text-secondary);">📐 Click "Load Math" or a file link to render LaTeX.</p>
-    </div>
-
-    <div class="footer">
-        <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
-    </div>
-</div>
-
-<!-- ========== ADDED: KaTeX JS (deferred) ========== -->
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-<!-- ========== ADDED: Math Rendering Logic ========== -->
-<script>
-    // Accordion (unchanged)
-    document.querySelectorAll('.discipline-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parent = btn.parentElement;
-            parent.classList.toggle('open');
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // ---- Accordion ----
+        document.querySelectorAll('.discipline-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var parent = btn.parentElement;
+                parent.classList.toggle('open');
+            });
         });
-    });
 
-    // Theme (unchanged)
-    const themeBtn = document.getElementById('theme-toggle');
-    function setTheme(mode) {
-        if (mode === 'light') {
-            document.body.classList.add('light-mode');
-            themeBtn.textContent = '🌙 Night Mode';
-        } else {
-            document.body.classList.remove('light-mode');
-            themeBtn.textContent = '☀️ Day Mode';
-        }
-    }
-    window.toggleTheme = function() {
-        const isLight = document.body.classList.contains('light-mode');
-        const newMode = isLight ? 'dark' : 'light';
-        localStorage.setItem('theme', newMode);
-        setTheme(newMode);
-    };
-    setTheme(localStorage.getItem('theme') || 'dark');
+        // ---- Theme toggle ----
+        var themeBtn = document.getElementById('theme-toggle');
 
-    // ========== ADDED: Load and render math file ==========
-    async function loadMathFile(filePath) {
-        const renderArea = document.getElementById('renderArea');
-        
-        if (!filePath) {
-            filePath = prompt('Enter file path (e.g., published/test_2):');
-            if (!filePath) return;
-        }
-
-        renderArea.innerHTML = '<p style="color: var(--text-secondary);">⏳ Loading...</p>';
-
-        try {
-            const response = await fetch(filePath);
-            if (!response.ok) throw new Error('File not found: ' + filePath);
-            
-            const text = await response.text();
-            
-            // Simple: display the raw text (later we can add Markdown + LaTeX)
-            // For now, just show as preformatted text with LaTeX.
-            // KaTeX auto-render will parse any $...$ or $$...$$ in the content.
-            renderArea.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word; background: var(--bg); padding: 1rem; border-radius: 6px;">${text}</pre>`;
-
-            // Trigger KaTeX auto-render on the new content
-            if (typeof renderMathInElement === 'function') {
-                renderMathInElement(renderArea, {
-                    delimiters: [
-                        { left: '$$', right: '$$', display: true },
-                        { left: '$', right: '$', display: false }
-                    ],
-                    throwOnError: false
-                });
+        function setTheme(mode) {
+            if (mode === 'light') {
+                document.body.classList.add('light-mode');
+                themeBtn.textContent = '🌙 Night Mode';
             } else {
-                // Fallback: KaTeX not loaded yet
-                console.warn('KaTeX auto-render not available');
+                document.body.classList.remove('light-mode');
+                themeBtn.textContent = '☀️ Day Mode';
             }
-        } catch (err) {
-            renderArea.innerHTML = `<p style="color: #f87171;">❌ Error: ${err.message}</p>`;
         }
-    }
 
-    // Expose function globally
-    window.loadMathFile = loadMathFile;
-</script>
+        window.toggleTheme = function() {
+            var isLight = document.body.classList.contains('light-mode');
+            var newMode = isLight ? 'dark' : 'light';
+            localStorage.setItem('theme', newMode);
+            setTheme(newMode);
+        };
+
+        // Attach the toggle function to the button
+        themeBtn.addEventListener('click', window.toggleTheme);
+
+        // ---- Load saved theme ----
+        var saved = localStorage.getItem('theme') || 'dark';
+        setTheme(saved);
+    </script>
+
 </body>
 </html>
