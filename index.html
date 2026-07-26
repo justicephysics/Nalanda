@@ -16,7 +16,7 @@
                 ],
                 displayMath: [
                     ['$$', '$$'],
-                    ['\\[', '\\]']
+                    ['\\[', '\]']
                 ]
             },
             svg: { fontCache: 'global' },
@@ -33,22 +33,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             const isLight = document.body.classList.contains('light-mode');
             mermaid.initialize({
-                startOnLoad: true,
+                startOnLoad: false, // we'll call mermaid.run() manually after content loads
                 theme: isLight ? 'default' : 'dark',
                 securityLevel: 'loose'
             });
         });
 
         /**
-         * Utility: call this after dynamically loading new content
-         * to re‑render any math or Mermaid diagrams.
+         * Re‑render all math and Mermaid diagrams in the current page.
+         * Call this after injecting new dynamic content.
          */
         function renderMathAndFlowcharts() {
             if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise().catch(function(e) { console.warn('MathJax re-render error:', e); });
+                MathJax.typesetPromise().catch(function(e) {
+                    console.warn('MathJax re-render error:', e);
+                });
             }
             if (window.mermaid) {
-                mermaid.run().catch(function(e) { console.warn('Mermaid re-render error:', e); });
+                // Mermaid might have already rendered some nodes; we need to re-run
+                // Remove previous SVG to avoid duplication (optional)
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    // Clear any existing rendered SVG
+                    el.innerHTML = el.textContent; // revert to raw code
+                });
+                mermaid.run({
+                    nodes: document.querySelectorAll('.mermaid')
+                }).catch(function(e) {
+                    console.warn('Mermaid re-render error:', e);
+                });
             }
         }
     </script>
@@ -192,36 +204,57 @@
             padding: 0.35rem 0;
             border-bottom: 1px solid rgba(127, 219, 255, 0.1);
             font-size: 0.95rem;
+            cursor: pointer;
         }
         .panel a:hover {
             color: var(--accent);
         }
 
-        /* Narrative sections */
-        .narrative {
-            margin-top: 2.5rem;
+        /* Content display area */
+        #content-display {
+            margin-top: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            min-height: 100px;
         }
-        .narrative h2 {
+        #content-display h2 {
             color: var(--accent);
             font-size: 1.5rem;
-            margin: 1.8rem 0 0.8rem;
+            margin: 1.2rem 0 0.6rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.3rem;
         }
-        .narrative h3 {
+        #content-display h3 {
             color: var(--accent);
-            margin: 1.2rem 0 0.5rem;
+            margin: 1rem 0 0.4rem;
         }
-        .narrative p,
-        .narrative ul {
+        #content-display p,
+        #content-display ul,
+        #content-display ol {
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
-        .narrative ul {
+        #content-display ul,
+        #content-display ol {
             padding-left: 1.5rem;
         }
-        .narrative li {
-            margin-bottom: 0.3rem;
+        #content-display li {
+            margin-bottom: 0.2rem;
+        }
+        #content-display .mermaid {
+            max-width: 100%;
+            overflow: auto;
+            margin: 1rem 0;
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+        #content-display .loading {
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .footer {
@@ -233,17 +266,6 @@
         .footer a {
             color: var(--accent);
             text-decoration: none;
-        }
-
-        /* ---- Mermaid diagrams respect the container width ---- */
-        .mermaid {
-            max-width: 100%;
-            overflow: auto;
-            margin: 1rem 0;
-            background: var(--surface);
-            padding: 1rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
         }
     </style>
 </head>
@@ -296,6 +318,11 @@
             </div>
         </div>
 
+        <!-- ==================== CONTENT DISPLAY AREA ==================== -->
+        <div id="content-display">
+            <p class="loading">Select a topic from the accordion above to view its content.</p>
+        </div>
+
         <!-- Footer -->
         <div class="footer">
             <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
@@ -304,7 +331,7 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script>
-        // Accordion
+        // ---- Accordion toggle ----
         document.querySelectorAll('.discipline-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const parent = btn.parentElement;
@@ -312,7 +339,46 @@
             });
         });
 
-        // Theme toggle
+        // ---- Dynamic content loading ----
+        const contentDisplay = document.getElementById('content-display');
+
+        // Intercept clicks on all links inside panels
+        document.querySelectorAll('.panel a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // prevent navigation
+                const url = this.getAttribute('href');
+                if (!url) return;
+
+                // Show loading indicator
+                contentDisplay.innerHTML = `<p class="loading">Loading ${this.textContent}…</p>`;
+
+                // Fetch the content
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        return response.text();
+                    })
+                    .then(html => {
+                        // Insert the fetched HTML into the display area
+                        contentDisplay.innerHTML = html;
+
+                        // Now render any math and diagrams within the new content
+                        renderMathAndFlowcharts();
+
+                        // Optionally auto-open the parent discipline to show the panel
+                        const parentDiscipline = this.closest('.discipline');
+                        if (parentDiscipline) {
+                            parentDiscipline.classList.add('open');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        contentDisplay.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
+                    });
+            });
+        });
+
+        // ---- Theme toggle ----
         const themeBtn = document.getElementById('theme-toggle');
 
         function setTheme(mode) {
@@ -322,15 +388,19 @@
                 // Update Mermaid theme to 'default' for light mode
                 if (window.mermaid) {
                     mermaid.initialize({ theme: 'default', startOnLoad: false });
-                    mermaid.run();
+                    // If content is already loaded, re-render mermaid diagrams
+                    if (contentDisplay.querySelector('.mermaid')) {
+                        mermaid.run({ nodes: contentDisplay.querySelectorAll('.mermaid') });
+                    }
                 }
             } else {
                 document.body.classList.remove('light-mode');
                 themeBtn.textContent = '☀️ Day Mode';
-                // Update Mermaid theme to 'dark' for dark mode
                 if (window.mermaid) {
                     mermaid.initialize({ theme: 'dark', startOnLoad: false });
-                    mermaid.run();
+                    if (contentDisplay.querySelector('.mermaid')) {
+                        mermaid.run({ nodes: contentDisplay.querySelectorAll('.mermaid') });
+                    }
                 }
             }
         }
@@ -345,7 +415,30 @@
         // Load saved theme
         const saved = localStorage.getItem('theme') || 'dark';
         setTheme(saved);
-    </script>
 
+        // ---- Additional: re-render when theme changes and content is present ----
+        // (The setTheme already handles re-render of mermaid, but we also need MathJax to adapt?)
+        // MathJax doesn't change with theme, but we might want to re-render if equations are in display.
+        // We can trigger a re-render after theme change if content is loaded.
+        // We'll add a global function to re-render everything after theme change.
+        const originalSetTheme = setTheme;
+        setTheme = function(mode) {
+            originalSetTheme(mode);
+            // Re-run MathJax and Mermaid after theme change
+            if (contentDisplay.innerHTML && !contentDisplay.querySelector('.loading')) {
+                renderMathAndFlowcharts();
+            }
+        };
+        // Override toggleTheme to use new setTheme
+        window.toggleTheme = function() {
+            const isLight = document.body.classList.contains('light-mode');
+            const newMode = isLight ? 'dark' : 'light';
+            localStorage.setItem('theme', newMode);
+            setTheme(newMode);
+        };
+
+        // Ensure initial render if content already loaded (e.g., after refresh)
+        // Since we don't load automatically, no action needed.
+    </script>
 </body>
 </html>
