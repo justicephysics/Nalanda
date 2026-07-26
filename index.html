@@ -148,126 +148,137 @@
         }
 
         /* ============================================================
-           RENDER AREA - FORCE THEME INHERITANCE
+           RENDER AREA - CONTAINED & SCROLLABLE
            ============================================================ */
         #renderArea {
-            background: var(--surface) !important;
-            color: var(--text) !important;
-            border: 1px solid var(--border) !important;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2rem;
             margin-top: 2rem;
             min-height: 200px;
-            overflow-x: auto;
-            word-wrap: break-word;
             max-width: 100%;
             box-sizing: border-box;
+            overflow: hidden; /* Prevents scatter */
         }
 
-        /* Force ALL children to inherit the theme */
-        #renderArea,
-        #renderArea * {
-            color: var(--text) !important;
-            background: transparent !important;
+        /* Inner content wrapper - this is the KEY fix */
+        #renderArea .content-wrapper {
             max-width: 100%;
-            box-sizing: border-box;
+            overflow-x: auto;
+            overflow-y: visible;
+            padding: 0;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
 
-        /* Headers keep accent color */
-        #renderArea h1,
-        #renderArea h2,
-        #renderArea h3,
-        #renderArea h4,
-        #renderArea h5,
-        #renderArea h6 {
-            color: var(--accent) !important;
+        /* Force ALL content to stay within */
+        #renderArea .content-wrapper * {
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            box-sizing: border-box;
+        }
+
+        /* Headers */
+        #renderArea .content-wrapper h1,
+        #renderArea .content-wrapper h2,
+        #renderArea .content-wrapper h3,
+        #renderArea .content-wrapper h4,
+        #renderArea .content-wrapper h5,
+        #renderArea .content-wrapper h6 {
+            color: var(--accent);
         }
 
         /* Lists */
-        #renderArea ul {
+        #renderArea .content-wrapper ul {
             padding-left: 1.5rem;
         }
-        #renderArea li {
+        #renderArea .content-wrapper li {
             margin-bottom: 0.3rem;
         }
 
-        /* Tables - FORCED COLORS */
-        #renderArea table,
-        #renderArea th,
-        #renderArea td {
-            color: var(--text) !important;
-            border-color: var(--border) !important;
-            background: transparent !important;
-            padding: 8px 12px !important;
-            text-align: left !important;
-        }
-        #renderArea table {
+        /* Tables - contained with scroll */
+        #renderArea .content-wrapper table {
             display: block;
             overflow-x: auto;
             max-width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
-            border: 1px solid var(--border) !important;
+            border: 1px solid var(--border);
         }
-        #renderArea th {
-            background: var(--bg) !important;
+        #renderArea .content-wrapper th,
+        #renderArea .content-wrapper td {
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+            background: transparent;
+        }
+        #renderArea .content-wrapper th {
+            background: var(--bg);
             font-weight: 600;
         }
 
         /* Code blocks */
-        #renderArea pre {
+        #renderArea .content-wrapper pre {
             overflow-x: auto;
             max-width: 100%;
             white-space: pre-wrap;
             word-wrap: break-word;
-            background: var(--bg) !important;
+            background: var(--bg);
             padding: 1rem;
             border-radius: 6px;
             border: 1px solid var(--border);
         }
-        #renderArea code {
+        #renderArea .content-wrapper code {
             font-family: monospace;
-            background: var(--bg) !important;
+            background: var(--bg);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
         }
 
         /* Math blocks */
-        #renderArea .katex-display {
+        #renderArea .content-wrapper .katex-display {
             overflow-x: auto;
             overflow-y: hidden;
             max-width: 100%;
             padding: 6px 0;
         }
-        #renderArea .katex {
+        #renderArea .content-wrapper .katex {
             font-size: 1.1em !important;
         }
 
-        /* Mermaid diagrams */
-        #renderArea .mermaid {
+        /* Mermaid diagrams - contained */
+        #renderArea .content-wrapper .mermaid {
             overflow-x: auto;
             max-width: 100%;
-            background: var(--bg) !important;
+            background: var(--bg);
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
             text-align: center;
+            min-height: 100px;
         }
 
         /* Images */
-        #renderArea img {
+        #renderArea .content-wrapper img {
             max-width: 100%;
             height: auto;
         }
 
         /* Blockquotes */
-        #renderArea blockquote {
+        #renderArea .content-wrapper blockquote {
             border-left: 4px solid var(--accent);
             padding-left: 1rem;
             margin: 1rem 0;
-            color: var(--text-secondary) !important;
+            color: var(--text-secondary);
+        }
+
+        /* Paragraphs */
+        #renderArea .content-wrapper p {
+            margin-bottom: 0.8rem;
         }
 
         .loading {
@@ -288,16 +299,6 @@
             text-decoration: none;
         }
 
-        .math, .katex-display {
-            display: block;
-            overflow-x: auto;
-            overflow-y: hidden;
-            max-width: 100%;
-            white-space: normal;
-            word-break: break-word;
-            padding-bottom: 6px;
-        }
-
         /* ============================================================
            MOBILE RESPONSIVENESS
            ============================================================ */
@@ -310,22 +311,21 @@
                 max-width: 100%;
             }
             #renderArea {
-                padding: 0.8rem !important;
-                margin-top: 1rem;
-                border-radius: 6px;
+                padding: 0.8rem;
             }
-            #renderArea h1 { font-size: 1.4rem !important; }
-            #renderArea h2 { font-size: 1.2rem !important; }
-            #renderArea h3 { font-size: 1rem !important; }
-            #renderArea p, #renderArea li {
-                font-size: 0.95rem !important;
+            #renderArea .content-wrapper h1 { font-size: 1.4rem; }
+            #renderArea .content-wrapper h2 { font-size: 1.2rem; }
+            #renderArea .content-wrapper h3 { font-size: 1rem; }
+            #renderArea .content-wrapper p,
+            #renderArea .content-wrapper li {
+                font-size: 0.95rem;
             }
-            #renderArea table {
+            #renderArea .content-wrapper table {
                 font-size: 0.85rem;
             }
-            #renderArea th,
-            #renderArea td {
-                padding: 4px 8px !important;
+            #renderArea .content-wrapper th,
+            #renderArea .content-wrapper td {
+                padding: 4px 8px;
             }
             .controls {
                 gap: 0.4rem;
@@ -346,17 +346,18 @@
 
         @media (max-width: 480px) {
             #renderArea {
-                padding: 0.5rem !important;
+                padding: 0.5rem;
             }
-            #renderArea h1 { font-size: 1.2rem !important; }
-            #renderArea h2 { font-size: 1rem !important; }
-            #renderArea h3 { font-size: 0.9rem !important; }
-            #renderArea p, #renderArea li {
-                font-size: 0.85rem !important;
+            #renderArea .content-wrapper h1 { font-size: 1.2rem; }
+            #renderArea .content-wrapper h2 { font-size: 1rem; }
+            #renderArea .content-wrapper h3 { font-size: 0.9rem; }
+            #renderArea .content-wrapper p,
+            #renderArea .content-wrapper li {
+                font-size: 0.85rem;
             }
-            #renderArea th,
-            #renderArea td {
-                padding: 3px 6px !important;
+            #renderArea .content-wrapper th,
+            #renderArea .content-wrapper td {
+                padding: 3px 6px;
                 font-size: 0.75rem;
             }
         }
@@ -416,7 +417,9 @@
 
     <!-- ==================== RENDER AREA ==================== -->
     <div id="renderArea">
-        <p class="loading">📄 Click a link above, or use "Load Report" / "Latest" to view a rendered document.</p>
+        <div class="content-wrapper">
+            <p class="loading">📄 Click a link above, or use "Load Report" / "Latest" to view a rendered document.</p>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -444,20 +447,21 @@
         if (mode === 'light') {
             document.body.classList.add('light-mode');
             themeBtn.textContent = '🌙 Night Mode';
-            mermaid.initialize({ startOnLoad: false, theme: 'default' });
         } else {
             document.body.classList.remove('light-mode');
             themeBtn.textContent = '☀️ Day Mode';
-            mermaid.initialize({ startOnLoad: false, theme: 'dark' });
         }
+        // Re-initialize Mermaid with correct theme
+        const isLight = document.body.classList.contains('light-mode');
+        mermaid.initialize({ startOnLoad: false, theme: isLight ? 'default' : 'dark' });
     }
     window.toggleTheme = function() {
         const isLight = document.body.classList.contains('light-mode');
         const newMode = isLight ? 'dark' : 'light';
         localStorage.setItem('theme', newMode);
         setTheme(newMode);
-        // Re-render Mermaid if diagrams are present
-        const mermaidNodes = document.querySelectorAll('#renderArea .mermaid');
+        // Re-render existing Mermaid diagrams
+        const mermaidNodes = document.querySelectorAll('#renderArea .content-wrapper .mermaid');
         if (mermaidNodes.length > 0) {
             mermaid.run({ nodes: mermaidNodes });
         }
@@ -559,7 +563,12 @@
             if (!filePath) return;
         }
 
-        renderArea.innerHTML = '<p class="loading">⏳ Loading document...</p>';
+        // Clear and show loading
+        renderArea.innerHTML = `
+            <div class="content-wrapper">
+                <p class="loading">⏳ Loading document...</p>
+            </div>
+        `;
 
         try {
             const response = await fetch(filePath);
@@ -568,45 +577,56 @@
             let markdownText = await response.text();
             markdownText = sanitizeLatexForKaTeX(markdownText);
 
+            // Parse Markdown
+            let htmlContent;
             if (typeof marked !== 'undefined') {
-                renderArea.innerHTML = marked.parse(markdownText);
+                htmlContent = marked.parse(markdownText);
             } else {
-                renderArea.innerText = markdownText;
+                htmlContent = '<pre>' + markdownText + '</pre>';
                 throw new Error('Marked.js not loaded');
             }
 
+            // Wrap content in content-wrapper to prevent scatter
+            renderArea.innerHTML = `<div class="content-wrapper">${htmlContent}</div>`;
+
             // ============================================================
-            // MERMAID - ZERO PREPROCESSING (like your working reader.html)
+            // MERMAID - RENDER DIAGRAMS
             // ============================================================
-            const codeBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
-            codeBlocks.forEach(block => {
+            const contentWrapper = renderArea.querySelector('.content-wrapper');
+            const mermaidBlocks = contentWrapper.querySelectorAll('pre code.language-mermaid');
+            
+            // Replace code blocks with mermaid divs
+            mermaidBlocks.forEach(block => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
-                // Pass the raw content EXACTLY as-is
                 mermaidDiv.textContent = block.textContent;
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            // Initialize and render Mermaid
+            // Run Mermaid
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
                 
-                const mermaidNodes = renderArea.querySelectorAll('.mermaid');
-                for (const node of mermaidNodes) {
+                const mermaidNodes = contentWrapper.querySelectorAll('.mermaid');
+                if (mermaidNodes.length > 0) {
                     try {
-                        await mermaid.run({ nodes: [node] });
+                        await mermaid.run({ nodes: mermaidNodes });
                     } catch (err) {
                         console.warn('Mermaid error:', err);
-                        node.innerHTML = `<pre style="color: #f87171;">⚠️ Diagram error: ${err.message}</pre>`;
+                        mermaidNodes.forEach(node => {
+                            node.innerHTML = `<pre style="color: #f87171;">⚠️ Diagram error: ${err.message}</pre>`;
+                        });
                     }
                 }
             }
 
-            // --- KaTeX ---
+            // ============================================================
+            // KATEX - RENDER MATH
+            // ============================================================
             if (typeof renderMathInElement !== 'undefined') {
                 try {
-                    renderMathInElement(renderArea, {
+                    renderMathInElement(contentWrapper, {
                         delimiters: [
                             { left: '$$', right: '$$', display: true },
                             { left: '$', right: '$', display: false }
@@ -621,10 +641,12 @@
 
         } catch (err) {
             renderArea.innerHTML = `
-                <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
-                    <h3>❌ Render Failure</h3>
-                    <p><b>Error:</b> ${err.message}</p>
-                    <p><b>Path attempted:</b> <code>${filePath}</code></p>
+                <div class="content-wrapper">
+                    <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
+                        <h3>❌ Render Failure</h3>
+                        <p><b>Error:</b> ${err.message}</p>
+                        <p><b>Path attempted:</b> <code>${filePath}</code></p>
+                    </div>
                 </div>
             `;
         }
