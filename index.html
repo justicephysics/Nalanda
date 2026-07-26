@@ -6,7 +6,7 @@
     <meta name="google" content="notranslate" />
     <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
 
-    <!-- ==================== MATHJAX (for equations) ==================== -->
+    <!-- ==================== MATHJAX ==================== -->
     <script>
         window.MathJax = {
             tex: {
@@ -26,14 +26,14 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async>
     </script>
 
-    <!-- ==================== MERMAID (for flowcharts) ==================== -->
+    <!-- ==================== MERMAID ==================== -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const isLight = document.body.classList.contains('light-mode');
             mermaid.initialize({
-                startOnLoad: true,
+                startOnLoad: false, // we'll call mermaid.run manually
                 theme: isLight ? 'default' : 'dark',
                 securityLevel: 'loose'
             });
@@ -41,30 +41,26 @@
 
         /**
          * Re‑render all math and Mermaid diagrams in the current page.
-         * Useful if content is injected dynamically.
+         * Call this after injecting new dynamic content.
          */
         function renderMathAndFlowcharts() {
             if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise().catch(function(e) {
-                    console.warn('MathJax re-render error:', e);
-                });
+                MathJax.typesetPromise().catch(e => console.warn('MathJax error:', e));
             }
             if (window.mermaid) {
-                // Mermaid might have already rendered some nodes; we need to re-run
+                // Reset all mermaid containers to raw code before re‑running
                 document.querySelectorAll('.mermaid').forEach(el => {
-                    // Clear any existing rendered SVG
-                    el.innerHTML = el.textContent; // revert to raw code
+                    el.innerHTML = el.textContent;
                 });
                 mermaid.run({
                     nodes: document.querySelectorAll('.mermaid')
-                }).catch(function(e) {
-                    console.warn('Mermaid re-render error:', e);
-                });
+                }).catch(e => console.warn('Mermaid error:', e));
             }
         }
     </script>
 
     <style>
+        /* ---------- CSS (same as before, with minor additions) ---------- */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -102,8 +98,6 @@
             margin: 0 auto;
             padding: 2rem 0;
         }
-
-        /* Header */
         h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
@@ -118,14 +112,6 @@
             margin-bottom: 0.5rem;
             font-size: clamp(0.95rem, 3vw, 1.15rem);
         }
-        .translation-note {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Controls bar */
         .controls {
             display: flex;
             justify-content: center;
@@ -153,7 +139,13 @@
             color: var(--bg);
         }
 
-        /* Accordion */
+        /* Hub (accordion) */
+        #hub {
+            display: block;
+        }
+        #hub.hidden {
+            display: none;
+        }
         .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -203,12 +195,13 @@
             padding: 0.35rem 0;
             border-bottom: 1px solid rgba(127, 219, 255, 0.1);
             font-size: 0.95rem;
+            cursor: pointer;
         }
         .panel a:hover {
             color: var(--accent);
         }
 
-        /* Content display area - only used on index page */
+        /* Content display area */
         #content-display {
             margin-top: 2rem;
             background: var(--surface);
@@ -216,6 +209,9 @@
             border-radius: var(--radius);
             padding: 1.5rem;
             min-height: 100px;
+        }
+        #content-display.hidden {
+            display: none;
         }
         #content-display h2 {
             color: var(--accent);
@@ -254,6 +250,17 @@
             color: var(--text-secondary);
             font-style: italic;
         }
+        #content-display .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        #content-display .back-link:hover {
+            text-decoration: underline;
+        }
 
         .footer {
             text-align: center;
@@ -264,11 +271,6 @@
         .footer a {
             color: var(--accent);
             text-decoration: none;
-        }
-
-        /* Hide content display on sub-pages (we'll use a class) */
-        .hide-content #content-display {
-            display: none;
         }
     </style>
 </head>
@@ -286,45 +288,50 @@
             <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
 
-        <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
-        <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
+        <!-- ==================== HUB (accordion) ==================== -->
+        <div id="hub">
+            <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
-        <!-- Prototype & Pitch -->
-        <div class="discipline">
-            <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-            <div class="panel">
-                <!-- Link to a dedicated page for test_2 -->
-                <a href="test_2/">test_2</a>
+            <!-- Prototype & Pitch -->
+            <div class="discipline">
+                <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+                <div class="panel">
+                    <a href="#" data-page="test_2">test_2</a>
+                </div>
+            </div>
+
+            <!-- Engineering -->
+            <div class="discipline">
+                <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+                <div class="panel">
+                    <a href="#" data-page="simple-engineering-vision">The Simple Engineering Vision</a>
+                </div>
+            </div>
+
+            <!-- Economics -->
+            <div class="discipline">
+                <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
+                <div class="panel">
+                    <a href="#" data-page="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="discipline">
+                <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
+                <div class="panel">
+                    <a href="#" data-page="engineer-hurricane">The Engineer Hurricane</a>
+                </div>
             </div>
         </div>
 
-        <!-- Engineering -->
-        <div class="discipline">
-            <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
-            <div class="panel">
-                <a href="simple-engineering-vision/">The Simple Engineering Vision</a>
+        <!-- ==================== CONTENT DISPLAY ==================== -->
+        <div id="content-display" class="hidden">
+            <!-- Back link will be injected here -->
+            <a href="#" class="back-link" id="back-to-hub">← Back to Hub</a>
+            <div id="page-content">
+                <p class="loading">Loading…</p>
             </div>
-        </div>
-
-        <!-- Economics -->
-        <div class="discipline">
-            <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
-            <div class="panel">
-                <a href="secondary-vs-permanent-cure/">Secondary Solutions vs. The Permanent Cure</a>
-            </div>
-        </div>
-
-        <!-- Education -->
-        <div class="discipline">
-            <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
-            <div class="panel">
-                <a href="engineer-hurricane/">The Engineer Hurricane</a>
-            </div>
-        </div>
-
-        <!-- ==================== CONTENT DISPLAY AREA (only shown on index) ==================== -->
-        <div id="content-display">
-            <p class="loading">Select a topic from the accordion above to view its content.</p>
         </div>
 
         <!-- Footer -->
@@ -335,22 +342,19 @@
 
     <!-- ==================== SCRIPTS ==================== -->
     <script>
-        // ---- Accordion toggle ----
-        document.querySelectorAll('.discipline-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const parent = btn.parentElement;
-                parent.classList.toggle('open');
-            });
-        });
+        // ---- Elements ----
+        const hub = document.getElementById('hub');
+        const contentDisplay = document.getElementById('content-display');
+        const pageContent = document.getElementById('page-content');
+        const backLink = document.getElementById('back-to-hub');
 
-        // ---- Theme toggle ----
+        // ---- Theme toggle (unchanged) ----
         const themeBtn = document.getElementById('theme-toggle');
 
         function setTheme(mode) {
             if (mode === 'light') {
                 document.body.classList.add('light-mode');
                 themeBtn.textContent = '🌙 Night Mode';
-                // Update Mermaid theme to 'default' for light mode
                 if (window.mermaid) {
                     mermaid.initialize({ theme: 'default', startOnLoad: false });
                     mermaid.run();
@@ -376,26 +380,121 @@
         const saved = localStorage.getItem('theme') || 'dark';
         setTheme(saved);
 
-        // ---- Dynamic content loading (only for index page) ----
-        // If we are on the index page (no path after /Nalanda/), we keep the dynamic loader.
-        // We detect if we are on a sub-page by checking if the URL path has more than one segment.
-        const pathSegments = window.location.pathname.split('/').filter(seg => seg.length > 0);
-        if (pathSegments.length === 0 || (pathSegments.length === 1 && pathSegments[0] === 'index.html')) {
-            // We are on the index page. Set up dynamic loading for links that point to sub-pages.
-            // But we want to navigate to the sub-page instead of loading dynamically.
-            // So we change the behavior: links will now navigate to the sub-page.
-            // However, we want to keep the index page as a hub. So we'll let the links work as normal navigation.
-            // We can also add a listener to prevent default and use fetch, but the user wants separate URLs.
-            // So we do nothing: the links will navigate to the sub-page.
-            // We can optionally remove the dynamic loader.
-            console.log('Index page: links will navigate to sub-pages.');
-        } else {
-            // We are on a sub-page. Hide the content display (it's not needed) and show the content directly.
-            document.body.classList.add('hide-content');
-            // The content is already rendered by the server (since we have separate HTML files).
-            // But we might want to re-render MathJax and Mermaid just in case.
-            renderMathAndFlowcharts();
+        // ---- Routing ----
+        const contentBase = './pages/'; // folder containing content HTML files
+
+        /**
+         * Load a page by slug (e.g., 'test_2')
+         * Fetches the corresponding HTML file, inserts it into #page-content,
+         * updates the URL, and renders math & diagrams.
+         */
+        function loadPage(slug) {
+            // Show content area, hide hub
+            hub.classList.add('hidden');
+            contentDisplay.classList.remove('hidden');
+            pageContent.innerHTML = '<p class="loading">Loading…</p>';
+
+            // Update URL (without reload)
+            const newUrl = window.location.origin + window.location.pathname.replace(/\/$/, '') + '/' + slug;
+            if (window.history && window.history.pushState) {
+                window.history.pushState({ slug: slug }, '', newUrl);
+            }
+
+            // Fetch the content
+            fetch(contentBase + slug + '.html')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    pageContent.innerHTML = html;
+                    // Render math and flowcharts
+                    renderMathAndFlowcharts();
+                    // Update page title
+                    document.title = slug + ' — Justice Physics Nalanda';
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    pageContent.innerHTML = `<p style="color: red;">Error loading content: ${error.message}. Please ensure the file <code>${contentBase}${slug}.html</code> exists.</p>`;
+                });
         }
+
+        /**
+         * Show the hub (index) view.
+         */
+        function showHub() {
+            hub.classList.remove('hidden');
+            contentDisplay.classList.add('hidden');
+            // Reset URL to base
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/';
+            if (window.history && window.history.pushState) {
+                window.history.pushState({ slug: null }, '', baseUrl);
+            }
+            document.title = 'Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0';
+        }
+
+        // ---- Handle clicks on accordion links ----
+        document.querySelectorAll('.panel a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const slug = this.dataset.page;
+                if (slug) {
+                    loadPage(slug);
+                }
+            });
+        });
+
+        // ---- Back to Hub ----
+        backLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHub();
+        });
+
+        // ---- Handle browser back/forward ----
+        window.addEventListener('popstate', function(event) {
+            const state = event.state;
+            if (state && state.slug) {
+                loadPage(state.slug);
+            } else {
+                showHub();
+            }
+        });
+
+        // ---- On initial load, check the URL ----
+        (function init() {
+            const path = window.location.pathname;
+            // Extract slug: e.g., /Nalanda/test_2/ -> 'test_2'
+            const segments = path.split('/').filter(s => s.length > 0);
+            // If last segment is not empty and not 'index.html', treat as slug
+            if (segments.length > 0) {
+                const last = segments[segments.length - 1];
+                if (last !== 'index.html' && last !== '') {
+                    // We have a slug
+                    loadPage(last);
+                    return;
+                }
+            }
+            // Otherwise show hub
+            showHub();
+        })();
+
+        // ---- Re-render when theme changes (already handled in setTheme) ----
+        // Additionally, if content is loaded, we can re-render after theme toggle
+        // The setTheme already calls mermaid.run() which re-renders all diagrams.
+        // We'll also re-run MathJax after theme toggle? MathJax doesn't need re-run,
+        // but we can call renderMathAndFlowcharts() to be safe.
+        // Override setTheme to also re-render math if content is visible.
+        const originalSetTheme = setTheme;
+        setTheme = function(mode) {
+            originalSetTheme(mode);
+            if (!contentDisplay.classList.contains('hidden')) {
+                renderMathAndFlowcharts();
+            }
+        };
+        // Re-apply to ensure the override is used
+        window.setTheme = setTheme;
+        // Also re-run theme initialization with override
+        setTheme(saved);
     </script>
 </body>
 </html>
