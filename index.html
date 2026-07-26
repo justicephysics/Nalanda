@@ -217,6 +217,17 @@
         }
 
         /* ============================================================
+           FIX: Table text color
+           ============================================================ */
+        #renderArea table,
+        #renderArea th,
+        #renderArea td {
+            color: var(--text);
+            border-color: var(--border);
+            background: transparent;
+        }
+
+        /* ============================================================
            FIX 2: Mobile Responsiveness - Force all content to fit
            ============================================================ */
         
@@ -541,7 +552,7 @@
                 throw new Error('Marked.js not loaded');
             }
 
-        // --- Mermaid ---
+    // --- Mermaid ---
     const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
     mermaidBlocks.forEach((block) => {
         const mermaidDiv = document.createElement('div');
@@ -549,21 +560,20 @@
         let content = block.textContent;
         
         // ============================================================
-        // FIX 3: Auto-fix Mermaid syntax errors
+        // FIX 4: Fix missing newline after graph/flowchart declaration
         // ============================================================
+        content = content.replace(
+            /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|RL|DU|UD)\s+([A-Za-z])/im,
+            '$1 $2\n$3'
+        );
         
-        // 3a: Fix missing newline after graph TD/LR/etc
-        content = content.replace(/^(graph\s+(TD|LR|RL|TB|BT))\s*([A-Za-z])/m, '$1\n$3');
-        
-        // 3b: Fix edge labels with % and spaces - add quotes
-        // Pattern: -->|Restricted 2% - 5%| C
-        // Fix to: -->|"Restricted 2% - 5%"| C
+        // ============================================================
+        // FIX 3: Auto-quote edge labels with % and spaces
+        // ============================================================
         content = content.replace(
             /\|\s*([^|]*?[%])[^|]*?\s*\|/g,
             function(match) {
-                // Extract the label text
                 let label = match.replace(/\|/g, '').trim();
-                // If it contains % or spaces, wrap with quotes
                 if (label.includes('%') || label.includes(' ')) {
                     return '|"' + label + '"|';
                 }
@@ -571,12 +581,10 @@
             }
         );
         
-        // 3c: Also fix -->|text| patterns that have spaces
         content = content.replace(
             /\|\s*([^|]*?\s[^|]*?)\s*\|/g,
             function(match) {
                 let label = match.replace(/\|/g, '').trim();
-                // Only wrap if not already quoted
                 if (!label.startsWith('"') && !label.startsWith("'")) {
                     return '|"' + label + '"|';
                 }
@@ -584,12 +592,14 @@
             }
         );
         
-        // 3d: Escape remaining % to ％ (fullwidth percent) for safety
+        // ============================================================
+        // FIX: Escape remaining % to ％ (fullwidth) for safety
+        // ============================================================
         content = content.replace(/%/g, '％');
         
         mermaidDiv.textContent = content;
         block.parentElement.replaceWith(mermaidDiv);
-    });
+    });    
 
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
