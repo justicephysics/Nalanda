@@ -274,6 +274,18 @@
         <button type="button" onclick="loadReport('published/latest_report.md')">📄 Latest</button>
     </div>
 
+    // ============================================================
+    // FIX: Intercept accordion links to render instead of navigate
+    // ============================================================
+    document.querySelectorAll('.panel a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop the browser from navigating away
+            const filePath = this.getAttribute('href');
+            if (filePath) {
+                loadReport(filePath);
+            }
+        });
+    });
     <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
     <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
 
