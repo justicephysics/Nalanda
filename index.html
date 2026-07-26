@@ -567,21 +567,37 @@
             filePath = prompt('Enter the report file path (e.g., published/test_1):');
             if (!filePath) return;
         }
-
-        // Clear and show loading
+    
         renderArea.innerHTML = `
             <div class="content-wrapper">
                 <p class="loading">⏳ Loading document...</p>
             </div>
         `;
-
+    
         try {
             const response = await fetch(filePath);
             if (!response.ok) throw new Error('Document not found: ' + filePath);
-
+    
             let markdownText = await response.text();
+    
+            // 1. Convert non-breaking spaces (\u00A0) to standard spaces globally
+            markdownText = markdownText.replace(/\u00A0/g, ' ');
+    
+            // 2. Protect Mermaid code blocks before passing to LaTeX sanitizer
+            const mermaidCodeBlocks = [];
+            markdownText = markdownText.replace(/```mermaid[\s\S]*?```/g, (match) => {
+                mermaidCodeBlocks.push(match);
+                return `__MERMAID_PLACEHOLDER_${mermaidCodeBlocks.length - 1}__`;
+            });
+    
+            // 3. Run KaTeX/LaTeX Sanitizer on prose text only
             markdownText = sanitizeLatexForKaTeX(markdownText);
-
+    
+            // 4. Restore preserved Mermaid blocks
+            markdownText = markdownText.replace(/__MERMAID_PLACEHOLDER_(\d+)__/g, (_, index) => {
+                return mermaidCodeBlocks[index];
+            });
+    
             // Parse Markdown
             let htmlContent;
             if (typeof marked !== 'undefined') {
@@ -590,36 +606,23 @@
                 htmlContent = '<pre>' + markdownText + '</pre>';
                 throw new Error('Marked.js not loaded');
             }
-
-            // Wrap content in content-wrapper to prevent scatter
+    
             renderArea.innerHTML = `<div class="content-wrapper">${htmlContent}</div>`;
-
-            // ============================================================
-            // MERMAID - PREPROCESS AND RENDER
-            // ============================================================
+    
+            // Process Mermaid Blocks
             const contentWrapper = renderArea.querySelector('.content-wrapper');
-            
-            // Find all Mermaid code blocks
             const mermaidBlocks = contentWrapper.querySelectorAll('pre code.language-mermaid');
             
-            // Replace each with a mermaid div, with preprocessing
             mermaidBlocks.forEach(block => {
-                let content = block.textContent;
-                
-                // FIX: Insert newline after graph/flowchart declaration if missing
-                // Example: "graph TD A[Node]" → "graph TD\nA[Node]"
-                content = content.replace(
-                    /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|DU|UD)\s+([A-Za-z])/im,
-                    '$1 $2\n$3'
-                );
+                let content = block.textContent.trim();
                 
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
                 mermaidDiv.textContent = content;
                 block.parentElement.replaceWith(mermaidDiv);
             });
-
-            // Run Mermaid
+    
+            // Initialize and Run Mermaid
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
@@ -636,6 +639,31 @@
                     }
                 }
             }
+    
+            // Render KaTeX Math
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(contentWrapper, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false }
+                    ],
+                    throwOnError: false,
+                    errorColor: '#f87171'
+                });
+            }
+    
+        } catch (err) {
+            renderArea.innerHTML = `
+                <div class="content-wrapper">
+                    <div style="color: #f87171; padding: 20px; border: 1px solid #f87171; border-radius: 8px;">
+                        <h3>❌ Render Failure</h3>
+                        <p><b>Error:</b> ${err.message}</p>
+                        <p><b>Path attempted:</b> <code>${filePath}</code></p>
+                    </div>
+                </div>
+            `;
+        }
+    }
 
             // ============================================================
             // KATEX - RENDER MATH
