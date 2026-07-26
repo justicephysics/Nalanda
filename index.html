@@ -12,7 +12,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <!-- Mermaid -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     
     <!-- Marked (for Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -202,7 +202,7 @@
         }
         #renderArea th,
         #renderArea td {
-            color: var(--text);
+            color: var(--text) !important;
             border: 1px solid var(--border);
             padding: 8px 12px;
             text-align: left;
@@ -568,7 +568,7 @@
             // ============================================================
             // FIX 4: ENHANCED MERMAID RENDERING
             // ============================================================
-            const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
+            const mermaidBlocks = renderArea.querySelectorAll('pre code[class*="language-mermaid"]');
             mermaidBlocks.forEach((block) => {
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
