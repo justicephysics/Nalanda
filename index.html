@@ -148,7 +148,7 @@
         }
 
         /* ============================================================
-           RENDER AREA - COMPLETE STYLING (with !important for tables)
+           RENDER AREA
            ============================================================ */
         #renderArea {
             background: var(--surface);
@@ -164,7 +164,6 @@
             box-sizing: border-box;
         }
 
-        /* All children inherit text color */
         #renderArea * {
             color: var(--text);
             max-width: 100%;
@@ -173,7 +172,6 @@
             overflow-wrap: break-word;
         }
 
-        /* Headers keep accent color */
         #renderArea h1,
         #renderArea h2,
         #renderArea h3,
@@ -183,7 +181,6 @@
             color: var(--accent);
         }
 
-        /* Lists */
         #renderArea ul {
             padding-left: 1.5rem;
         }
@@ -192,7 +189,7 @@
         }
 
         /* ============================================================
-           TABLES - FIX WITH !important
+           TABLES - FORCED COLOR WITH !important
            ============================================================ */
         #renderArea table,
         #renderArea th,
@@ -569,7 +566,7 @@
             }
 
             // ============================================================
-            // FIX 4: BULLETPROOF MERMAID RENDERING
+            // MERMAID - MINIMAL PREPROCESSING (ONLY FIX MISSING NEWLINE)
             // ============================================================
             const mermaidBlocks = renderArea.querySelectorAll('pre code.language-mermaid');
             mermaidBlocks.forEach((block) => {
@@ -577,53 +574,19 @@
                 mermaidDiv.className = 'mermaid';
                 let content = block.textContent;
                 
-                // --- STEP 1: Fix missing newline after graph/flowchart declaration ---
+                // ONLY fix: if line starts with "graph TD" or "flowchart TD" without newline
+                // but we'll just add a newline after the declaration if missing.
                 content = content.replace(
-                    /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|RL|DU|UD)\s+([A-Za-z])/im,
+                    /^(graph|flowchart)\s+(TD|LR|RL|TB|BT|DU|UD)\s+([A-Za-z])/im,
                     '$1 $2\n$3'
                 );
                 
-                // --- STEP 2: ESCAPE ALL % to ％ (fullwidth) - SAFEST ---
-                // This prevents Mermaid from interpreting % as comment start
-                content = content.replace(/%/g, '％');
-                
-                // --- STEP 3: Auto-quote ALL labels that contain spaces or special characters ---
-                // Edge labels: -->|text with space| or -->|text with %| (already escaped)
-                content = content.replace(
-                    /\|\s*([^|]*?[^A-Za-z0-9_\-])[^|]*?\s*\|/g,
-                    function(match) {
-                        let label = match.replace(/\|/g, '').trim();
-                        // If label already quoted, skip
-                        if (label.startsWith('"') || label.startsWith("'")) return match;
-                        return '|"' + label + '"|';
-                    }
-                );
-                
-                // Node labels: [text with space] or [text with %] (already escaped)
-                content = content.replace(
-                    /\[([^\]]*?[^A-Za-z0-9_\-][^\]]*?)\]/g,
-                    function(match, label) {
-                        label = label.trim();
-                        if (label.startsWith('"') || label.startsWith("'")) return match;
-                        return '["' + label + '"]';
-                    }
-                );
-                
-                // --- STEP 4: Also handle curly braces labels {text with space} ---
-                content = content.replace(
-                    /\{([^}]*?[^A-Za-z0-9_\-][^}]*?)\}/g,
-                    function(match, label) {
-                        label = label.trim();
-                        if (label.startsWith('"') || label.startsWith("'")) return match;
-                        return '{"' + label + '"}';
-                    }
-                );
-                
+                // Do NOT escape %, do NOT auto-quote – let Mermaid handle it
                 mermaidDiv.textContent = content;
                 block.parentElement.replaceWith(mermaidDiv);
             });
 
-            // Initialize and render Mermaid with proper theme
+            // Initialize and render Mermaid
             if (typeof mermaid !== 'undefined') {
                 const theme = document.body.classList.contains('light-mode') ? 'default' : 'dark';
                 mermaid.initialize({ startOnLoad: false, theme: theme });
@@ -667,7 +630,7 @@
     }
 
     // ============================================================
-    // 5. FIX: INTERCEPT ACCORDION LINKS
+    // 5. INTERCEPT ACCORDION LINKS
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.panel a').forEach(link => {
@@ -676,8 +639,6 @@
                 const filePath = this.getAttribute('href');
                 if (filePath && typeof loadReport === 'function') {
                     loadReport(filePath);
-                } else {
-                    console.warn('loadReport not available or filePath missing');
                 }
             });
         });
