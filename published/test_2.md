@@ -45,7 +45,7 @@ graph TD
     H --> I
 ```
 
-```mermaid
+
 graph TD
     A[Raw Cognitive Matrix 100%] --> B{Artificial Scarcity Bottleneck}
     B -->|Restricted 2% - 5%| C[Elite Class Generator & High-Wage Slots]
@@ -56,4 +56,4 @@ graph TD
     H --> I[Systemic Inversion & Youth Street Resistance]
     F --> H["Unemployable Base >80% & Low-Wage Gig Work"]
     G --> I
-```
+
