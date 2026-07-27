@@ -90,7 +90,7 @@
         .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Standard Bullet Points - Native CSS */
+        /* Standard Native Bullet Points */
         ul, ol {
             padding-left: 1.5rem;
             margin-bottom: 1rem;
@@ -103,10 +103,25 @@
             margin-bottom: 0;
         }
         
-        /* MathJax Native Wrapping for Inline Math */
-        /* No forced overflow or max-width on inline mjx-container so it flows with text */
-        
-        /* Slider ONLY for Display Math ($$...$$) if it's an unbreakable block */
+        /* ISOLATED MATH SLIDER */
+        /* Only the math element gets the slider. Text before it stays, text after it wraps. */
+        mjx-container {
+            display: inline-block !important;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            vertical-align: middle; /* Keeps math aligned with text baseline */
+            padding-bottom: 4px; /* Space for the auto-hide scrollbar */
+        }
+        mjx-container::-webkit-scrollbar { height: 6px; }
+        mjx-container::-webkit-scrollbar-track { background: transparent; }
+        mjx-container::-webkit-scrollbar-thumb {
+            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
+        }
+        mjx-container:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
+
+        /* Display Math Block ($$...$$) */
         mjx-container[display="true"] {
             display: block !important;
             margin: 1rem 0;
@@ -182,8 +197,8 @@
           displayMath: [['$$', '$$'], ['\\[', '\\]']]
         },
         chtml: {
-          // Enable MathJax's native line-breaking so long equations wrap to the next line naturally
-          linebreaks: { automatic: true } 
+          // Disable automatic line breaking so long math stays on one line and triggers the isolated slider
+          linebreaks: { automatic: false } 
         }
       };
     </script>
