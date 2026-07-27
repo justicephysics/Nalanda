@@ -1,61 +1,14 @@
+---
+layout: none
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google" content="notranslate" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
     <title>Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0</title>
-
-    <!-- ==================== MATHJAX ==================== -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [
-                    ['$', '$'],
-                    ['\\(', '\\)']
-                ],
-                displayMath: [
-                    ['$$', '$$'],
-                    ['\\[', '\\]']
-                ]
-            },
-            svg: { fontCache: 'global' },
-            options: { skipHtmlTypes: 'script' }
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async>
-    </script>
-
-    <!-- ==================== MERMAID ==================== -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const isLight = document.body.classList.contains('light-mode');
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: isLight ? 'default' : 'dark',
-                securityLevel: 'loose'
-            });
-        });
-
-        function renderMathAndFlowcharts() {
-            if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise().catch(e => console.warn('MathJax error:', e));
-            }
-            if (window.mermaid) {
-                document.querySelectorAll('.mermaid').forEach(el => {
-                    el.innerHTML = el.textContent;
-                });
-                mermaid.run({
-                    nodes: document.querySelectorAll('.mermaid')
-                }).catch(e => console.warn('Mermaid error:', e));
-            }
-        }
-    </script>
-
     <style>
-        /* ---------- CSS (unchanged) ---------- */
         :root {
             --bg: #0B1A2F;
             --surface: #112240;
@@ -74,11 +27,7 @@
             --accent: #0077b6;
             --border: #d0d7de;
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: var(--bg);
             color: var(--text);
@@ -93,6 +42,7 @@
             margin: 0 auto;
             padding: 2rem 0;
         }
+        /* Header */
         h1 {
             color: var(--accent);
             font-size: clamp(1.7rem, 5vw, 2.4rem);
@@ -107,6 +57,13 @@
             margin-bottom: 0.5rem;
             font-size: clamp(0.95rem, 3vw, 1.15rem);
         }
+        .translation-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 1.5rem;
+        }
+        /* Controls bar */
         .controls {
             display: flex;
             justify-content: center;
@@ -114,8 +71,7 @@
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-        .controls a,
-        .controls button {
+        .controls a, .controls button {
             color: var(--accent);
             text-decoration: none;
             font-weight: 600;
@@ -128,25 +84,18 @@
             transition: background 0.2s, color 0.2s;
             font-family: inherit;
         }
-        .controls a:hover,
-        .controls button:hover {
+        .controls a:hover, .controls button:hover {
             background: var(--accent);
             color: var(--bg);
         }
-
-        /* Hub (accordion) */
-        #hub {
-            display: block;
-        }
-        #hub.hidden {
-            display: none;
-        }
+        /* Accordion */
         .discipline {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             margin-bottom: 0.85rem;
             overflow: hidden;
+            scroll-margin-top: 2rem; /* Smooth scroll offset */
         }
         .discipline-btn {
             width: 100%;
@@ -190,73 +139,73 @@
             padding: 0.35rem 0;
             border-bottom: 1px solid rgba(127, 219, 255, 0.1);
             font-size: 0.95rem;
-            cursor: pointer;
         }
         .panel a:hover {
             color: var(--accent);
         }
-
-        /* Content display area */
-        #content-display {
-            margin-top: 2rem;
+        /* Mermaid flowchart section */
+        .flowchart-section {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .flowchart-section h2 {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+        .flowchart-section .flowchart-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        #mermaid-diagram {
+            overflow-x: auto;
+            text-align: center;
+            padding: 1rem 0;
             min-height: 100px;
         }
-        #content-display.hidden {
-            display: none;
+        #mermaid-diagram svg {
+            max-width: 100%;
+            height: auto;
         }
-        #content-display h2 {
+        /* Make Mermaid nodes look clickable */
+        #mermaid-diagram .node {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #mermaid-diagram .node:hover {
+            transform: scale(1.05);
+        }
+        /* Narrative sections */
+        .narrative {
+            margin-top: 2.5rem;
+        }
+        .narrative h2 {
             color: var(--accent);
             font-size: 1.5rem;
-            margin: 1.2rem 0 0.6rem;
+            margin: 1.8rem 0 0.8rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.3rem;
         }
-        #content-display h3 {
+        .narrative h3 {
             color: var(--accent);
-            margin: 1rem 0 0.4rem;
+            margin: 1.2rem 0 0.5rem;
         }
-        #content-display p,
-        #content-display ul,
-        #content-display ol {
+        .narrative p, .narrative ul {
             color: var(--text-secondary);
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
         }
-        #content-display ul,
-        #content-display ol {
+        .narrative ul {
             padding-left: 1.5rem;
         }
-        #content-display li {
-            margin-bottom: 0.2rem;
+        .narrative li {
+            margin-bottom: 0.3rem;
         }
-        #content-display .mermaid {
-            max-width: 100%;
-            overflow: auto;
-            margin: 1rem 0;
-            background: var(--surface);
-            padding: 1rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-        #content-display .loading {
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-        #content-display .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        #content-display .back-link:hover {
-            text-decoration: underline;
-        }
-
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -270,299 +219,537 @@
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <!-- Header -->
+    <h1>🏛️ Justice Physics Nalanda</h1>
+    <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br><em>The Virtual Academy for HumanOS 2.0</em></p>
+    <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
+   
+    <!-- Controls -->
+    <div class="controls">
+        <a href="languages.html">🌐 Languages</a>
+        <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
+    </div>
 
-        <!-- Header -->
-        <h1>🏛️ Justice Physics Nalanda</h1>
-        <p class="subtitle"><a href="cosmos-human-link" style="color:inherit; text-decoration:none;"><em>🌐 Cosmos — Human — Human Life</em></a><br /><em>The Virtual Academy for HumanOS 2.0</em></p>
-        <p class="subtitle" style="font-style:normal; margin-top:0.5rem;">Writing the code of a new civilisation — From scarcity to abundance.</p>
-
-        <!-- Controls -->
-        <div class="controls">
-            <a href="languages.html">🌐 Languages</a>
-            <button type="button" id="theme-toggle" onclick="toggleTheme()">🌓 Day / Night</button>
-        </div>
-
-        <!-- ==================== HUB (accordion) ==================== -->
-        <div id="hub">
-            <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
-
-            <!-- Prototype & Pitch -->
-            <div class="discipline">
-                <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
-                <div class="panel">
-                    <a href="#" data-page="test_2">test_2</a>
-                </div>
-            </div>
-
-            <!-- Engineering -->
-            <div class="discipline">
-                <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
-                <div class="panel">
-                    <a href="#" data-page="simple-engineering-vision">The Simple Engineering Vision</a>
-                </div>
-            </div>
-
-            <!-- Economics -->
-            <div class="discipline">
-                <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
-                <div class="panel">
-                    <a href="#" data-page="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
-                </div>
-            </div>
-
-            <!-- Education -->
-            <div class="discipline">
-                <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
-                <div class="panel">
-                    <a href="#" data-page="engineer-hurricane">The Engineer Hurricane</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== CONTENT DISPLAY ==================== -->
-        <div id="content-display" class="hidden">
-            <a href="#" class="back-link" id="back-to-hub">← Back to Hub</a>
-            <div id="page-content">
-                <p class="loading">Loading…</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
+    <!-- ==================== MERMAID FLOWCHART: THE VISION MAP ==================== -->
+    <div class="flowchart-section">
+        <h2>🌍 The HumanOS 2.0 Vision Map</h2>
+        <p class="flowchart-subtitle">From extraction to abundance — click any discipline below to explore the blueprint</p>
+        <div id="mermaid-diagram">
+            <p style="color:var(--text-secondary); text-align:center;">Loading vision map…</p>
         </div>
     </div>
 
-    <!-- ==================== SCRIPTS ==================== -->
-    <script>
-        // ---- EMBEDDED CONTENT - add new pages here ----
-        const PAGE_CONTENT = {
-            'test_2': `
-                <h1>SYSTEM PROFILE: SYSTEMIC RUIN OF EDUCATION &amp; COMMODITY EXTRACTION</h1>
+    <!-- ==================== ACCORDION: EXPLORE THE BLUEPRINT ==================== -->
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:1.5rem;">🧭 Explore the Blueprint — The Disciplines of HumanOS 2.0</h2>
+    
+    <!-- Prototype & Pitch -->
+    <div class="discipline" id="disc-prototype">
+        <button type="button" class="discipline-btn">🛠️ Prototype & Pitch <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="jpe-master-plan">🗺️ The JPE Master Plan — Complete Roadmap</a>
+            <a href="prototype-overview">🌟 The Snapshot Prototype — Overview</a>
+            <a href="pitch-deck">🚀 Space State Infrastructure — One‑Page Pitch</a>
+            <a href="prototype-phase1">🔧 Phase 1 Prototype Specification</a>
+            <a href="hybrid-protocol">🧬 The Hybrid Protocol — Image Lane and Cell Lane</a>
+            <a href="backend-revolution">🔙 The Backend Revolution — Every App, Every AI, Every Tool Moves to the Cloud</a>
+            <a href="five-year-mission">🚀 The 5‑Year Mission — Computing @2.7 K in Space</a>
+            <a href="light-at-0-2.7k">💡 Light@0‑2.7Kelvin — The New Discipline</a>
+            <a href="y">y_decipline</a>
+            <a href="z">z_decipline</a>
+            <a href="Misc/z1">z1_decipline</a>
+        </div>
+    </div>
 
-                <h2>1. VECTOR TELEMETRY &amp; SYSTEM METRICS</h2>
-                <ul>
-                    <li>$\\text{Vector Identity: Systemic Ruin of Education and Commodity Extraction}$</li>
-                    <li>$\\text{Thermodynamic Transmission Rate: } \\frac{dS_{\\text{Civilization}}}{dt} \\propto \\frac{1}{\\eta_{\\text{Edu}}}$</li>
-                    <li>$\\text{Political Independence (PI): } \\text{PI} = 0.90$</li>
-                    <li>$\\text{Economic Independence (EI): } \\text{EI} = 0.08$</li>
-                    <li>$\\text{Social Independence (SI): } \\text{SI} = 0.70$</li>
-                    <li>$\\text{Total Sovereignty Index (TI): } \\text{TI} = (\\text{PI} + \\text{EI} + \\text{SI}) \\times (\\text{PI} \\times \\text{EI} \\times \\text{SI}) = 0.084672$</li>
-                </ul>
+    <!-- Engineering -->
+    <div class="discipline" id="disc-engineering">
+        <button type="button" class="discipline-btn">🛠️ Engineering — The Hardware of HumanOS 2.0 <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="simple-engineering-vision">The Simple Engineering Vision</a>
+            <a href="chip-architecture">Chip Architecture Detail</a>
+            <a href="roadmap-light-0k">The Roadmap to Light@0K Computing</a>
+            <a href="visual-proofs">Visual Proofs & Simulations</a>
+            <a href="hyper-imagination-mode">Hyper‑Imagination Mode — The Cognitive Engine</a>
+            <a href="asml-locked-puzzle-box">The ASML Locked Puzzle Box</a>
+            <a href="cold-solar">Cold Solar — Rotational Panels at 2.7 K</a>
+            <a href="three-pillars-computation">The Three Pillars of Computation</a>
+            <a href="light-driven-switching">Light‑Driven Switching — The Lab Validates</a>
+            <a href="phone-cluster-computing">Phone Cluster Computing — Google Validates</a>
+            <a href="retrofit-revolution">The Retrofit Revolution</a>
+            <a href="google-vs-space-state">Google vs. The Space State</a>
+            <a href="physical-ai-prometheus">Physical AI — Prometheus Validates</a>
+            <a href="industry-convergence">Industry Convergence</a>
+        </div>
+    </div>
 
-                <h2>2. LOCAL EMPIRICAL DECAY &amp; ELIMINATION MATRIX</h2>
-                <ul>
-                    <li>$\\text{Foundational Learning Deficit: Over 50\\% of Grade 5 students in rural public schools cannot read Grade 2 text.}$</li>
-                    <li>$\\text{Multigrade Classroom Contraction: 66\\% of Grade I and II public primary classrooms run on multigrade setups; >10 Lakh vacancies.}$</li>
-                    <li>$\\text{UPSC CSE Elimination: 13.0 Lakh Applicants } \\rightarrow \\text{ 1,000 Seats } \\Rightarrow \\text{ Rejection Rate: 99.92\\%}$</li>
-                    <li>$\\text{IIT-JEE Adv Elimination: 14.5 Lakh Applicants } \\rightarrow \\text{ 17,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.80\\%}$</li>
-                    <li>$\\text{NEET-UG Elimination: 24.0 Lakh Applicants } \\rightarrow \\text{ 55,000 Govt Seats } \\Rightarrow \\text{ Rejection Rate: 97.71\\%}$</li>
-                    <li>$\\text{CAT Management Elimination: 3.3 Lakh Applicants } \\rightarrow \\text{ 5,500 Seats } \\Rightarrow \\text{ Rejection Rate: 98.34\\%}$</li>
-                    <li>$\\text{Test-Prep Extortion Axis: Coaching mafia extracts ₹1.0 Lakh Crore to ₹3.5 Lakh Crore annually from households.}$</li>
-                    <li>$\\text{Private Capitation Fee Axis: Private MBBS seats cost ₹50 Lakh to ₹1.5+ Crore; Engineering costs ₹10 Lakh to ₹25 Lakh.}$</li>
-                    <li>$\\text{NCRB Mortality Telemetry: >13,000 student suicides annually (>35 deaths/day); 12,598 exam failure deaths in 5 years.}$</li>
-                    <li>$\\text{Paper Leak Scam Network: Over 70+ major exam leaks across 15+ states affecting >1.5 Crore to 2.0 Crore aspirants.}$</li>
-                    <li>$\\text{Employability Paradox: Only 3.84\\% engineering graduates possess software skills; >80\\% to 85\\% remain unemployable.}$</li>
-                </ul>
+    <!-- Economics -->
+    <div class="discipline" id="disc-economics">
+        <button type="button" class="discipline-btn">💰 Economics — The End of Artificial Scarcity <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="secondary-vs-permanent-cure">Secondary Solutions vs. The Permanent Cure</a>
+            <a href="silicon-feudalism">The Silicon Feudalism</a>
+            <a href="un-ai-environmental-crisis">UN Warning — AI's Environmental Crisis</a>
+            <a href="fortune-500-feudalism">The Fortune 500 Feudalism</a>
+            <a href="ai-feudal-money-chain">The AI Feudal Money Chain</a>
+            <a href="money-from-nothing">Money from Nothing — The Central Bank Canal</a>
+            <a href="true-citizens">The True Citizens</a>
+            <a href="ti-theorem">The TI Theorem — Replacing GDP</a>
+            <a href="lollipop-economy">The Lollipop Economy</a>
+            <a href="billionaire-bunkers">The Bunker Paradox</a>
+            <a href="sea-farming-revolution">The Sea Farming Revolution</a>
+            <a href="ai-feudal-gate">The AI Feudal Gate</a>
+            <a href="trillionaire-vs-student-debt">The Trillionaire and the Student</a>
+            <a href="the-debt-treadmill">The Debt Treadmill</a>
+            <a href="token-colonialism">Token Colonialism</a>
+            <a href="manufacturing-poverty">Manufacturing Poverty</a>
+            <a href="universal-scarcity">Universal Scarcity — The Lie</a>
+            <a href="earn-more-burn-more">The e^m ↔ b^m Cycle</a>
+            <a href="why-earn-more-burn-more">Why Earn More? Why Burn More?</a>
+            <a href="the-9-99-percent-cap">The 9.99% Cap</a>
+            <a href="center-of-gravity">The Center of Gravity of Civilization</a>
+            <a href="anti-incumbency-valve">The Anti‑Incumbency Valve</a>
+            <a href="38-year-gold-cycle">The 38‑Year Gold Cycle</a>
+            <a href="45-trillion-reversal">The $45 Trillion Reversal</a>
+            <a href="development-vs-exploitation">The Line Between Development and Exploitation</a>
+            <a href="bootstrap-myth">The Bootstrap Myth</a>
+            <a href="partners">Open Call for Partners</a>
+        </div>
+    </div>
 
-                <div class="mermaid">
-                    graph TD
-                        A[Systemic Ruin of Education] --> B[Commodity Extraction]
-                        B --> C[Coaching Mafia]
-                        B --> D[Capitation Fees]
-                        C --> E[₹1-3.5 Lakh Crore/year]
-                        D --> F[₹50 Lakh – ₹1.5+ Crore per MBBS seat]
-                        A --> G[Student Suicides]
-                        G --> H[>13,000/year]
-                        A --> I[Paper Leaks]
-                        I --> J[70+ major leaks, 1.5-2.0 Crore affected]
-                </div>
-            `,
-            'simple-engineering-vision': `
-                <h1>The Simple Engineering Vision</h1>
-                <p>This is a placeholder for the Engineering vision content. Replace with your own HTML, including LaTeX and Mermaid diagrams.</p>
-                <p>Example equation: $E = mc^2$</p>
-                <div class="mermaid">
-                    graph LR
-                        A[Hardware] --> B[HumanOS 2.0]
-                        B --> C[Abundance]
-                </div>
-            `,
-            'secondary-vs-permanent-cure': `
-                <h1>Secondary Solutions vs. The Permanent Cure</h1>
-                <p>Placeholder for Economics content.</p>
-                <p>Example: $\\text{Supply} = \\text{Demand}$</p>
-            `,
-            'engineer-hurricane': `
-                <h1>The Engineer Hurricane</h1>
-                <p>Placeholder for Education content.</p>
-                <p>Flowchart:</p>
-                <div class="mermaid">
-                    graph TD
-                        A[Engineers] --> B[Innovation]
-                        B --> C[New Civilisation]
-                </div>
-            `
-        };
+    <!-- Education -->
+    <div class="discipline" id="disc-education">
+        <button type="button" class="discipline-btn">🎓 Education — The Engineer Hurricane <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="engineer-hurricane">The Engineer Hurricane</a>
+            <a href="challenges">Challenges & Open Problems</a>
+            <a href="factory-floor-warriors">The Factory Floor Warriors</a>
+            <a href="campus-gate-cosmic-gate">The Campus Gate and the Cosmic Gate</a>
+            <a href="test-case-1000-infants">The 1,000 Infants Test Case</a>
+            <a href="lollipop-education-system">The Lollipop Education System</a>
+            <a href="pravaha-bihar-convergence">Pravaha and the Reawakening of Bihar</a>
+            <a href="ethics-cambridge-oxford-eic">The Ethics of the Narrow Canal</a>
+            <a href="z">The Ethics of the Narrow Canal</a>
+        </div>
+    </div>
 
-        // ---- DOM refs ----
-        const hub = document.getElementById('hub');
-        const contentDisplay = document.getElementById('content-display');
-        const pageContent = document.getElementById('page-content');
-        const backLink = document.getElementById('back-to-hub');
+    <!-- Strategy -->
+    <div class="discipline" id="disc-strategy">
+        <button type="button" class="discipline-btn">🎯 Strategy — Mission 2100 and Beyond <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="mission-2100">Mission 2100</a>
+            <a href="village-transformation">Village Transformation</a>
+            <a href="cosmic-cold-chain">The Cosmic Cold Chain</a>
+            <a href="warrior-engineer-identity">The Warrior‑Engineer</a>
+            <a href="cold-submarine-fleet">The Cold Submarine Fleet</a>
+            <a href="geopolitics-canal-dogma">The Geopolitics of the Canal Dogma</a>
+            <a href="true-owners-unite">The True Owners of the World, Unite!</a>
+            <a href="real-owners-unite">The Real Owners Unite</a>
+            <a href="the-2025-2065-window">The 2025–2065 Window</a>
+            <a href="mythos-breach">The Mythos Breach</a>
+            <a href="horizontal-future">The Horizontal Future</a>
+        </div>
+    </div>
 
-        // ---- Theme toggle ----
-        const themeBtn = document.getElementById('theme-toggle');
+    <!-- Philosophy -->
+    <div class="discipline" id="disc-philosophy">
+        <button type="button" class="discipline-btn">🔮 Philosophy — The Invisible Beliefs That Shape Civilizations <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="canal-dogma">Canal Dogma</a>
+            <a href="canal-ontology">Canal Ontology</a>
+            <a href="three-bursts">The Three Bursts</a>
+            <a href="upgraded-equation">The Upgraded Equation</a>
+            <a href="ocean-g7-canal-dogma">The Ocean and the G7</a>
+            <a href="moores-law-exposed">Moore's Law Exposed</a>
+            <a href="the-mousetrap">The Mousetrap</a>
+            <a href="the-suppression-manual">The Suppression Manual</a>
+            <a href="consciousness-principle">The Consciousness Principle</a>
+            <a href="ethics-vacuum">The Ethics Vacuum</a>
+            <a href="lis-test">The #LisTest</a>
+            <a href="physical-continuum">The Physical Continuum</a>
+            <a href="two-pillars-space-state">The Two Pillars of the Cosmos</a>
+            <a href="beyond-guardrails">Beyond Guardrails</a>
+            <a href="ignorance-principle">The Ignorance Principle</a>
+            <a href="nobel-feudalism">The Nobel Feudalism</a>
+            <a href="the-poverty-sticker">The Poverty Sticker</a>
+            <a href="alexander-and-the-saint">Alexander and the Saint</a>
+            <a href="the-unmasked-framework">The Unmasked Framework</a>
+            <a href="impossibility-of-outside">The Impossibility of the Outside</a>
+            <a href="bihar-lineage">The Bihar Lineage</a>
+            <a href="labor-colony-to-space-state">From Labour Colony to Space State</a>
+            <a href="reversal-newtons-third-law">The Reversal Is Simple Physics</a>
+            <a href="before-after-1785">Before and After 1785</a>
+            <a href="qpf-and-mystics">The QPF and the Mystics</a>
+            <a href="bohm-horizontal-future">David Bohm and the Horizontal Future</a>
+            <a href="the-broken-link">The Broken Link — Why Humanity Is on the Brink</a>
+            <a href="einstein-truth-seeking">Einstein's Aspiration — Science as Truth‑Seeking</a>
+            <a href="zero-sum-game">⚖️ The Zero‑Sum Game — Distribution vs. Extraction</a>
+            <a href="identical-arithmetic-opposite-physics">🧮 Identical Arithmetic, Opposite Physics</a>
+            <a href="notebooklm-zero-sum-audit">🎲 The NotebookLM Zero‑Sum Audit — Game Theory & Opposite Physics</a>
+        </div>
+    </div>
 
-        function setTheme(mode) {
-            if (mode === 'light') {
-                document.body.classList.add('light-mode');
-                themeBtn.textContent = '🌙 Night Mode';
-                if (window.mermaid) {
-                    mermaid.initialize({ theme: 'default', startOnLoad: false });
-                    mermaid.run();
-                }
-            } else {
-                document.body.classList.remove('light-mode');
-                themeBtn.textContent = '☀️ Day Mode';
-                if (window.mermaid) {
-                    mermaid.initialize({ theme: 'dark', startOnLoad: false });
-                    mermaid.run();
-                }
-            }
-        }
+    <!-- Consciousness -->
+    <div class="discipline" id="disc-consciousness">
+        <button type="button" class="discipline-btn">🧠 Consciousness <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="consciousness-interface">The Consciousness Interface</a>
+            <a href="cognitive-cascade">The Cognitive Cascade</a>
+            <a href="artificial-cognitive-extension">The Artificial Cognitive Extension</a>
+            <a href="cognitive-revolution-harari">The Cognitive Revolutions</a>
+            <a href="intelligence-vs-wisdom">Intelligence Is Not Wisdom</a>
+            <a href="cosmic-training-protocol">The Cosmic Training Protocol</a>
+            <a href="two-engines">The Two Engines</a>
+            <a href="guardrails-for-feudal-lords">Guardrails for the Feudal Lords</a>
+            <a href="two-engines-dashboard">The Two Engines Dashboard</a>
+            <a href="glm-stress-test">The GLM Stress‑Test</a>
+            <a href="unified-agi-framework">U[I, T, K]F — The Unified AGI Framework</a>
+            <a href="glm-convergence">The GLM Convergence</a>
+            <a href="qpf-catalyst-genius">The QPF as Catalyst</a>
+            <a href="riding-the-light">Riding the Light</a>
+        </div>
+    </div>
 
-        window.toggleTheme = function() {
-            const isLight = document.body.classList.contains('light-mode');
-            const newMode = isLight ? 'dark' : 'light';
-            localStorage.setItem('theme', newMode);
-            setTheme(newMode);
-        };
+    <!-- Physics -->
+    <div class="discipline" id="disc-physics">
+        <button type="button" class="discipline-btn">⚛️ Physics — The Cosmic Reference Point <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="light-at-0-2.7k">Light@0-2.7Kelvin</a>
+            <a href="how-it-works">How It Works — The Y‑Lattice</a>
+            <a href="upgraded-equation">The Upgraded Equation</a>
+            <a href="glm-audit-lcdm">The GLM‑5‑Turbo Audit</a>
+            <a href="glm-double-standard-report">The GLM‑5‑Turbo Report</a>
+            <a href="opposing-properties-space-matter">The Opposing Properties of Space and Matter</a>
+            <a href="matter-space-embedded">Matter and Space Are Embedded</a>
+            <a href="straight-universe">The Straight Universe</a>
+            <a href="internal-cube-external-sphere">The Internal Cube and the External Sphere</a>
+            <a href="ball-straight-line-universe">The Ball, the Straight Line, and the Cosmic Cube‑Sphere</a>
+            <a href="finite-closed-conserved-cosmos">The Finite, Closed, Conserved Cosmos</a>
+            <a href="universe-shape-mapped">The Universe Mapped</a>
+            <a href="expansion-of-matter-not-space">The Expansion of Matter, Not Space</a>
+            <a href="energy-governs-energy">Energy Governs Energy</a>
+            <a href="notebooklm-audit">📋 The NotebookLM Audit — Third‑Party Validation</a>
+        </div>
+    </div>
 
-        // Load saved theme
-        const saved = localStorage.getItem('theme') || 'dark';
-        setTheme(saved);
+    <!-- Cosmology -->
+    <div class="discipline" id="disc-cosmology">
+        <button type="button" class="discipline-btn">🌌 Cosmology — The Structure and Dynamics of the Y‑Universe <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="universe-shape-mapped">The Universe Mapped</a>
+            <a href="straight-universe">The Straight Universe</a>
+            <a href="internal-cube-external-sphere">The Internal Cube and the External Sphere</a>
+            <a href="ball-straight-line-universe">The Ball, the Straight Line</a>
+            <a href="expansion-of-matter-not-space">The Expansion of Matter, Not Space</a>
+            <a href="hubble-law-static-plenum">Hubble's Law in the Static Plenum</a>
+            <a href="finite-closed-conserved-cosmos">The Finite, Closed, Conserved Cosmos</a>
+            <a href="impossibility-of-outside">The Impossibility of the Outside</a>
+            <a href="opposing-properties-space-matter">The Opposing Properties of Space and Matter</a>
+            <a href="matter-space-embedded">Matter and Space Are Embedded</a>
+            <a href="upgraded-equation">The Upgraded Equation</a>
+            <a href="quantum-plenum-block">The Quantum Plenum Block</a>
+            <a href="black-holes-gravitational-waves-qpb">Black Holes and Gravitational Waves</a>
+            <a href="black-hole-traffic-jam">The Black Hole — The Ultimate Traffic Jam</a>
+            <a href="two-lenses-black-holes">The Two Lenses on Black Holes</a>
+            <a href="hydrogen-thread">The Hydrogen Thread</a>
+            <a href="qpf-omnipresent">The Omnipresent QPF</a>
+            <a href="qpf-cosmic-balancer">The QPF as the Cosmic Balancer</a>
+            <a href="expanding-cloud">The Expanding Cloud</a>
+            <a href="the-cosmic-breath">The Cosmic Breath</a>
+            <a href="dark-label-fallacy">The Dark Label Fallacy</a>
+            <a href="baring-qpf-convergence">The Quantum Plenum — From Anne Baring to the QPF</a>
+            <a href="The 40-Year Cycle">🌍The 40-Year Cycle</a>
+        </div>
+    </div>
 
-        // ---- Routing ----
-        function loadPage(slug) {
-            // Show content area, hide hub
-            hub.classList.add('hidden');
-            contentDisplay.classList.remove('hidden');
+    <!-- Community -->
+    <div class="discipline" id="disc-community">
+        <button type="button" class="discipline-btn">🌐 Community <span class="arrow">▼</span></button>
+        <div class="panel">
+            <a href="retired-contributors">Retired but Curious</a>
+            <a href="support-the-mission">Support the Mission</a>
+            <a href="the-thought-partner">The Thought Partner</a>
+            <a href="personal-mission-support">The Mission Is Personal</a>
+            <a href="bihar-lineage">The Bihar Lineage</a>
+            <a href="labor-colony-to-space-state">From Labour Colony to Space State</a>
+            <a href="samastipur-prodigy">The Samastipur Prodigy</a>
+            <a href="horizontal-future">The Horizontal Future</a>
+            <a href="languages">Languages</a>
+        </div>
+    </div>
 
-            // Get content from embedded object
-            const html = PAGE_CONTENT[slug];
-            if (html) {
-                pageContent.innerHTML = html;
-                // Update page title
-                document.title = slug.replace(/-/g, ' ') + ' — Justice Physics Nalanda';
-                // Render math and diagrams
-                renderMathAndFlowcharts();
-            } else {
-                pageContent.innerHTML = `<p style="color: red;">Error: Content for "${slug}" not found. Please add it to the PAGE_CONTENT object.</p>`;
-            }
+    <!-- ==================== NARRATIVE SECTIONS ==================== -->
+    <div class="narrative">
+        <h2>1. THE DIAGNOSTIC: Why Every Civilization Collapses</h2>
+        <p><em>"From Bihar to the 70%" — Book 1 of The Operating System Chronicles</em></p>
+        <p>At every scale of human organization, <strong>70–80% of available resources are extracted and concentrated into elite silos</strong>, while 20–30% is distributed to everyone else. This is not metaphor. It is measured across 1,800 years of data.</p>
+        <ul>
+            <li><strong>Individual:</strong> Worker produces $100 value, receives $20–30.</li>
+            <li><strong>Regional:</strong> Bihar's resources flow 70–80% to urban/elite centers.</li>
+            <li><strong>National:</strong> India's GDP collapsed from 30% to 3% under 180 years of colonial extraction.</li>
+            <li><strong>Global:</strong> Top 10% owns 76% of all wealth. Bottom 50% owns 2%. Gini coefficient: <strong>0.88–0.90</strong> — beyond every historical collapse threshold.</li>
+        </ul>
+        <p><strong>Root cause:</strong> Capital evolved from a human tool into an autonomous entity with its own survival imperatives. It operates through an <strong>11-layer protocol</strong> that survives by replacing representatives — kings, CEOs, politicians. The elite is not people. It is software.</p>
+        <p><strong>Why we keep repeating the collapse:</strong> Humans believe abstract thought can override physical law in the physical realm. We build economic systems that violate energy distribution laws. We create extraction mechanisms that assume immunity from thermodynamics. But when thought becomes action, physics is sovereign. The pressure builds. And when it cannot release gradually, it corrects violently.</p>
+        <h2>2. THE PHYSICAL PROOF: How the Cosmos Operates Without Collapse</h2>
+        <p>The universe has run for <strong>13.8 billion years</strong> without a single collapse. Why?</p>
+        <p>Because it obeys its own physical design:</p>
+        <ul>
+            <li><strong>One substance (Y)</strong> — mass, energy, and space are the same physical units in different phases.</li>
+            <li><strong>A fixed, finite arena (A/V)</strong> — a superconducting quantum lattice at <strong>2.7 Kelvin</strong>.</li>
+            <li><strong>Pull and push</strong> — G‑Force (inward binding) and E=mc² (outward release).</li>
+            <li><strong>Instant heat absorption</strong> — the cold lattice acts as a superconducting heat sink, channeling light perfectly while absorbing waste heat immediately.</li>
+        </ul>
+        <p>The Big Bang was not a creation event. It was a phase transition — from contraction to expansion — in an eternal, cyclic sequence. There was no "t=0." There is only the continuous, unbroken sequence of rearrangement.</p>
+        <p><strong>The cosmos does not congest. It expands, distributes, and cools.</strong></p>
+        <h2>3. THE ENGINEERING PRESCRIPTION: HumanOS 2.0 Compute Fabric</h2>
+        <p>We can now build a civilization that mirrors the cosmic design — <strong>not through philosophy, but through hardware.</strong></p>
+        <h3>The Traffic Jam (Current Model)</h3>
+        <ul>
+            <li>Dense, hot, resistive silicon chips.</li>
+            <li>Electrons pushed through copper traces → resistance → heat → throttling → massive cooling cost.</li>
+            <li>Compact, monolithic, expensive. Energy wasted. Computation bottlenecked.</li>
+        </ul>
+        <h3>The Cosmic Highway (HumanOS 2.0 Fabric)</h3>
+        <ul>
+            <li><strong>Modular silicon nodes</strong> — small, simple chips (3 GHz each), not exotic Ferraris.</li>
+            <li><strong>Connected by light</strong> — photonic interconnects with zero resistance and zero heat in transit.</li>
+            <li><strong>Operated at 0–2.7 Kelvin</strong> — cryogenic cold eliminates resistive heating; every node is directly coupled to a superconducting heat sink.</li>
+            <li><strong>Thin, wide, stacked layers</strong> — chips are ultra‑thin planes with 0 K coolant flowing freely between layers. Heat never builds up.</li>
+        </ul>
+        <h3>Two Deployment Options</h3>
+        <ol>
+            <li><strong>Earth‑based at 0 Kelvin</strong> — cryostats using liquid helium/nitrogen. Operating cost drastically reduced.</li>
+            <li><strong>Space‑based at 2.7 Kelvin</strong> — orbital constellation: Unit 1 (sun‑shield + solar power) + Unit 2 (compute modules in shadow). Free electricity. Free coolant. Operating cost: <strong>zero</strong>.</li>
+        </ol>
+        <p><strong>Result:</strong> A global, open, distributed compute fabric that makes high‑end computation abundant and near‑free. This is the backbone of <strong>HumanOS 2.0</strong> — a civilization that obeys physics and circulates energy rather than extracting it.</p>
+        <p><a href="chip-architecture">→ Read the full chip architecture specification</a></p>
+        <h2>4. THE CASCADE: What This Unlocks</h2>
+        <p>Once computation is no longer bottlenecked:</p>
+        <ul>
+            <li><strong>Energy:</strong> Fusion modeling, perfect solar harvesting, waste‑heat recycling.</li>
+            <li><strong>Materials:</strong> Atom‑by‑atom design, perfect recycling, lab‑grown everything.</li>
+            <li><strong>Food & Water:</strong> Precision agriculture, cellular agriculture, desalination powered by free energy.</li>
+            <li><strong>Medicine:</strong> Personalized drugs, molecular repair, pandemic prevention.</li>
+            <li><strong>Education:</strong> Universal, AI‑tutored, always available.</li>
+            <li><strong>Space:</strong> Self‑sustaining habitats, interstellar communication, multi‑planetary civilization.</li>
+        </ul>
+        <p>Every artificial scarcity collapses — not through revolution, but because the <strong>physical bottleneck is removed</strong>.</p>
+        <h2>5. THE TIMELINE</h2>
+        <p>Economic instability (Gini 0.88), climate tipping points (6 of 9 boundaries exceeded), nuclear proliferation (12,000+ warheads). Convergent evidence gives a window of approximately <strong>5–15 years</strong> to build the conscious correction.</p>
+        <p><strong>The choice:</strong> Build the 0 K compute fabric and release the pressure voluntarily — or let physics correct it violently.</p>
+        <h2>6. JOIN THE MOVEMENT</h2>
+        <p>I am an independent researcher from Bihar, with no institutional funding, working from a rented house with a 15‑year‑old computer. Every resource is borrowed. But the blueprint is complete, and it is <strong>free for humanity</strong>.</p>
+        <p><strong>What I need:</strong></p>
+        <ul>
+            <li>Engineers (cryogenics, photonics, silicon design) to prototype the first 0 K module.</li>
+            <li>Universities and labs willing to test the architecture.</li>
+            <li>Storytellers, translators, and designers to spread the word.</li>
+            <li>Small donors and philanthropists to fund the first prototype and village pilot.</li>
+        </ul>
+        <p><strong>What I offer:</strong></p>
+        <ul>
+            <li>The complete diagnostic (Book 1 — "From Bihar to the 70%").</li>
+            <li>The complete physical proof (Cosmos Mechanism).</li>
+            <li>The complete engineering specification (0 K Photonic Compute Fabric).</li>
+            <li>An open, patent‑free partnership model.</li>
+        </ul>
+        <h2>📡 CONNECT</h2>
+        <ul>
+            <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/justice-physics-nalanda-the-virtual-academy-for-humanos%E2%80%AF2-501b5a69/">Justice Physics Nalanda (Cosmos—Human—Human Life.) - The Virtual Academy for HumanOS 2</a></li>
+            <li><strong>Email:</strong> mukesh.justicephysics@gmail.com</li>
+            <li><strong>GitHub:</strong> <a href="https://github.com/justicephysics/humanos2.0">justicephysics/humanos2.0</a></li>
+            <li><strong>Book:</strong><a href="https://www.amazon.in/s?k=from+bihar+to+70%25&crid=37ONR04BMCMIY&sprefix=from+bihar+to%2Caps%2C678&ref=nb_sb_noss_2">"From Bihar to the 70%" — The Operating System Chronicles, Book 1 (Amazon Kindle)</a></li>
+        </ul>
+        <p style="font-style:italic; margin-top:2rem;">"Abstract thought is free. Physical action is bound. Confuse the two, and physics corrects. Align them, and civilization thrives."</p>
+        <p><strong>#LisMissing #JusticePhysics #HumanOS2 #CryogenicComputing #PhotonicFabric</strong></p>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>✨ Open‑source and free for all curious minds. <a href="https://github.com/justicephysics/humanos2.0">Contribute on GitHub</a>.</p>
+    </div>
+</div>
 
-            // Update URL (without reload)
-            // Build the correct base path: remove trailing slash and last segment (if any)
-            let basePath = window.location.pathname;
-            // Remove trailing slash
-            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
-            // Remove the last segment if it's not the repository name (we'll replace it)
-            const segments = basePath.split('/');
-            // If the last segment is a known slug, remove it
-            if (segments.length > 0 && PAGE_CONTENT[segments[segments.length - 1]]) {
-                segments.pop();
-            }
-            basePath = segments.join('/') + '/';
-            const newUrl = window.location.origin + basePath + slug;
-            if (window.history && window.history.pushState) {
-                window.history.pushState({ slug: slug }, '', newUrl);
-            }
-        }
+<!-- ==================== SCRIPTS ==================== -->
+<!-- Mermaid library -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+    // Accordion logic
+    document.querySelectorAll('.discipline-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parent = btn.parentElement;
+            parent.classList.toggle('open');
+        });
+    });
 
-        function showHub() {
-            hub.classList.remove('hidden');
-            contentDisplay.classList.add('hidden');
-            // Reset URL to base (without slug)
-            let basePath = window.location.pathname;
-            if (basePath.endsWith('/')) basePath = basePath.slice(0, -1);
-            const segments = basePath.split('/');
-            // Remove any known slug at the end
-            if (segments.length > 0 && PAGE_CONTENT[segments[segments.length - 1]]) {
-                segments.pop();
-            }
-            basePath = segments.join('/') + '/';
-            const baseUrl = window.location.origin + basePath;
-            if (window.history && window.history.pushState) {
-                window.history.pushState({ slug: null }, '', baseUrl);
-            }
-            document.title = 'Justice Physics Nalanda — The Virtual Academy for HumanOS 2.0';
-        }
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
 
-        // ---- Handle clicks on accordion links ----
-        document.querySelectorAll('.panel a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const slug = this.dataset.page;
-                if (slug && PAGE_CONTENT[slug]) {
-                    loadPage(slug);
-                } else {
-                    console.warn('Page not found:', slug);
-                }
+    // ─── Interactive Function for Mermaid Nodes ───
+    // This function is triggered when a user clicks a node in the Mermaid diagram
+    window.openAccordion = function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            // Close all currently open accordions for a clean view
+            document.querySelectorAll('.discipline.open').forEach(openEl => {
+                if (openEl !== el) openEl.classList.remove('open');
             });
-        });
+            // Open the targeted accordion
+            el.classList.add('open');
+            // Smoothly scroll to it
+            setTimeout(() => {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    };
 
-        // ---- Back to Hub ----
-        backLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showHub();
-        });
+    // ─── Mermaid Flowchart: The HumanOS 2.0 Vision Map ───
+    const mermaidCode = `flowchart TD
+    subgraph S1["❌ CURRENT — Extraction Civilization"]
+        A["70–80% resources extracted<br/>to elite silos<br/>Gini 0.88–0.90"]
+    end
 
-        // ---- Handle browser back/forward ----
-        window.addEventListener('popstate', function(event) {
-            const state = event.state;
-            if (state && state.slug) {
-                if (PAGE_CONTENT[state.slug]) {
-                    loadPage(state.slug);
-                } else {
-                    showHub();
-                }
-            } else {
-                showHub();
+    A --> D{"⚖️ 5–15 Year<br/>Window of Choice"}
+
+    D -->|"Violent correction"| E["💥 Civilizational Collapse"]
+    D -->|"Conscious correction"| F["🔭 Study the Cosmos<br/>13.8B years — zero collapse"]
+
+    subgraph S2["✅ COSMIC DESIGN — The Reference Model"]
+        F --> G["One substance Y<br/>mass = energy = space"]
+        F --> H["2.7 K Quantum Lattice<br/>superconducting heat sink"]
+        F --> I["Pull and Push<br/>G-Force ↔ E=mc²"]
+    end
+
+    G --> J["🔧 HumanOS 2.0<br/>Compute Fabric"]
+    H --> J
+    I --> J
+
+    subgraph S3["⚙️ ENGINEERING PRESCRIPTION"]
+        J --> K["Modular silicon nodes<br/>3 GHz each"]
+        J --> L["Photonic interconnects<br/>0 resistance, 0 heat"]
+        J --> M["0–2.7 K cryogenic<br/>operation"]
+    end
+
+    K --> N["🚀 Abundance Cascade"]
+    L --> N
+    M --> N
+
+    subgraph S4["🌟 NEW — Abundance Civilization"]
+        N --> O["⚡ Energy"]
+        N --> P["🔬 Materials"]
+        N --> Q["🌾 Food and Water"]
+        N --> R["💊 Medicine"]
+        N --> S["📚 Education"]
+        N --> T["🌌 Space"]
+    end
+
+    O --> U["✨ HumanOS 2.0<br/>From Scarcity to Abundance"]
+    P --> U
+    Q --> U
+    R --> U
+    S --> U
+    T --> U
+
+    U --> Explore["🧭 Explore the Blueprint Disciplines<br>(Click to open section)"]
+
+    Explore --> D1["🛠️ Prototype & Pitch"]
+    Explore --> D2["🛠️ Engineering"]
+    Explore --> D3["💰 Economics"]
+    Explore --> D4["🎓 Education"]
+    Explore --> D5["🎯 Strategy"]
+    Explore --> D6["🔮 Philosophy"]
+    Explore --> D7["🧠 Consciousness"]
+    Explore --> D8["⚛️ Physics"]
+    Explore --> D9["🌌 Cosmology"]
+    Explore --> D10["🌐 Community"]
+
+    %% Click interactions linking Mermaid nodes to HTML elements
+    click D1 call window.openAccordion('disc-prototype')
+    click D2 call window.openAccordion('disc-engineering')
+    click D3 call window.openAccordion('disc-economics')
+    click D4 call window.openAccordion('disc-education')
+    click D5 call window.openAccordion('disc-strategy')
+    click D6 call window.openAccordion('disc-philosophy')
+    click D7 call window.openAccordion('disc-consciousness')
+    click D8 call window.openAccordion('disc-physics')
+    click D9 call window.openAccordion('disc-cosmology')
+    click D10 call window.openAccordion('disc-community')
+
+    classDef collapse fill:#e74c3c,stroke:#c0392b,color:#fff
+    classDef choice fill:#e67e22,stroke:#d35400,color:#fff
+    classDef cosmos fill:#1abc9c,stroke:#16a085,color:#fff
+    classDef fabric fill:#3498db,stroke:#2980b9,color:#fff
+    classDef cascade fill:#9b59b6,stroke:#8e44ad,color:#fff
+    classDef abundance fill:#2ecc71,stroke:#27ae60,color:#fff
+    classDef goal fill:#f1c40f,stroke:#e6b800,color:#1a1a2e
+    classDef discipline fill:#112240,stroke:#7FDBFF,color:#7FDBFF,stroke-width:2px
+
+    class A,E collapse
+    class D choice
+    class F,G,H,I cosmos
+    class J,K,L,M fabric
+    class N cascade
+    class O,P,Q,R,S,T abundance
+    class U goal
+    class D1,D2,D3,D4,D5,D6,D7,D8,D9,D10 discipline
+    `;
+
+    let renderCounter = 0;
+
+    async function renderMermaid(theme) {
+        if (typeof mermaid === 'undefined') {
+            // Retry if library not yet loaded
+            setTimeout(() => renderMermaid(theme), 500);
+            return;
+        }
+
+        const mermaidTheme = theme === 'light' ? 'default' : 'dark';
+
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: mermaidTheme,
+            securityLevel: 'loose', // Required to allow click callbacks
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
             }
         });
 
-        // ---- On initial load, check the URL ----
-        (function init() {
-            const path = window.location.pathname;
-            // Remove trailing slash
-            const cleanPath = path.replace(/\/$/, '');
-            const segments = cleanPath.split('/').filter(s => s.length > 0);
-            // The last segment might be a slug
-            let slug = null;
-            if (segments.length > 0) {
-                const last = segments[segments.length - 1];
-                if (PAGE_CONTENT[last]) {
-                    slug = last;
-                }
-            }
-            if (slug) {
-                loadPage(slug);
-            } else {
-                showHub();
-            }
-        })();
+        try {
+            const id = 'mmd-graph-' + (renderCounter++);
+            const { svg } = await mermaid.render(id, mermaidCode);
+            const container = document.getElementById('mermaid-diagram');
+            container.innerHTML = svg;
+        } catch (err) {
+            console.error('Mermaid render error:', err);
+            const container = document.getElementById('mermaid-diagram');
+            container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">⚠️ Diagram could not be rendered. Please refresh the page.</p>';
+        }
+    }
 
-        // ---- Re-render when theme changes ----
-        const originalSetTheme = setTheme;
-        setTheme = function(mode) {
-            originalSetTheme(mode);
-            if (!contentDisplay.classList.contains('hidden')) {
-                renderMathAndFlowcharts();
-            }
-        };
-        window.setTheme = setTheme;
-        setTheme(saved);
-    </script>
+    function setTheme(mode) {
+        if (mode === 'light') {
+            document.body.classList.add('light-mode');
+            themeBtn.textContent = '🌙 Night Mode';
+        } else {
+            document.body.classList.remove('light-mode');
+            themeBtn.textContent = '☀️ Day Mode';
+        }
+        // Re-render mermaid with the new theme
+        renderMermaid(mode);
+    }
+
+    window.toggleTheme = function() {
+        const isLight = document.body.classList.contains('light-mode');
+        const newMode = isLight ? 'dark' : 'light';
+        localStorage.setItem('theme', newMode);
+        setTheme(newMode);
+    };
+
+    // Load saved theme
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
+</script>
 </body>
 </html>
