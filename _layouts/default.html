@@ -54,34 +54,23 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+        p { color: var(--text-secondary); margin-bottom: 1rem; }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
         .table-wrapper {
-            overflow-x: auto;
-            overflow-y: hidden;
-            margin: 1.5rem 0;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            scrollbar-width: thin;
+            overflow-x: auto; overflow-y: hidden; margin: 1.5rem 0;
+            border-radius: var(--radius); border: 1px solid var(--border); scrollbar-width: thin;
         }
         .table-wrapper::-webkit-scrollbar { height: 6px; }
         .table-wrapper::-webkit-scrollbar-track { background: transparent; }
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
-        }
+        .table-wrapper::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; transition: background-color 0.3s; }
         .table-wrapper:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
         table { width: 100%; border-collapse: collapse; margin: 0; background: var(--surface); }
-        th, td { 
-            border: 1px solid var(--border); padding: 0.8rem 1rem; text-align: left; 
-            vertical-align: top; white-space: normal; 
-        }
+        th, td { border: 1px solid var(--border); padding: 0.8rem 1rem; text-align: left; vertical-align: top; white-space: normal; }
         th { color: var(--text); background: rgba(127, 219, 255, 0.05); white-space: nowrap; }
-        td:nth-child(2), td:nth-child(3), td:nth-child(4) {
-            text-align: right; white-space: nowrap;
-        }
+        td:nth-child(2), td:nth-child(3), td:nth-child(4) { text-align: right; white-space: nowrap; }
 
         code { background: var(--surface); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: 'Courier New', monospace; color: var(--accent); }
         pre { background: var(--surface); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); overflow-x: auto; }
@@ -90,51 +79,38 @@
         hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
         
         /* Controls Bar */
-        .controls {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap;
-        }
-        .back-link {
-            text-decoration: none; color: var(--accent); font-weight: 600;
-            border: 1px solid var(--accent); padding: 0.45rem 1rem; border-radius: var(--radius);
-            transition: background 0.2s, color 0.2s;
-        }
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap; }
+        .back-link { text-decoration: none; color: var(--accent); font-weight: 600; border: 1px solid var(--accent); padding: 0.45rem 1rem; border-radius: var(--radius); transition: background 0.2s, color 0.2s; }
         .back-link:hover { background: var(--accent); color: var(--bg); }
-        .theme-btn {
-            color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem;
-            border: 1px solid var(--accent); border-radius: var(--radius); background: transparent;
-            cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s;
-        }
+        .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Custom Bullet Points with Sticky Scroll */
-        ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
+        /* Custom Bullet Points */
+        ul, ol { list-style: none; padding-left: 1.5rem; margin-bottom: 1rem; }
         ol { counter-reset: item; }
-        li {
-            display: flex; align-items: flex-start; margin-bottom: 1rem; color: var(--text-secondary);
-            overflow-x: auto; overflow-y: hidden; scrollbar-width: thin;
-        }
-        li > p { overflow-x: visible; margin-bottom: 0; padding-right: 1rem; }
-        li::before {
-            position: sticky; left: 0; background: var(--bg); z-index: 1;
-            padding-right: 0.75rem; flex-shrink: 0;
-        }
+        li { position: relative; margin-bottom: 1rem; color: var(--text-secondary); }
+        li > p { margin-bottom: 0; }
+        li::before { position: absolute; left: -1rem; top: 0; }
         ul > li::before { content: "•"; color: var(--text-secondary); }
         ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
         
-        p::-webkit-scrollbar, li::-webkit-scrollbar { height: 6px; }
-        p::-webkit-scrollbar-track, li::-webkit-scrollbar-track { background: transparent; }
-        p::-webkit-scrollbar-thumb, li::-webkit-scrollbar-thumb {
-            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
+        /* Math Equation Mobile Fit & Auto-Hide Slider */
+        mjx-container {
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            vertical-align: middle; /* Keeps inline math aligned with text */
         }
-        p:hover::-webkit-scrollbar-thumb, li:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
+        mjx-container::-webkit-scrollbar { height: 6px; }
+        mjx-container::-webkit-scrollbar-track { background: transparent; }
+        mjx-container::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; transition: background-color 0.3s; }
+        mjx-container:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
         mjx-container[display="true"] {
-            display: block !important; margin: 1rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;
+            display: block !important;
+            margin: 1rem 0;
         }
-        mjx-container[display="true"]::-webkit-scrollbar { height: 6px; }
-        mjx-container[display="true"]::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; }
-        mjx-container[display="true"]:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
     </style>
 </head>
 <body>
@@ -146,19 +122,34 @@
         {{ content }}
     </div>
 
-    <!-- Pre-process math to fix unescaped % and \% inside \text{} -->
+    <!-- Pre-process math to fix inline $$, unescaped %, and \% inside \text{} -->
     <script>
       (function() {
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
         let node;
         while ((node = walker.nextNode())) {
-          const text = node.nodeValue;
-          if (text && (text.includes('$') || text.includes('\\('))) {
-            // 1. Find all math blocks
+          let text = node.nodeValue;
+          if (text.includes('$') || text.includes('\\(')) {
+            // 1. Convert inline $$...$$ to $...$ if there is text before or after it on the same line
+            if (text.includes('$$')) {
+              text = text.replace(/\$\$([^\n$]+)\$\$/g, (match, inner, offset, string) => {
+                const before = string.substring(0, offset);
+                const after = string.substring(offset + match.length);
+                if (before.trim() || after.trim()) {
+                  return `$${inner}$`;
+                }
+                return match;
+              });
+            }
+
+            // 2. Fix unescaped % and \% inside \text{}
             const newText = text.replace(/(\$\$[\s\S]+?\$\$|\$[^$]+\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/g, (match) => {
-              // 2. Replace unescaped % with \%
-              let fixed = match.replace(/(?<!\\)%/g, '\\%');
-              // 3. Replace \% inside \text{...} with $\%$ to fix MathJax bug
+              // Safely escape unescaped %
+              let fixed = match.split('\\%').join('§ESC§');
+              fixed = fixed.replace(/%/g, '\\%');
+              fixed = fixed.split('§ESC§').join('\\%');
+              
+              // Fix \% inside \text{...}
               fixed = fixed.replace(/\\text\{([^{}]*)\}/g, (m) => m.split('\\%').join('$\\%$'));
               return fixed;
             });
