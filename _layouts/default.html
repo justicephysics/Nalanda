@@ -54,7 +54,16 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+        
+        /* Paragraphs scroll instead of wrapping to prevent layout breakage */
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            white-space: nowrap;
+        }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
@@ -85,28 +94,33 @@
         .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Custom Bullet Points with Sticky Scroll (Block Layout) */
+        /* Custom Bullet Points with Flexbox & Sticky Scroll */
         ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
         ol { counter-reset: item; }
         li {
-            display: block; /* Reverted to block to fix MathJax vertical alignment */
+            display: flex;
+            align-items: center; /* Vertically aligns bullet, text, and math */
             margin-bottom: 1rem;
             color: var(--text-secondary);
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            padding-left: 1.5rem; /* Space for the bullet */
+            white-space: nowrap; /* Force scrolling instead of wrapping */
         }
-        /* If Markdown wraps text in <p>, let the <li> handle the scroll */
-        li > p { display: inline; margin-bottom: 0; padding-right: 1rem; }
+        li > p {
+            margin: 0;
+            padding-right: 1rem;
+            overflow: visible;
+        }
         li::before {
-            position: sticky; /* Bullet stays pinned when scrolling */
+            align-self: stretch; /* Makes the bullet background cover the full height of the line */
+            display: flex;
+            align-items: center; /* Centers the bullet character vertically */
+            position: sticky;
             left: 0;
-            display: inline-block;
-            width: 1.5rem;
-            margin-left: -1.5rem;
-            padding-right: 0.5rem;
-            background: var(--bg); /* Hides text sliding under it */
+            flex-shrink: 0;
+            background: var(--bg); /* Opaque background to hide text sliding under it */
+            padding-right: 0.75rem;
             z-index: 1;
             box-sizing: border-box;
         }
