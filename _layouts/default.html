@@ -104,14 +104,15 @@
         }
         
         /* ISOLATED MATH SLIDER */
+        /* Only the math element gets the slider. Text before it stays, text after it wraps. */
         mjx-container {
             display: inline-block !important;
             max-width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            vertical-align: middle;
-            padding-bottom: 4px;
+            vertical-align: middle; /* Keeps math aligned with text baseline */
+            padding-bottom: 4px; /* Space for the auto-hide scrollbar */
         }
         mjx-container::-webkit-scrollbar { height: 6px; }
         mjx-container::-webkit-scrollbar-track { background: transparent; }
@@ -120,6 +121,7 @@
         }
         mjx-container:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
+        /* Display Math Block ($$...$$) */
         mjx-container[display="true"] {
             display: block !important;
             margin: 1rem 0;
@@ -140,7 +142,7 @@
 <body>
     <div class="container">
         <div class="controls">
-            <a href="https://justicephysics.github.io/humanos2.0/" class="back-link">← Back to Blueprint</a>
+            <a href="https://justicephysics.github.io/Nalanda/" class="back-link">← Back to Blueprint</a>
             <button type="button" id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
         {{ content }}
@@ -195,9 +197,8 @@
           displayMath: [['$$', '$$'], ['\\[', '\\]']]
         },
         chtml: {
-          linebreaks: { automatic: false },
-          scale: 0.95, /* Scales down math to perfectly match body text size */
-          minScale: 0.5
+          // Disable automatic line breaking so long math stays on one line and triggers the isolated slider
+          linebreaks: { automatic: false } 
         }
       };
     </script>
