@@ -54,12 +54,7 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        
-        /* Standard paragraph behavior - NO forced scrolling or wrapping */
-        p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
+        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; white-space: nowrap; }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
@@ -90,47 +85,57 @@
         .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Standard Bullet Points - Reverted to Native CSS */
-        ul, ol {
-            padding-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
+        /* Custom Bullet Points with Flexbox & Sticky Scroll */
+        ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
+        ol { counter-reset: item; }
         li {
+            display: flex;
+            align-items: center;
             margin-bottom: 1rem;
             color: var(--text-secondary);
-        }
-        li > p {
-            margin-bottom: 0;
-        }
-        
-        /* HOLISTIC MATH SLIDER: Applied ONLY to the math element itself */
-        /* This prevents paragraph breakage, bullet misalignment, and baseline issues */
-        mjx-container {
-            max-width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            padding-bottom: 0.2rem; /* Small gap for the scrollbar */
+            white-space: nowrap;
         }
-        mjx-container::-webkit-scrollbar { height: 6px; }
-        mjx-container::-webkit-scrollbar-track { background: transparent; }
-        mjx-container::-webkit-scrollbar-thumb {
+        li > p { margin: 0; padding-right: 1rem; overflow: visible; }
+        li::before {
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            left: 0;
+            flex-shrink: 0;
+            background: var(--bg);
+            padding-right: 0.75rem;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+        ul > li::before { content: "•"; color: var(--text-secondary); }
+        ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
+        
+        p::-webkit-scrollbar, li::-webkit-scrollbar { height: 6px; }
+        p::-webkit-scrollbar-track, li::-webkit-scrollbar-track { background: transparent; }
+        p::-webkit-scrollbar-thumb, li::-webkit-scrollbar-thumb {
             background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
         }
-        mjx-container:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
+        p:hover::-webkit-scrollbar-thumb, li:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
-        /* Display math block layout */
         mjx-container[display="true"] {
-            display: block !important;
-            margin: 1rem 0;
-            padding-bottom: 0.5rem;
+            display: block !important; margin: 1rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;
         }
+        mjx-container[display="true"]::-webkit-scrollbar { height: 6px; }
+        mjx-container[display="true"]::-webkit-scrollbar-track { background: transparent; }
+        mjx-container[display="true"]::-webkit-scrollbar-thumb {
+            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
+        }
+        mjx-container[display="true"]:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="controls">
-            <a href="https://justicephysics.github.io/Nalanda/" class="back-link">← Back to Blueprint</a>
+            <a href="https://justicephysics.github.io/humanos2.0/" class="back-link">← Back to Blueprint</a>
             <button type="button" id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
         {{ content }}
@@ -185,8 +190,7 @@
           displayMath: [['$$', '$$'], ['\\[', '\\]']]
         },
         chtml: {
-          // Disable automatic line breaking so long math stays on one line and triggers the internal slider
-          linebreaks: { automatic: false } 
+          linebreaks: { automatic: true } 
         }
       };
     </script>
