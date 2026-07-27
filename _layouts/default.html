@@ -103,7 +103,7 @@
             margin-bottom: 0;
         }
         
-        /* ISOLATED MATH SLIDER & WEIGHT CONTROL */
+        /* ISOLATED MATH SLIDER */
         mjx-container {
             display: inline-block !important;
             max-width: 100%;
@@ -112,8 +112,6 @@
             scrollbar-width: thin;
             vertical-align: middle;
             padding-bottom: 4px;
-            font-size: 0.95em !important; /* Slightly shrinks the math container relative to text */
-            font-weight: normal !important; /* Prevents math from looking thick/bold */
         }
         mjx-container::-webkit-scrollbar { height: 6px; }
         mjx-container::-webkit-scrollbar-track { background: transparent; }
@@ -142,7 +140,7 @@
 <body>
     <div class="container">
         <div class="controls">
-            <a href="https://justicephysics.github.io/Nalanda/" class="back-link">← Back to Blueprint</a>
+            <a href="https://justicephysics.github.io/humanos2.0/" class="back-link">← Back to Blueprint</a>
             <button type="button" id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
         {{ content }}
@@ -198,11 +196,7 @@
         },
         chtml: {
           linebreaks: { automatic: false },
-          // =====================================================================
-          // >>> MANUALLY ADJUST MATH SIZE HERE <<<
-          // Change this number to make math smaller (e.g., 0.8) or larger (e.g., 1.0)
-          // =====================================================================
-          scale: 0.85, 
+          scale: 0.95, /* Scales down math to perfectly match body text size */
           minScale: 0.5
         }
       };
