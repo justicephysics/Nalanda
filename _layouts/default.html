@@ -54,7 +54,7 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        p { color: var(--text-secondary); margin-bottom: 1rem; }
+        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
@@ -85,32 +85,40 @@
         .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Custom Bullet Points */
-        ul, ol { list-style: none; padding-left: 1.5rem; margin-bottom: 1rem; }
+        /* Custom Bullet Points with Sticky Scroll */
+        ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
         ol { counter-reset: item; }
-        li { position: relative; margin-bottom: 1rem; color: var(--text-secondary); }
-        li > p { margin-bottom: 0; }
-        li::before { position: absolute; left: -1rem; top: 0; }
+        li {
+            display: flex; align-items: flex-start; margin-bottom: 1rem; color: var(--text-secondary);
+            overflow-x: auto; overflow-y: hidden; scrollbar-width: thin;
+        }
+        /* If Markdown wraps text in <p>, let the <li> handle the scroll */
+        li > p { overflow-x: visible; margin-bottom: 0; padding-right: 1rem; }
+        li::before {
+            position: sticky; left: 0; background: var(--bg); z-index: 1;
+            padding-right: 0.75rem; flex-shrink: 0;
+        }
         ul > li::before { content: "•"; color: var(--text-secondary); }
         ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
         
-        /* Math Equation Mobile Fit & Auto-Hide Slider */
-        mjx-container {
-            max-width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            vertical-align: middle; /* Keeps inline math aligned with text */
+        /* Webkit scrollbar styling (Auto-hide) for paragraphs and lists */
+        p::-webkit-scrollbar, li::-webkit-scrollbar { height: 6px; }
+        p::-webkit-scrollbar-track, li::-webkit-scrollbar-track { background: transparent; }
+        p::-webkit-scrollbar-thumb, li::-webkit-scrollbar-thumb {
+            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
         }
-        mjx-container::-webkit-scrollbar { height: 6px; }
-        mjx-container::-webkit-scrollbar-track { background: transparent; }
-        mjx-container::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; transition: background-color 0.3s; }
-        mjx-container:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
+        p:hover::-webkit-scrollbar-thumb, li:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
+        /* Specifically target display math $$...$$ */
         mjx-container[display="true"] {
-            display: block !important;
-            margin: 1rem 0;
+            display: block !important; margin: 1rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;
         }
+        mjx-container[display="true"]::-webkit-scrollbar { height: 6px; }
+        mjx-container[display="true"]::-webkit-scrollbar-track { background: transparent; }
+        mjx-container[display="true"]::-webkit-scrollbar-thumb {
+            background-color: transparent; border-radius: 10px; transition: background-color 0.3s;
+        }
+        mjx-container[display="true"]:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
     </style>
 </head>
 <body>
@@ -144,12 +152,10 @@
 
             // 2. Fix unescaped % and \% inside \text{}
             const newText = text.replace(/(\$\$[\s\S]+?\$\$|\$[^$]+\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/g, (match) => {
-              // Safely escape unescaped %
               let fixed = match.split('\\%').join('§ESC§');
               fixed = fixed.replace(/%/g, '\\%');
               fixed = fixed.split('§ESC§').join('\\%');
               
-              // Fix \% inside \text{...}
               fixed = fixed.replace(/\\text\{([^{}]*)\}/g, (m) => m.split('\\%').join('$\\%$'));
               return fixed;
             });
@@ -221,7 +227,14 @@
             document.querySelectorAll('code.language-mermaid').forEach(function (block) {
                 const div = document.createElement('div');
                 div.className = 'mermaid';
-                div.textContent = block.textContent;
+                
+                // Auto-fix Mermaid syntax: Wrap node text containing | in quotes
+                let code = block.textContent;
+                code = code.replace(/\[([^\]"[]*\|[^\]"[]*)\]/g, '["$1"]');
+                code = code.replace(/\{([^\}"{]*\|[^\}"{]*)\}/g, '{"$1"}');
+                code = code.replace(/\(([^\)"(]*\|[^\)"(]*)\)/g, '("$1")');
+                
+                div.textContent = code;
                 block.parentElement.replaceWith(div);
             });
 
