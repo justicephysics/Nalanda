@@ -54,16 +54,7 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        
-        /* Paragraphs scroll instead of wrapping to prevent layout breakage */
-        p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            white-space: nowrap;
-        }
+        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; white-space: nowrap; }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
@@ -99,27 +90,23 @@
         ol { counter-reset: item; }
         li {
             display: flex;
-            align-items: center; /* Vertically aligns bullet, text, and math */
+            align-items: center;
             margin-bottom: 1rem;
             color: var(--text-secondary);
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            white-space: nowrap; /* Force scrolling instead of wrapping */
+            white-space: nowrap;
         }
-        li > p {
-            margin: 0;
-            padding-right: 1rem;
-            overflow: visible;
-        }
+        li > p { margin: 0; padding-right: 1rem; overflow: visible; }
         li::before {
-            align-self: stretch; /* Makes the bullet background cover the full height of the line */
+            align-self: stretch;
             display: flex;
-            align-items: center; /* Centers the bullet character vertically */
+            align-items: center;
             position: sticky;
             left: 0;
             flex-shrink: 0;
-            background: var(--bg); /* Opaque background to hide text sliding under it */
+            background: var(--bg);
             padding-right: 0.75rem;
             z-index: 1;
             box-sizing: border-box;
@@ -127,7 +114,6 @@
         ul > li::before { content: "•"; color: var(--text-secondary); }
         ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
         
-        /* Webkit scrollbar styling (Auto-hide) for paragraphs and lists */
         p::-webkit-scrollbar, li::-webkit-scrollbar { height: 6px; }
         p::-webkit-scrollbar-track, li::-webkit-scrollbar-track { background: transparent; }
         p::-webkit-scrollbar-thumb, li::-webkit-scrollbar-thumb {
@@ -135,7 +121,6 @@
         }
         p:hover::-webkit-scrollbar-thumb, li:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
-        /* Specifically target display math $$...$$ */
         mjx-container[display="true"] {
             display: block !important; margin: 1rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;
         }
@@ -156,7 +141,7 @@
         {{ content }}
     </div>
 
-    <!-- Pre-process math to fix inline $$, unescaped %, and \% inside \text{} -->
+    <!-- Pre-process math to fix inline $$, unescaped %, \% inside \text{}, and Unicode symbols (₹, –) -->
     <script>
       (function() {
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
@@ -176,13 +161,19 @@
               });
             }
 
-            // 2. Fix unescaped % and \% inside \text{}
+            // 2. Fix unescaped %, \% inside \text{}, and unsupported Unicode
             const newText = text.replace(/(\$\$[\s\S]+?\$\$|\$[^$]+\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/g, (match) => {
               let fixed = match.split('\\%').join('§ESC§');
               fixed = fixed.replace(/%/g, '\\%');
               fixed = fixed.split('§ESC§').join('\\%');
               
+              // Fix \% inside \text{...}
               fixed = fixed.replace(/\\text\{([^{}]*)\}/g, (m) => m.split('\\%').join('$\\%$'));
+              
+              // Wrap unsupported Unicode characters (₹, –) in \text{} to prevent Math input errors
+              fixed = fixed.replace(/₹/g, '\\text{₹}');
+              fixed = fixed.replace(/–/g, '\\text{–}');
+              
               return fixed;
             });
             node.nodeValue = newText;
