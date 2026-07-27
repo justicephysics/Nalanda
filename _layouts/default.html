@@ -54,7 +54,15 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         h1, h2, h3, h4 { color: var(--accent); margin-top: 1.5rem; margin-bottom: 1rem; }
-        p { color: var(--text-secondary); margin-bottom: 1rem; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; white-space: nowrap; }
+        
+        /* Normal text wraps naturally. Long unbreakable math triggers the slider. */
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+        }
         a { color: var(--accent); }
         
         /* Table Wrapper for Horizontal Scrolling */
@@ -90,23 +98,26 @@
         ol { counter-reset: item; }
         li {
             display: flex;
-            align-items: center;
+            align-items: center; /* Vertically aligns bullet, text, and math */
             margin-bottom: 1rem;
             color: var(--text-secondary);
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            white-space: nowrap;
         }
-        li > p { margin: 0; padding-right: 1rem; overflow: visible; }
+        li > p {
+            margin: 0;
+            padding-right: 1rem;
+            overflow: visible;
+        }
         li::before {
-            align-self: stretch;
+            align-self: stretch; /* Makes the bullet background cover the full height of the line */
             display: flex;
-            align-items: center;
+            align-items: center; /* Centers the bullet character vertically */
             position: sticky;
             left: 0;
             flex-shrink: 0;
-            background: var(--bg);
+            background: var(--bg); /* Opaque background to hide text sliding under it */
             padding-right: 0.75rem;
             z-index: 1;
             box-sizing: border-box;
@@ -114,6 +125,7 @@
         ul > li::before { content: "•"; color: var(--text-secondary); }
         ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
         
+        /* Webkit scrollbar styling (Auto-hide) for paragraphs and lists */
         p::-webkit-scrollbar, li::-webkit-scrollbar { height: 6px; }
         p::-webkit-scrollbar-track, li::-webkit-scrollbar-track { background: transparent; }
         p::-webkit-scrollbar-thumb, li::-webkit-scrollbar-thumb {
@@ -121,6 +133,7 @@
         }
         p:hover::-webkit-scrollbar-thumb, li:hover::-webkit-scrollbar-thumb { background-color: var(--border); }
 
+        /* Specifically target display math $$...$$ */
         mjx-container[display="true"] {
             display: block !important; margin: 1rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;
         }
@@ -190,7 +203,8 @@
           displayMath: [['$$', '$$'], ['\\[', '\\]']]
         },
         chtml: {
-          linebreaks: { automatic: true } 
+          // Disable automatic line breaking so long math stays on one line and triggers the slider
+          linebreaks: { automatic: false } 
         }
       };
     </script>
