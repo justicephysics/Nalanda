@@ -142,13 +142,13 @@
 <body>
     <div class="container">
         <div class="controls">
-            <a href="https://justicephysics.github.io/Nalanda/" class="back-link">← Back to Blueprint</a>
+            <a href="https://justicephysics.github.io/humanos2.0/" class="back-link">← Back to Blueprint</a>
             <button type="button" id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
         {{ content }}
     </div>
 
-    <!-- Pre-process math to fix inline $$, unescaped %, \% inside \text{}, and Unicode symbols (₹, –) -->
+    <!-- Pre-process math with custom parser to fix all MathJax v3 quirks -->
     <script>
       (function() {
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
@@ -174,14 +174,48 @@
               fixed = fixed.replace(/%/g, '\\%');
               fixed = fixed.split('§ESC§').join('\\%');
               
-              // Fix \% inside \text{...}
-              fixed = fixed.replace(/\\text\{([^{}]*)\}/g, (m) => m.split('\\%').join('$\\%$'));
+              // Custom parser to safely modify math without causing nested \text{} errors
+              let result = '';
+              let inText = false;
+              let braceDepth = 0;
               
-              // Replace Unicode characters with \unicode to prevent nesting errors inside \text{}
-              fixed = fixed.replace(/₹/g, '\\unicode{x20B9}');
-              fixed = fixed.replace(/–/g, '\\unicode{x2013}');
-              
-              return fixed;
+              for (let i = 0; i < fixed.length; i++) {
+                // Detect start of \text{...}
+                if (!inText && fixed.startsWith('\\text{', i)) {
+                  inText = true;
+                  braceDepth = 1;
+                  result += '\\text{';
+                  i += 5; // Skip to the '{'
+                } 
+                // Track brace depth inside \text{...}
+                else if (inText && fixed[i] === '{') {
+                  braceDepth++;
+                  result += fixed[i];
+                } 
+                else if (inText && fixed[i] === '}') {
+                  braceDepth--;
+                  result += fixed[i];
+                  if (braceDepth === 0) inText = false; // Exited \text{...}
+                } 
+                // Fix \% inside \text{...}
+                else if (inText && fixed.startsWith('\\%', i)) {
+                  result += '$\\%$';
+                  i += 1; // Skip the '%'
+                } 
+                // Wrap ₹ outside \text{...}
+                else if (!inText && fixed[i] === '₹') {
+                  result += '\\text{₹}';
+                } 
+                // Wrap – outside \text{...}
+                else if (!inText && fixed[i] === '–') {
+                  result += '\\text{–}';
+                } 
+                // Pass through everything else
+                else {
+                  result += fixed[i];
+                }
+              }
+              return result;
             });
             node.nodeValue = newText;
           }
