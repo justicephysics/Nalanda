@@ -85,18 +85,30 @@
         .theme-btn { color: var(--accent); font-weight: 600; font-size: 0.95rem; padding: 0.45rem 1rem; border: 1px solid var(--accent); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
         .theme-btn:hover { background: var(--accent); color: var(--bg); }
 
-        /* Custom Bullet Points with Sticky Scroll */
+        /* Custom Bullet Points with Sticky Scroll (Block Layout) */
         ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
         ol { counter-reset: item; }
         li {
-            display: flex; align-items: flex-start; margin-bottom: 1rem; color: var(--text-secondary);
-            overflow-x: auto; overflow-y: hidden; scrollbar-width: thin;
+            display: block; /* Reverted to block to fix MathJax vertical alignment */
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            padding-left: 1.5rem; /* Space for the bullet */
         }
         /* If Markdown wraps text in <p>, let the <li> handle the scroll */
-        li > p { overflow-x: visible; margin-bottom: 0; padding-right: 1rem; }
+        li > p { display: inline; margin-bottom: 0; padding-right: 1rem; }
         li::before {
-            position: sticky; left: 0; background: var(--bg); z-index: 1;
-            padding-right: 0.75rem; flex-shrink: 0;
+            position: sticky; /* Bullet stays pinned when scrolling */
+            left: 0;
+            display: inline-block;
+            width: 1.5rem;
+            margin-left: -1.5rem;
+            padding-right: 0.5rem;
+            background: var(--bg); /* Hides text sliding under it */
+            z-index: 1;
+            box-sizing: border-box;
         }
         ul > li::before { content: "•"; color: var(--text-secondary); }
         ol > li::before { content: counter(item) "."; counter-increment: item; color: var(--text-secondary); font-weight: bold; }
@@ -124,7 +136,7 @@
 <body>
     <div class="container">
         <div class="controls">
-            <a href="https://justicephysics.github.io/Nalanda/" class="back-link">← Back to Blueprint</a>
+            <a href="https://justicephysics.github.io/humanos2.0/" class="back-link">← Back to Blueprint</a>
             <button type="button" id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌓 Day / Night</button>
         </div>
         {{ content }}
