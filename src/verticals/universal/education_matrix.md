@@ -21,9 +21,9 @@
 
 ## 5. THE SOVEREIGNTY TRIAD DEPENDENCY (TI COUPLING)
 - True Index Interdependence: TI = (PI + EI + SI) × (PI × EI × SI)
-- PI = 0.90
-- EI = 0.08
-- SI = 0.70
+- PI = 0.90 (Because almost every citizen has the right to cast a vote)
+- EI = 0.08 (L_Gini ≈ 0.92)
+- SI = 0.70 (Because the economically weaker sections lose their influence in the social hierarchy)
 - TI = (0.90 + 0.08 + 0.70) × (0.90 × 0.08 × 0.70)
 - TI = 0.084672
 - Sovereignty Coupling:
