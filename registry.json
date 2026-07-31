@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-26",
+  "last_updated": "2026-07-31",
   "reports": [
     {
       "id": "2026-07-25-EDU-SSP",
@@ -60,6 +60,16 @@
       "format": "Medium System Profile",
       "title": "Systemic Ruin of Education and Commodity Extraction \u2013 Medium System Profile (2026-07-26)",
       "file": "published/2026-07-26_Education_SystemicRuin_MediumSystemProfile.md"
+    },
+    {
+      "id": "2026-07-31-EDU-YVS",
+      "date": "2026-07-31",
+      "time": "23-37 IST",
+      "topic": "Systemic Ruin of Education and Commodity Extraction",
+      "discipline": "Education",
+      "format": "YouTube Video Script",
+      "title": "Systemic Ruin of Education and Commodity Extraction \u2013 YouTube Video Script (2026-07-31)",
+      "file": "published/2026-07-31_Education_SystemicRuin_YouTubeVideoScript.md"
     }
   ]
 }
